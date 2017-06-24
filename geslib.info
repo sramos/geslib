@@ -1,0 +1,5 @@
+name = Geslib Integration 
+description = Geslib data import/export module.
+core = 7.x
+version = "7.x-0.1"
+package = "Geslib"

@@ -1,0 +1,117 @@
+<?php
+// $Id: geslib.install
+
+/**
+ * Implements hook_schema().
+ */
+function geslib_schema() {
+  $schema = array();
+
+  $schema['geslib_lines'] = array(
+    'description' => 'Temporary table with all the data for the first import.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Serial',
+        'type' => 'serial',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'geslib_id' => array(
+        'description' => 'Geslib ID.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'Type of line.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'inter_file' => array(
+        'description' => 'INTER File line belongs to.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'queued' => array(
+        'description' => 'Whether the file is queued or not',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'content' => array(
+        'description' => 'Serialized content of the line.',
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  $schema['geslib_log'] = array(
+    'description' => 'Store geslib import activity.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'ID of import',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'start_date' => array(
+        'description' => 'Importing beginning date',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'end_date' => array(
+        'description' => 'Importing ending date',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'imported_file' => array(
+        'description' => 'Imported file',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'processed_lines' => array(
+        'description' => 'Number of lines of the import',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+      'items' => array(
+        'description' => 'Number of imported elements.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}
+
+/**
+ * Adding a file to reference the inter file
+ */
+function geslib_update_7001() {
+   $spec = array(
+    'description' => 'INTER File line belongs to.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+  );
+  db_add_field('geslib_lines', 'inter_file', $spec);
+}
+
+/**
+ * Adding a queued field to table
+ */
+function geslib_update_7002() {
+   $spec = array(
+    'description' => 'Whether the file is queued or not',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+  );
+  db_add_field('geslib_lines', 'queued', $spec);
+}
