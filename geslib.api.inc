@@ -114,9 +114,8 @@ class geslib_api {
 
           try {
             drupal_write_record('geslib_lines', $record);
-          }
-          catch (Exception $e){
-            watchdog('geslib', "Geslib id: @id Type: @type Message: @message", array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()));            }
+          } catch (Exception $e) {
+            #watchdog('geslib', "Geslib id: @id Type: @type Message: @message",array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()) );            }
           }
         }
       }
