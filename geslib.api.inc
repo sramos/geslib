@@ -23,8 +23,8 @@ class geslib_api {
     $this->verbose_level = $verbose_level;
     $this->geslib_files = $this->select_geslib_files($geslib_filepath);
     # Check if covers upload path is writable
-    $covers_path = file_directory_path()."/book_covers";
-    if ( !file_check_directory($covers_path, FILE_CREATE_DIRECTORY) ) {
+    $covers_path = drupal_realpath('public://book_covers');
+    if ( !file_prepare_directory($covers_path, FILE_CREATE_DIRECTORY) ) {
       throw new Exception('No rights to write in book covers path ('. $covers_path . ')' );
     }
     # Initialize Dilve access
