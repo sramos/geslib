@@ -32,7 +32,7 @@ class GeslibReader {
         $this->process_line($data);
       }
       #$this->tracea_utf8();
-    }  
+    }
   }
 
   function tracea_utf8() {
@@ -66,12 +66,13 @@ class GeslibReader {
   }
 
   /**
-  * Process geslib line and insert it in $elements array
+  * Read geslib line and insert it in $elements array
   *
   * @param $myline
-  *     CVS line from geslib file 
+  *     CVS line from geslib file
   */
-  function process_line($myline) {
+  function read_line($myline) {
+    $item = array();
     switch ($myline[0]) {
         # Usuarios
         case "";
@@ -133,6 +134,7 @@ class GeslibReader {
         # eBooks (igual que articulos)
         case "EB":
         # Articulos
+        # GP4|M|3913|LA GUERRA SEGÚN SIMONE WEIL|LARRAURI GÓMEZ, MAITE|2489|978-84-8131-427-4|9788481314274|108|01|VALENCIA|20021101||    |2002||1|27|20061127||1|||MAX (CAPDEVILA GISBERT, FRANCESC)|1|4||0|7,00|14,96|L0|1|1038|14,38||191|140|200|||||4,00|||0,00|HPC||||N|N||3931|||1||N|
         case "GP4":
           $this->elements["product"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
@@ -149,7 +151,7 @@ class GeslibReader {
             if ($myline[7]) {
               $this->elements["product"][$myline[2]]["attribute"]["ean"] = $myline[7];
             } else {
-              $this->elements["product"][$myline[2]]["attribute"]["ean"] = str_replace('-','',$myline[6]); 
+              $this->elements["product"][$myline[2]]["attribute"]["ean"] = str_replace('-','',$myline[6]);
             }
             $this->elements["product"][$myline[2]]["attribute"]["pages"] = $myline[8];
             $this->elements["product"][$myline[2]]["attribute"]["edition"] = $myline[9];
@@ -208,6 +210,7 @@ class GeslibReader {
           $this->elements["product"][$myline[1]]["ebook"]["url"] = $myline[6];
           break;
         # Autores
+        # AUT|A|42671|BOIE, KIRSTEN|
         case "AUT":
           $this->elements["author"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
@@ -215,31 +218,54 @@ class GeslibReader {
             $this->elements["author"][$myline[2]]["type"] = $myline[4];
           }
           break;
+        # Descripcion del autor
+        # AUTBIO|42671|Kirsten Boie (Hamburgo, 1950) es una de las autoras de libros ...|
+        case "AUTBIO":
+          $this->elements["author"][$myline[1]]["body"] = $this->utf8_encode($myline[2]);
+          break;
         # Autores asociados a los libros
+        # LA|48253|2807|A|1|
+        # LA|43071|32477|T|1|
         case "LA":
           $this->elements["product"][$myline[1]]["relation"]["author"][] = array("gid" => $myline[2], "function" => $myline[3]);
           break;
         # Materias asociadas a articulos
+        # 5|27|50667|
         case "5":
           $this->elements["product"][$myline[2]]["relation"]["category"][] = array("gid" => $myline[1]);
           break;
+        # BIC|50879|2ADS|Español / Castellano|
+        # BIC|50879|3JJ|Siglo xx|
+        # BIC|50879|3JK|Siglo xx: España|
+        # BIC|50879|3JM|Siglo xxi|
+        # BIC|50879|HBTV4|Revolución rusa|
+        # BIC|50879|HBTW|La guerra fría|
+        # BIC|50879|JPFC|Marxismo y comunismo|
+        # BIC|50879|JPFF|Socialismo e ideologías democráticas de centro izquierda|
+        # BIC|50667|JPL|Partidos políticos|
+        # BIC|50667|JPWF|Manifestaciones y movimientos de protesta|
+        case "BIC"
+          $this->elements["product"][$myline[1]]["relation"]["tags"][] = array("code" => $myline[2], "body" => $myline[3]);
+          break;
         # Referencias Libreria
         case "6":
-          # Library reference code is relative to book, so internal code should include it 
+          # Library reference code is relative to book, so internal code should include it
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = $this->utf8_encode($myline[3]);
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["body"] = $this->utf8_encode($myline[3]);
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["product"][$myline[1]]["relation"]["library_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
         # Referencias Editor
+        # 6E|48794|1|Palabra de moda, "populismo" significa cosas ...|
         case "6E":
           # Publisher reference code is relative to book, so internal code should include it
-	  $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = $this->utf8_encode($myline[3]);
+	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = $this->utf8_encode($myline[3]);
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["body"] = $this->utf8_encode($myline[3]);
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["product"][$myline[1]]["relation"]["publisher_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
         # Indice del articulo
+        # 6I|50879|1|I. EL CAMINO DE LA REVOLUCIÓN Y SU ESTALLIDO ... |
         case "6I":
           # Index code is relative to book, so internal code should include it
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = $this->utf8_encode($myline[3]);
@@ -289,4 +315,3 @@ class GeslibReader {
   }
 
 }
-
