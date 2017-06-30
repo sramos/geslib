@@ -244,7 +244,7 @@ class GeslibReader {
         # BIC|50879|JPFF|Socialismo e ideologías democráticas de centro izquierda|
         # BIC|50667|JPL|Partidos políticos|
         # BIC|50667|JPWF|Manifestaciones y movimientos de protesta|
-        case "BIC"
+        case "BIC":
           $this->elements["product"][$myline[1]]["relation"]["tags"][] = array("code" => $myline[2], "body" => $myline[3]);
           break;
         # Referencias Libreria
