@@ -13,9 +13,9 @@ include_once dirname(__FILE__) . '/geslib.api.inc';
 function geslib_drush_help($section) {
   switch ($section) {
     case 'drush:geslib-prepare':
-      return "\nGESLIB-PREPARE\n".dt('Only preprocess geslib file don\'t inserting nodes in database.')
+      return "\nGESLIB-PREPARE\n".dt('Only preprocess geslib file don\'t inserting nodes in database.');
     case 'drush:geslib-load':
-      return "\nGESLIB-LOAD\n".dt('Import preprocessed geslib files.')
+      return "\nGESLIB-LOAD\n".dt('Import preprocessed geslib files.');
     case 'drush:geslib-import':
       return "\nGESLIB-IMPORT\n".dt('Import geslib files (prepare + load).');
     case 'drush:geslib-covers':
