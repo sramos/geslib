@@ -640,66 +640,66 @@ function geslib_admin_settings_validate($form, &$form_state) {
   # Valida que los elementos tengan los campos CCK elegidos
 
   if ($form_state['values']['geslib_category_node_type']) {
-    $type = content_types($form_state['values']['geslib_category_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_category_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_category_node_type', t("Category node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
 
   if ($form_state['values']['geslib_publisher_node_type']) {
-    $type = content_types($form_state['values']['geslib_publisher_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_publisher_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_publisher_node_type', t("Publisher node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
 
   if ($form_state['values']['geslib_music_publisher_node_type']) {
-    $type = content_types($form_state['values']['geslib_music_publisher_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_music_publisher_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_music_publisher_node_type', t("Music publisher node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
 
   if ($form_state['values']['geslib_collection_node_type']) {
-    $type = content_types($form_state['values']['geslib_collection_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_collection_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_collection_node_type', t("Collection node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_collection_link_to_publisher']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_collection_link_to_publisher', t("Collection node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
 
   if ($form_state['values']['geslib_author_node_type']) {
-    $type = content_types($form_state['values']['geslib_author_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_author_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_author_node_type', t("Author node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
 
   if ($form_state['values']['geslib_index_node_type']) {
-    $type = content_types($form_state['values']['geslib_index_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_index_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_index_node_type', t("Index node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
 
   if ($form_state['values']['geslib_library_reference_node_type']) {
-    $type = content_types($form_state['values']['geslib_library_reference_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_library_reference_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
       if ( !$type["fields"][$field] ) {
         form_set_error('geslib_library_reference_node_type', t("Library Reference node type doesn't have defined field")." '".$field."'.");
@@ -708,7 +708,7 @@ function geslib_admin_settings_validate($form, &$form_state) {
   }
 
   if ($form_state['values']['geslib_publisher_reference_node_type']) {
-    $type = content_types($form_state['values']['geslib_publisher_reference_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_publisher_reference_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
       if ( !$type["fields"][$field] ) {
         form_set_error('geslib_publisher_reference_node_type', t("Publisher Reference node type doesn't have defined field")." '".$field."'.");
@@ -717,109 +717,109 @@ function geslib_admin_settings_validate($form, &$form_state) {
   }
 
   if ($form_state['values']['geslib_book_node_type']) {
-    $type = content_types($form_state['values']['geslib_book_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_book_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_node_type', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_type']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_type', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_category']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_category', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_author']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_author', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_publisher']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_publisher', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_collection']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_collection', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_isbn']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_isbn', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_ean']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_ean', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_library_reference']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_library_reference', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_publisher_reference']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_publisher_reference', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_index']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_index', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_external_description']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_external_description', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_pages']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_pages', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_language']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_language', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_year']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_year', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_edition']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_edition', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_edition_date']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_edition_date', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_registration_date']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_registration_date', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_subtitle']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_subtitle', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_status']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_status', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_format']) {
-      if ( !$type["fields"][$field] ) {
+        if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_format', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
@@ -836,21 +836,21 @@ function geslib_admin_settings_validate($form, &$form_state) {
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_classification']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_classification', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_attribute_vat']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_attribute_vat', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
 
   if ($form_state['values']['geslib_other_node_type']) {
-    $type = content_types($form_state['values']['geslib_other_node_type']);
+    $types = field_info_instances('node', $form_state['values']['geslib_other_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
-      if ( !$type["fields"][$field] ) {
+      if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_other_node_type', t("Other Product node type doesn't have defined field")." '".$field."'.");
       }
     }
