@@ -18,8 +18,8 @@ class geslib_api {
   */
   function __construct($geslib_filepath, $verbose_level) {
     $this->user = user_load(array('uid' => 1));
-    $this->default_nom_category = $this->utf8_encode(variable_get('geslib_category_default_name', NULL));
-    $this->default_nom_collection = $this->utf8_encode(variable_get('geslib_collection_default_name', NULL));
+    $this->default_nom_category = $this->geslib_utf8_encode(variable_get('geslib_category_default_name', NULL));
+    $this->default_nom_collection = $this->geslib_utf8_encode(variable_get('geslib_collection_default_name', NULL));
     $this->verbose_level = $verbose_level;
     $this->geslib_files = $this->select_geslib_files($geslib_filepath);
     # Check if covers upload path is writable
@@ -123,7 +123,8 @@ class geslib_api {
           try {
             drupal_write_record('geslib_lines', $record);
           } catch (Exception $e) {
-            watchdog('geslib', "Geslib id: @id Type: @type Message: @message",array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()) );            }
+            watchdog('geslib', "Geslib id: @id Type: @type Message: @message",
+                     array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()) );
           }
         }
       }
@@ -311,7 +312,7 @@ class geslib_api {
   * Returns
   *     $string
   */
-  function utf8_encode($string) {
+  function geslib_utf8_encode($string) {
     if ($string) {
       return Encoding::fixUTF8(mb_check_encoding($string, 'UTF-8') ? $string : utf8_encode($string));
     } else {
