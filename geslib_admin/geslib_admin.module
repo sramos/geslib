@@ -104,6 +104,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_link_content_field', NULL),
     '#description' => t('Drupal field used to link with geslib. All node types from above must have this field.'),
     '#options' => array ( NULL => '--- '.t('Use Geslib module tables').' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['storage']['geslib_upload_path'] = array(
     '#type' => 'textfield',
@@ -120,6 +122,8 @@ function geslib_admin_settings($form_state) {
       NULL => t("Don't delete"),
       1 => t("Delete imported geslib files"),
     ),
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['storage']['geslib_upload_cover_path'] = array(
     '#type' => 'textfield',
@@ -226,6 +230,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_collection_link_to_publisher', NULL),
     '#description' => t('Drupal field used to link with publisher nodes (nodereference type) or to store publisher name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't link to publishers").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['collections']['geslib_collection_default_name'] = array(
     '#type' => 'textfield',
@@ -310,6 +316,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_type', NULL),
     '#description' => t("Drupal field used to store product type."),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_default_image'] = array(
     '#type' => 'textfield',
@@ -335,6 +343,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_subtitle', NULL),
     '#description' => t('Drupal field used to store subtitle (col 26).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_link_to_category'] = array(
     '#type' => 'select',
@@ -342,6 +352,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_link_to_category', NULL),
     '#description' => t('Drupal field used to link books with category nodes (nodereference type) or to store category name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_link_to_author'] = array(
     '#type' => 'select',
@@ -349,6 +361,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_link_to_author', NULL),
     '#description' => t('Drupal field used to link books with author nodes (nodereference type) or to store author name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_create_fake_author'] = array(
     '#type' => 'select',
@@ -377,6 +391,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_link_to_publisher', NULL),
     '#description' => t('Drupal field used to link with publisher nodes (nodereference type) or to store publisher name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_link_to_collection'] = array(
     '#type' => 'select',
@@ -384,6 +400,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_link_to_collection', NULL),
     '#description' => t('Drupal field used to link with collection nodes (nodereference type) or to store collection name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_isbn'] = array(
     '#type' => 'select',
@@ -391,6 +409,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_isbn', NULL),
     '#description' => t('Drupal field used to store ISBN code (col 6). This field is also stored in uc_product.model field.'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
 
   $form['books']['geslib_book_attribute_ean'] = array(
@@ -399,6 +419,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_ean', NULL),
     '#description' => t('Drupal field used to store EAN code (col 7).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_link_to_index'] = array(
     '#type' => 'select',
@@ -406,6 +428,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_link_to_index', NULL),
     '#description' => t('Drupal field used to link with publication index nodes (nodereference type) or to store it (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_link_to_library_reference'] = array(
     '#type' => 'select',
@@ -413,6 +437,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_link_to_library_reference', NULL),
     '#description' => t('Drupal field used to store library reference nodes (nodereference type) or to store it (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_link_to_publisher_reference'] = array(
     '#type' => 'select',
@@ -420,6 +446,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_link_to_publisher_reference', NULL),
     '#description' => t('Drupal field used to store publisher reference nodes (nodereference type) or to store it (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_external_description'] = array(
     '#type' => 'select',
@@ -427,6 +455,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_external_description', NULL),
     '#description' => t('Drupal field used to store external description (col 39).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_year'] = array(
     '#type' => 'select',
@@ -434,6 +464,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_year', NULL),
     '#description' => t('Drupal field used to store publication date (col 13).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_dat_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_edition'] = array(
     '#type' => 'select',
@@ -441,6 +473,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_edition', NULL),
     '#description' => t('Drupal field used to store book edition (col 9).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_edition_date'] = array(
     '#type' => 'select',
@@ -448,6 +482,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_edition_date', NULL),
     '#description' => t('Drupal field used to store book edition date (col 11).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_dat_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_registration_date'] = array(
     '#type' => 'select',
@@ -455,6 +491,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_registration_date', NULL),
     '#description' => t('Drupal field used to store registration date (col 18).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_dat_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_pages'] = array(
     '#type' => 'select',
@@ -462,6 +500,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_pages', NULL),
     '#description' => t('Drupal field used to store book pages (col 8).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_int_fields + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_language'] = array(
     '#type' => 'select',
@@ -469,6 +509,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_language', NULL),
     '#description' => t('Drupal field used to store language (col 20)).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_status'] = array(
     '#type' => 'select',
@@ -476,6 +518,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_status', NULL),
     '#description' => t('Drupal field used to store book status (col 27).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_format'] = array(
     '#type' => 'select',
@@ -483,6 +527,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_format', NULL),
     '#description' => t('Drupal field used to store book format (col 21).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_location'] = array(
     '#type' => 'select',
@@ -490,6 +536,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_location', NULL),
     '#description' => t('Drupal field used to store location (col 15).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $vocabularies,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_alt_location'] = array(
     '#type' => 'select',
@@ -497,6 +545,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_alt_location', NULL),
     '#description' => t('Drupal field used to store alternative location (col 41).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $vocabularies,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_classification'] = array(
     '#type' => 'select',
@@ -504,6 +554,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_classification', NULL),
     '#description' => t('Drupal field used to store book classification (col 31).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_attribute_vat'] = array(
     '#type' => 'select',
@@ -511,6 +563,8 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_book_attribute_vat', NULL),
     '#description' => t('Drupal field used to store book vat (42).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_int_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
 
   // Options for other products
