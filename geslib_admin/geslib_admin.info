@@ -1,0 +1,5 @@
+name = Geslib Integration (Admin Module)
+description = Geslib configuration management module.
+core = 7.x
+version = "7.x-0.2"
+package = "Geslib"

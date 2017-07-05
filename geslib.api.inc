@@ -68,7 +68,7 @@ class geslib_api {
     foreach($this->geslib_files as $file) {
       $query = 'SELECT id FROM {geslib_log} WHERE component = "geslib_file" AND imported_file = "%s" AND (status = "ok" OR status ="working")';
       $result = db_query($query, basename($file));
-      if (!$result || !db_fetch_object($result)) {
+      if (!$result || !$result->fetchObject()) {
         $files[] = $file;
       } else {
         $this->vprint(t("Excluded previously imported file") . " " . $file,1);
@@ -88,6 +88,12 @@ class geslib_api {
     if (empty($filename) || !file_exists ($filename)) {
       throw new Exception(t('Geslib file not valid.'));
     } else {
+      # Write reading file into log
+      $log_import = array('start_date' => date('Y-m-d H:i:s'),
+                          'component' => 'geslib_file',
+                          'imported_file' => basename($filename),
+                          'uid' => $this->user->uid, 'status' => 'working');
+      drupal_write_record('geslib_log', $log_import);
       $this->geslib_filename = $filename;
       $this->elements = array();
 
@@ -101,10 +107,12 @@ class geslib_api {
 
       # Write data to database
       $this->vprint(t("Writing data to database"),1);
+      $processed_lines = 0;
       #file_put_contents($filename . ".serialized",serialize($this->elements));
       # For each element type process imported information if not null and drupal_node_type exists
       foreach ($this->elements as $element_type => $items) {
         # Store all items of element_type
+        $processed_lines += count($items);
         foreach ($items as $item_id => $item_data) {
           $record = array();
           $record['geslib_id'] = $item_id;
@@ -115,10 +123,16 @@ class geslib_api {
           try {
             drupal_write_record('geslib_lines', $record);
           } catch (Exception $e) {
-            #watchdog('geslib', "Geslib id: @id Type: @type Message: @message",array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()) );            }
+            watchdog('geslib', "Geslib id: @id Type: @type Message: @message",array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()) );            }
           }
         }
       }
+      # Write file readed into log
+      $this->vprint(t("Writing log file"),1);
+      $log_import['end_date'] = date('Y-m-d H:i:s');
+      $log_import['items'] = $processed_lines;
+      $log_import['status'] = 'ok';
+      drupal_write_record('geslib_log', $log_import, 'id');
     }
   }
 

@@ -29,7 +29,7 @@ class GeslibReader {
       $handle = fopen($filename, "r");
       $tmp_val = array();
       while (($data = fgetcsv($handle, 0, "|")) !== FALSE) {
-        $this->process_line($data);
+        $this->read_line($data);
       }
       #$this->tracea_utf8();
     }
