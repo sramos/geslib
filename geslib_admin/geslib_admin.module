@@ -41,12 +41,15 @@ function geslib_admin_settings($form_state) {
   $form = array();
 
   // Get node types
-  $node_types = array( NULL => '--- '.t("Don't import").' ---') + node_type_get_names();
+  $node_types = array( NULL => '--- '.t("Don't import").' ---');
+  foreach ( node_type_get_names() as $node_type => $node_label ) {
+    $node_types[$node_type] = $node_label . " (" . $node_type . ")";
+  }
 
   // Get vocabularies
   $vocabularies = array();
   foreach ( taxonomy_get_vocabularies() as $vocab) {
-    $vocabularies["#vid-".$vocab->vid] = "(". t("Vocabulary") .") ". $vocab->name;
+    $vocabularies["#vid-".$vocab->vid] = "(". t("Vocabulary") ." #vid-" .$vocab->vid.") ". $vocab->name;
   }
 
   // Get field by type
@@ -58,7 +61,7 @@ function geslib_admin_settings($form_state) {
   foreach ( field_info_instances('node', NULL) as $node_name => $node_data ) {
     # And all fields
     foreach ( $node_data as $field_name => $field_data) {
-      #print_r("<br>" . $field_name . "<br>");
+      #print_r("<br>" . $node_name . ": " . $field_name . "<br>");
       #print_r($field_data);
       if ($field_data[widget][module] == "text") {
         if (array_key_exists($field_name,$type_txt_fields)) {
@@ -67,11 +70,11 @@ function geslib_admin_settings($form_state) {
           $type_txt_fields[$field_name]  = $field_name.": ".$field_data[label] . " @ " . $node_name;
         }
       }
-      if ($field_data[widget][module] == "nodereference_url") {
+      if (preg_match('#^nodereference#', $field_data[widget_type]) === 1) {
         if (array_key_exists($field_name,$type_ref_fields)) {
           $type_ref_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_ref_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+          $type_ref_fields[$field_name]  = $field_name." (".$field_data[widget_type]."): ".$field_data[label] . " @ " . $node_name;
        }
       }
       if ($field_data[widget][module] == "number") {
