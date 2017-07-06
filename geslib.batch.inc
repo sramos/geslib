@@ -121,7 +121,7 @@ function geslib_process_finish($success, $results, $operations) {
     }
     $log = array(
       'start_date' => $results['start_date'],
-      'end_date' => date('Y-m-d H:i:s'),
+      'end_date' => time(),
       'imported_file' => $results['inter_file'],
       'items' => $total_items,
       'processed_lines' => $results['processed_lines'],

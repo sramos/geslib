@@ -89,7 +89,7 @@ class geslib_api {
       throw new Exception(t('Geslib file not valid.'));
     } else {
       # Write reading file into log
-      $log_import = array('start_date' => date('Y-m-d H:i:s'),
+      $log_import = array('start_date' => time(),
                           'component' => 'geslib_file',
                           'imported_file' => basename($filename),
                           'uid' => $this->user->uid, 'status' => 'working');
@@ -129,7 +129,7 @@ class geslib_api {
       }
       # Write file readed into log
       $this->vprint(t("Writing log file"),1);
-      $log_import['end_date'] = date('Y-m-d H:i:s');
+      $log_import['end_date'] = time();
       $log_import['items'] = $processed_lines;
       $log_import['status'] = 'ok';
       drupal_write_record('geslib7_log', $log_import, 'id');
