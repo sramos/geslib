@@ -1,18 +1,18 @@
-<?php 
+<?php
 /**
  * @author   Santiago Ramos <sramos@semillasl.com>
- * @package  InetBookSearch 
+ * @package  InetBookSearch
  * @version  0.1
   */
 
 class InetBookSearch {
-  
+
   private static $user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1";
- 
+
   /**
   * Function InetBookSearch::download_file
   *
-  * @param string url 
+  * @param string url
   *   URI of the image to be downloaded
   * @param string path
   *   path where image will be stored
@@ -29,9 +29,9 @@ class InetBookSearch {
         preg_match("/^Content-Type: .+\/(.+)/", $header, $matches);
         if ( $matches ) {
           $ext = $matches[1];
-        }  
+        }
       }
-      # If no extension was returned in content type headers, get it from url 
+      # If no extension was returned in content type headers, get it from url
       if (! $ext) {
         #print "----------> No existe content type para el elemento!!!\n";
         $ext = pathinfo($url, PATHINFO_EXTENSION);
@@ -59,7 +59,7 @@ class InetBookSearch {
     $book = array();
     $url = 'http://books.google.com/books?q=isbn%3A'.$isbn;
     $book_data = drupal_http_request($url);
-    dpm($book_data);
+    #dpm($book_data);
     #print "\n------------------> ".$book_data."\n";
     $dom = new DOMDocument();
     $dom->preserveWhiteSpace = false;
@@ -94,8 +94,8 @@ class InetBookSearch {
           $book['*cover_url'] = $tmp_value;
         }
       }
-    }   
-    
+    }
+
     return $book;
   }
 
@@ -109,13 +109,13 @@ class InetBookSearch {
   */
   static function search_ttl($isbn) {
     libxml_use_internal_errors(true);
-    $book = array(); 
+    $book = array();
 
     $url = 'http://www.todostuslibros.com';
     #print "----------------> " . $url;
     $book_data = drupal_http_request(sprintf("%s/busquedas/?keyword=%s", $url, $isbn));
     #print "\n------------------> ".$book_data."\n";
-    
+
     $dom = new DOMDocument();
     $dom->preserveWhiteSpace = false;
     $dom->loadHTML($book_data->data);
@@ -124,7 +124,8 @@ class InetBookSearch {
     $books = $xpath->query("//div[@class='details']//h2//a");
 
     if ($books->length > 0) {
-      dpm("TENEMOS EL ENLACE AL LIBRO!");
+      #dpm("TENEMOS EL ENLACE AL LIBRO!");
+      #print("\n------------------> TENEMOS EL ENLACE AL LIBRO\n");
       #var_dump($books->item(0)->nodeValue);
       #var_dump($books->item(0)->getAttribute('href'));
       $book_path = $books->item(0)->getAttribute('href');
@@ -160,7 +161,7 @@ class InetBookSearch {
         if ($tmp_value != "Información no disponible") {
           $authors = self::get_multiple_authors($tmp_value);
           foreach($authors as $author) {
-            $author_name = trim($author); 
+            $author_name = trim($author);
             $book['*author'][] = array('name' => $author_name);
           }
         }
@@ -177,7 +178,7 @@ class InetBookSearch {
         }
       }
 
-      # Get number of pages 
+      # Get number of pages
       $element = $xpath->query("//dd[@itemprop='numberOfPages']");
       if ( $element->length > 0 ) {
         $tmp_value = $element->item(0)->nodeValue;
@@ -195,7 +196,7 @@ class InetBookSearch {
         }
       }
 
-      # Get format 
+      # Get format
       $element = $xpath->query("//dd[@itemprop='bookFormat']");
       if ( $element->length > 0 ) {
         $tmp_value = $element->item(0)->nodeValue;
@@ -214,6 +215,6 @@ class InetBookSearch {
       $authors = explode("/", $string);
     }
     return $authors;
-  }  
+  }
 
 }
