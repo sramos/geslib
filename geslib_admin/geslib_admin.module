@@ -608,14 +608,14 @@ function geslib_admin_settings($form_state) {
 function geslib_admin_settings_validate($form, &$form_state) {
 
   # Comprueba que exista el directorio de subida (si se ha especificado)
-  if ( $form_state['values']['geslib_upload_path'] && !file_check_directory($form_state['values']['geslib_upload_path'], FILE_CREATE_DIRECTORY)) {
+  if ( $form_state['values']['geslib_upload_path'] && !file_prepare_directory($form_state['values']['geslib_upload_path'], FILE_CREATE_DIRECTORY) ) {
     form_set_error('geslib_upload_path', t('Please enter a valid directory path.'));
   }
 
   # Comprueba que exista el directorio de subida de imagenes (si se ha especificado)
-  #if ( $form_state['values']['geslib_upload_cover_path'] && !file_check_directory($form_state['values']['geslib_upload_cover_path'], FILE_CREATE_DIRECTORY)) {
-    #form_set_error('geslib_upload_cover_path', t('Please enter a valid directory path.'));
-  #}
+  if ( $form_state['values']['geslib_upload_cover_path'] && !file_prepare_directory($form_state['values']['geslib_upload_cover_path'], FILE_CREATE_DIRECTORY) ) {
+    form_set_error('geslib_upload_cover_path', t('Please enter a valid directory path.'));
+  }
 
   # Comprueba que existan usuario y password DILVE si se ha elegido la descarga desde alli
   if ( $form_state['values']['geslib_book_download_info'] == 3 ) {
