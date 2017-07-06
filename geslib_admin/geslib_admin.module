@@ -63,7 +63,7 @@ function geslib_admin_settings($form_state) {
     foreach ( $node_data as $field_name => $field_data) {
       #print_r("<br>" . $node_name . ": " . $field_name . "<br>");
       #print_r($field_data);
-      if ($field_data[widget][module] == "text") {
+      if ($field_data[widget][module] == "text" || $field_data[widget][module] == "options") {
         if (array_key_exists($field_name,$type_txt_fields)) {
           $type_txt_fields[$field_name] .= ", " . $node_name;
         } else {
