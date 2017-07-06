@@ -66,7 +66,7 @@ class geslib_api {
   function get_pending_files() {
     $files = array();
     foreach($this->geslib_files as $file) {
-      $query = 'SELECT id FROM {geslib_log} WHERE component = "geslib_file" AND imported_file = "%s" AND (status = "ok" OR status ="working")';
+      $query = 'SELECT id FROM {geslib7_log} WHERE component = "geslib_file" AND imported_file = "%s" AND (status = "ok" OR status ="working")';
       $result = db_query($query, basename($file));
       if (!$result || !$result->fetchObject()) {
         $files[] = $file;
@@ -93,7 +93,7 @@ class geslib_api {
                           'component' => 'geslib_file',
                           'imported_file' => basename($filename),
                           'uid' => $this->user->uid, 'status' => 'working');
-      drupal_write_record('geslib_log', $log_import);
+      drupal_write_record('geslib7_log', $log_import);
       $this->geslib_filename = $filename;
       $this->elements = array();
 
@@ -117,11 +117,10 @@ class geslib_api {
           $record = array();
           $record['geslib_id'] = $item_id;
           $record['type'] = $element_type;
-          $record['inter_file'] = $filename;
+          $record['imported_file'] = $filename;
           $record['content'] = serialize($item_data);
-
           try {
-            drupal_write_record('geslib_lines', $record);
+            drupal_write_record('geslib7_lines', $record);
           } catch (Exception $e) {
             watchdog('geslib', "Geslib id: @id Type: @type Message: @message",
                      array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()) );
@@ -133,7 +132,7 @@ class geslib_api {
       $log_import['end_date'] = date('Y-m-d H:i:s');
       $log_import['items'] = $processed_lines;
       $log_import['status'] = 'ok';
-      drupal_write_record('geslib_log', $log_import, 'id');
+      drupal_write_record('geslib7_log', $log_import, 'id');
     }
   }
 

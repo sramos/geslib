@@ -31,7 +31,7 @@ function geslib_process_read_file($geslib_file_path, &$context) {
 
   foreach ($geslib_lines as $line) {
     if (!isset($line['action'])) {
-      $product_db = db_select('geslib_lines', 'g')->condition('geslib_id', $line['geslib_id'])
+      $product_db = db_select('geslib7_lines', 'g')->condition('geslib_id', $line['geslib_id'])
         ->condition('type', 'product')->fields('g')->execute()->fetchObject();
       $product = unserialize($product_db->content);
 
@@ -42,7 +42,7 @@ function geslib_process_read_file($geslib_file_path, &$context) {
         $product['description'] = $line;
       }
       $product_db->content = serialize($product);
-      drupal_write_record('geslib_lines', $product_db, array('id'));
+      drupal_write_record('geslib7_lines', $product_db, array('id'));
     } elseif ($line['action'] != 'delete') {
       $record = array();
       $record['geslib_id'] = $line['geslib_id'];
@@ -51,7 +51,7 @@ function geslib_process_read_file($geslib_file_path, &$context) {
       $record['content'] = serialize($line);
 
       try {
-        drupal_write_record('geslib_lines', $record);
+        drupal_write_record('geslib7_lines', $record);
       }
       catch (Exception $e){
         watchdog('geslib', "Geslib id: @id Type: @type Message: @message", array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()));
@@ -78,20 +78,20 @@ function geslib_process_read_file($geslib_file_path, &$context) {
  */
 function geslib_process_items($type, $limit, &$context){
   if (!isset($context['sandbox']['progress'])) {
-    $items_db = db_select('geslib_lines', 'g')->condition('type', $type)
+    $items_db = db_select('geslib7_lines', 'g')->condition('type', $type)
       ->fields('g')->execute();
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] =  $items_db->rowCount();
     $context['results']['items'][$type] = 0;
   }
 
-  $lines = db_select('geslib_lines', 'g')->condition('type', $type)->fields('g')
+  $lines = db_select('geslib7_lines', 'g')->condition('type', $type)->fields('g')
     ->range(0, $limit)->execute()->fetchAll();
 
   foreach ($lines as $line) {
     $item = unserialize($line->content);
     module_invoke_all('geslib_'.$type, $item['action'], $item);
-    db_delete('geslib_lines')->condition('geslib_id', $line->geslib_id)->condition('type', $type)
+    db_delete('geslib7_lines')->condition('geslib_id', $line->geslib_id)->condition('type', $type)
      ->execute();
     $context['results']['items'][$type]++;
     $context['sandbox']['progress']++;
@@ -121,12 +121,12 @@ function geslib_process_finish($success, $results, $operations) {
     }
     $log = array(
       'start_date' => $results['start_date'],
-      'end_date' => time(),
+      'end_date' => date('Y-m-d H:i:s'),
       'imported_file' => $results['inter_file'],
       'items' => $total_items,
       'processed_lines' => $results['processed_lines'],
     );
-    drupal_write_record('geslib_log', $log);
+    drupal_write_record('geslib7_log', $log);
   }
   else {
     // An error occurred.

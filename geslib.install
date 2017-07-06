@@ -124,7 +124,7 @@ function geslib_schema() {
   $schema = array();
 
   # Stores each of elements to import
-  $schema['geslib_lines'] = array(
+  $schema['geslib7_lines'] = array(
     'description' => 'Temporary table with all readed data from INTER file.',
     'fields' => array(
       'id' => array(
@@ -168,7 +168,7 @@ function geslib_schema() {
   );
 
   # Stores status of import
-  $schema['geslib_log'] = array(
+  $schema['geslib7_log'] = array(
     'description' => 'Store geslib import activity.',
     'fields' => array(
       'id' => array(
@@ -186,12 +186,12 @@ function geslib_schema() {
       ),
       'start_date' => array(
         'description' => 'Importing beginning date',
-        'type' => 'int',
+        'type' => 'datetime',
         'not null' => TRUE,
       ),
       'end_date' => array(
         'description' => 'Importing ending date',
-        'type' => 'int',
+        'type' => 'datetime',
       ),
       'imported_file' => array(
         'description' => 'Imported file',

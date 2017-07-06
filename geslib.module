@@ -57,13 +57,13 @@ function geslib_settings_form($form, &$form_state) {
 
 /**
  * Process an item
- * 
+ *
  * @param type $item
  */
 function geslib_process_item($item) {
   $hook_name = 'geslib_'.$item['type'];
   module_invoke_all($hook_name, $item['action'], $item);
-  db_delete('geslib_lines')->condition('geslib_id', $item['geslib_id'])
+  db_delete('geslib7_lines')->condition('geslib_id', $item['geslib_id'])
     ->condition('type', $item['type'])->execute();
 }
 
@@ -85,7 +85,7 @@ function geslib_first_import_form($form, &$form_state) {
     '#options' => $options,
   );
   $form['operations'] = array(
-    '#type' => 'fieldset',  
+    '#type' => 'fieldset',
   );
 
   $form['operations']['geslib_process_read_file'] = array(
@@ -121,7 +121,7 @@ function geslib_first_import_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => 'Borrar todo',
   );
-  
+
   return $form;
 }
 
@@ -131,7 +131,7 @@ function geslib_first_import_form_submit($form, &$form_state) {
       'title' => t('Eliminando todos los elementos'),
       'operations' => array(
         array('geslib_process_delete_categories', array()),
-        array('geslib_process_delete_products', array()), 
+        array('geslib_process_delete_products', array()),
         array('geslib_process_delete_nodes', array()),
       ),
       'finished' => 'geslib_process_finish',
@@ -164,14 +164,14 @@ function geslib_first_import_form_submit($form, &$form_state) {
 function geslib_cron() {
   $geslib_dir = DRUPAL_ROOT.'/'.variable_get('geslib_directory', 'sites/default/files/geslib');
   $file_to_process = _geslib_get_file_to_process();
-  
+
   if ($file_to_process) {
     $geslib_file = file_get_contents($geslib_dir."/".$file_to_process);
     $geslib_file_array = explode("\n", $geslib_file);
-    
+
     $line_count = count($geslib_file_array);
     $item_count = 0;
-  
+
     $geslib_lines = array();
     foreach ($geslib_file_array as $line) {
       $line = explode("|", $line);
@@ -179,11 +179,11 @@ function geslib_cron() {
     }
     foreach ($geslib_lines as $line) {
     if (!isset($line['action'])) {
-      $product_db = db_select('geslib_lines', 'g')
+      $product_db = db_select('geslib7_lines', 'g')
         ->condition('geslib_id', $line['geslib_id'])->condition('type', 'product')
         ->fields('g')->execute()->fetchObject();
       $product = unserialize($product_db->content);
-      
+
       if ($line['type'] == 'product_author') {
         $product['authors'][] = $line;
       }
@@ -191,7 +191,7 @@ function geslib_cron() {
         $product['description'] = $line;
       }
       $product_db->content = serialize($product);
-      drupal_write_record('geslib_lines', $product_db, array('id'));
+      drupal_write_record('geslib7_lines', $product_db, array('id'));
     }
     else {
       $record = array();
@@ -201,7 +201,7 @@ function geslib_cron() {
       $record['content'] = serialize($line);
 
       try {
-        drupal_write_record('geslib_lines', $record);
+        drupal_write_record('geslib7_lines', $record);
         $item_count++;
       }
       catch (Exception $e){
@@ -216,55 +216,55 @@ function geslib_cron() {
       'items' => $item_count,
       'processed_lines' => $line_count,
     );
-    drupal_write_record('geslib_log', $log);
-    
+    drupal_write_record('geslib7_log', $log);
+
   }
   else {
-    $last_processed_file = db_select('geslib_log', 'g')->fields('g', array('imported_file'))
+    $last_processed_file = db_select('geslib7_log', 'g')->fields('g', array('imported_file'))
             ->orderBy('g.id', 'DESC')->execute()->fetchField();
     //We avoid queueing lines of the first import
     if ($last_processed_file) {
-      $lines = db_select('geslib_lines', 'g')->condition('queued', 0)->fields('g')
+      $lines = db_select('geslib7_lines', 'g')->condition('queued', 0)->fields('g')
         ->execute()->fetchAll();
       $queue = DrupalQueue::get('geslibCronQueue');
       foreach ($lines as $line) {
         $queue->createItem(unserialize($line->content));
-        db_update('geslib_lines')->fields(array('queued' => 1))->condition('geslib_id', $line->geslib_id)
+        db_update('geslib7_lines')->fields(array('queued' => 1))->condition('geslib_id', $line->geslib_id)
           ->condition('type', $line->type)->execute();
       }
     }
   }
-  
+
 }
 
 function geslib_init() {
 }
 
 /**
- * 
+ *
  * @return string
  */
 function _geslib_get_file_to_process() {
   $geslib_dir = DRUPAL_ROOT.'/'.variable_get('geslib_directory', 'sites/default/files/geslib');
   $files_tmp = scandir($geslib_dir);
-  
-  $processed_files = db_select('geslib_log', 'g')->fields('g', array('imported_file'))
+
+  $processed_files = db_select('geslib7_log', 'g')->fields('g', array('imported_file'))
     ->execute()->fetchCol();
-  
+
   if (empty($processed_files)) {
     //If nothing in the log, it means we haven't done the first import
     return '';
   }
-  
+
   $files = array();
   foreach ($files_tmp as $value) {
     if (strpos($value, '.') !== 0 && strpos($value, '-') !== 0 && !in_array($value, $processed_files)){
       $files[] = $value;
     }
   }
-  
+
   $file_to_process = array_shift($files);
- 
+
   if (strrpos($file_to_process, '.zip') == TRUE) {
     $zip = new ZipArchive;
     $res = $zip->open($geslib_dir.'/'.$file_to_process);
