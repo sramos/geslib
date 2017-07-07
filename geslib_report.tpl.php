@@ -16,8 +16,8 @@
     print '<tr id="geslib_file_' . $record->id . '">';
     print '  <td>' . $record->imported_file . '</td>';
     print '  <td>' . $record->component . '</td>';
-    print '  <td>' . $record->start_date . '</td>';
-    print '  <td>' . $record->end_date . '</td>';
+    print '  <td>' . date('m/d/Y H:i:s', $record->start_date) . '</td>';
+    print '  <td>' . date('m/d/Y H:i:s', $record->end_date) . '</td>';
     print '  <td>' . $record->count . '</td>';
     print '  <td>' . $record->status . '</td>';
     print '  <td><a href="' . $base_path . 'geslib/delete_log/' . $record->id . '">Delete</a></td>';
