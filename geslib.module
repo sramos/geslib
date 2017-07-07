@@ -77,7 +77,7 @@ function geslib_files_report() {
   $list = array();
   # Get all geslib logs
   $results = db_query("SELECT * FROM {geslib_log} ORDER BY start_date DESC LIMIT 30");
-  while ($record = db_fetch_object($results)) {
+  foreach ($results as $record) {
     $list[] = $record;
   }
 
