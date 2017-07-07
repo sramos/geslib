@@ -134,12 +134,12 @@ function geslib_schema() {
       ),
       'start_date' => array(
         'description' => 'Importing beginning date',
-        'type' => 'datetime',
+        'type' => 'int',
         'not null' => TRUE,
       ),
       'end_date' => array(
         'description' => 'Importing ending date',
-        'type' => 'datetime',
+        'type' => 'int',
         'not null' => TRUE,
       ),
       'imported_file' => array(
