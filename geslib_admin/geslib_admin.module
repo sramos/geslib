@@ -10,8 +10,10 @@ include_once dirname(__FILE__) . '/../geslib.api.inc';
 /**
  * Implementation of hook_perm().
  */
-function geslib_admin_perm() {
-  return array('geslib_settings admin');
+function geslib_admin_permission() {
+  return array('geslib_settings admin' => array(
+      'title' => t('Admin Geslib settings'),
+  );
 }
 
 /**

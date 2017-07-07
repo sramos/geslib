@@ -65,8 +65,9 @@ class geslib_api {
   */
   function get_pending_files() {
     $files = array();
+    # Comprueba que los "geslib_files" leidos en la inicializacion no esten ya procesados
     foreach($this->geslib_files as $file) {
-      $query = 'SELECT id FROM {geslib7_log} WHERE component = "geslib_file" AND imported_file = "%s" AND (status = "ok" OR status ="working")';
+      $query = 'SELECT id FROM {geslib_log} WHERE component = "geslib_file" AND imported_file = "%s" AND (status = "ok" OR status ="working")';
       $result = db_query($query, basename($file));
       if (!$result || !$result->fetchObject()) {
         $files[] = $file;
@@ -88,51 +89,42 @@ class geslib_api {
     if (empty($filename) || !file_exists ($filename)) {
       throw new Exception(t('Geslib file not valid.'));
     } else {
-      # Write reading file into log
-      $log_import = array('start_date' => time(),
-                          'component' => 'geslib_file',
-                          'imported_file' => basename($filename),
-                          'uid' => $this->user->uid, 'status' => 'working');
-      drupal_write_record('geslib7_log', $log_import);
       $this->geslib_filename = $filename;
       $this->elements = array();
+      # Check if there is a previously serialized version of file
+      if ( file_exists($filename . ".json") ) {
+        $this->vprint(t("Reading previously serialized file"),1);
+        #$this->elements = unserialize(file_get_contents($filename . '.serialized'));
+        $this->elements = json_decode(file_get_contents($filename . '.json'), true);
+      } else {
+        # Write reading file into log
+        $log_import = array('start_date' => time(),
+                            'component' => 'geslib_file',
+                            'imported_file' => basename($filename),
+                            'status' => 'working',
+                            'uid' => $this->user->uid, 'status' => 'working');
+        drupal_write_record('geslib_log', $log_import);
 
-      $reader = new GeslibReader($filename, $this->default_nom_collection, $this->default_nom_category);
-      $this->elements = &$reader->getElements();
+        $reader = new GeslibReader($filename, $this->default_nom_collection, $this->default_nom_category);
+        $this->elements = &$reader->getElements();
 
-      # If user wants to search book data
-      if (variable_get('geslib_book_download_info', NULL)) {
-        $this->preprocess_book_data();
-      }
-
-      # Write data to database
-      $this->vprint(t("Writing data to database"),1);
-      $processed_lines = 0;
-      #file_put_contents($filename . ".serialized",serialize($this->elements));
-      # For each element type process imported information if not null and drupal_node_type exists
-      foreach ($this->elements as $element_type => $items) {
-        # Store all items of element_type
-        $processed_lines += count($items);
-        foreach ($items as $item_id => $item_data) {
-          $record = array();
-          $record['geslib_id'] = $item_id;
-          $record['type'] = $element_type;
-          $record['imported_file'] = $filename;
-          $record['content'] = serialize($item_data);
-          try {
-            drupal_write_record('geslib7_lines', $record);
-          } catch (Exception $e) {
-            watchdog('geslib', "Geslib id: @id Type: @type Message: @message",
-                     array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()) );
-          }
+        # If user wants to search book data
+        if (variable_get('geslib_book_download_info', NULL)) {
+          $this->preprocess_book_data();
         }
+
+        # Write data to disk
+        $this->vprint(t("Saving serialized file"),1);
+        #file_put_contents($filename . ".serialized",serialize($this->elements));
+        file_put_contents($filename . ".json",json_encode($this->elements));
+
+        # Write file readed into log
+        $this->vprint(t("Writing log file"),1);
+        $log_import['end_date'] = time();
+        $log_import['count'] = $processed_lines;
+        $log_import['status'] = 'ok';
+        drupal_write_record('geslib_log', $log_import, 'id');
       }
-      # Write file readed into log
-      $this->vprint(t("Writing log file"),1);
-      $log_import['end_date'] = time();
-      $log_import['items'] = $processed_lines;
-      $log_import['status'] = 'ok';
-      drupal_write_record('geslib7_log', $log_import, 'id');
     }
   }
 

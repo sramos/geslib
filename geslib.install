@@ -123,75 +123,24 @@ function geslib_uninstall() {
 function geslib_schema() {
   $schema = array();
 
-  # Stores each of elements to import
-  $schema['geslib7_lines'] = array(
-    'description' => 'Temporary table with all readed data from INTER file.',
-    'fields' => array(
-      'id' => array(
-        'description' => 'Serial',
-        'type' => 'serial',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'geslib_id' => array(
-        'description' => 'Geslib ID.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'type' => array(
-        'description' => 'Type of line.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'imported_file' => array(
-        'description' => 'INTER File line belongs to.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'queued' => array(
-        'description' => 'Whether the file is queued or not',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'content' => array(
-        'description' => 'Serialized content of the line.',
-        'type' => 'text',
-        'size' => 'medium',
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('id'),
-  );
-
-  # Stores status of import
-  $schema['geslib7_log'] = array(
+  $schema['geslib_log'] = array(
     'description' => 'Store geslib import activity.',
     'fields' => array(
       'id' => array(
         'description' => 'ID of import',
         'type' => 'serial',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'uid' => array(
-        'description' => 'User id.',
-        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0,
       ),
       'start_date' => array(
         'description' => 'Importing beginning date',
-        'type' => 'int',
+        'type' => 'datetime',
         'not null' => TRUE,
       ),
       'end_date' => array(
         'description' => 'Importing ending date',
-        'type' => 'int',
+        'type' => 'datetime',
+        'not null' => TRUE,
       ),
       'imported_file' => array(
         'description' => 'Imported file',
@@ -199,24 +148,32 @@ function geslib_schema() {
         'length' => 128,
         'not null' => TRUE,
       ),
-      'status' => array(
-        'description' => 'Import status',
-        'type' => 'varchar',
-        'length' => 32,
-      ),
       'component' => array(
         'description' => 'Element imported.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
       ),
-      'items' => array(
-        'description' => 'Number of elements to import',
+      'count' => array(
+        'description' => 'Number of imported elements.',
         'type' => 'int',
         'unsigned' => TRUE,
       ),
-    ),
-    'primary key' => array('id'),
-  );
+      'status' => array(
+        'description' => 'Import status',
+        'type' => 'varchar',
+        'length' => 32,
+      ),
+      'uid' => array(
+          'description' => 'User id.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'primary key' => array('id'),
+    );
+
   return $schema;
 }

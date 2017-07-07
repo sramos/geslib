@@ -1,49 +1,87 @@
 <?php
+// $Id: geslib.module
 
-include_once dirname(__FILE__) . '/geslib.api.inc';
-include_once dirname(__FILE__) . '/lib/InetBookSearch.php';
+/**
+* @file
+* Importacion/exportacion de datos con geslib.
+*/
 
+/**
+ * Implements hook_permission().
+ */
+function geslib_permission() {
+  return array(
+      'geslib content import' => array(
+          'title' => t('Import Geslib files'),
+      ),
+      'geslib report page' => array(
+          'title' => t('Imported Geslib items report'),
+      ),
+      'geslib delete report line' => array(
+          'title' => t('Delete imported Geslib item'),
+      ),
+  );
+}
 
 /**
  * Implementation of hook_menu().
  */
 function geslib_menu() {
   $items = array();
-  $items['admin/commerce/config/geslib'] = array(
+  # Define import form
+  $items['admin/store/geslib_import'] = array(
     'title' => 'Import Geslib File',
-    'description' => 'Carga inicial del fichero de geslig.',
+    'description' => 'Import Geslib File',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('geslib_first_import_form'),
     'access callback' => 'user_access',
-    'access arguments' => array('geslib_content import'),
+    'access arguments' => array('geslib content import'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/commerce/config/geslib/process'] = array(
-    'title' => 'Process files',
-    'description' => 'Geslib',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
+  # Define reports page
+  $items['admin/store/reports/geslib_report'] = array(
+    'title' => 'Imported Geslib Files Report',
+    'description' => 'Imported Geslib Files Report',
+    'page callback' => 'geslib_files_report',
+    'access callback' => 'user_access',
+    'access arguments' => array('geslib report page'),
   );
-  $items['admin/commerce/config/geslib/settings'] = array(
-    'title' => 'Settings',
-    'description' => 'Geslib options',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('geslib_settings_form'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK,
+  # Delete log line
+  $items['geslib/delete_log'] = array(
+    'title' => 'Delete log line',
+    'page callback' => 'geslib_delete_log',
+    'page arguments' => array(2, 3),
+    'access callback' => 'user_access',
+    'access arguments' => array('geslib delete report line'),
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
 
 /**
-* Implements hook_cron_queue_info().
-*/
-function geslib_cron_queue_info() {
-  $queues = array();
-  $queues['geslibCronQueue'] = array(
-    'worker callback' => 'geslib_process_item', //function to call for each item
-    'time' => 30, //seconds to spend working on the queue
+ * Implements hook_theme().
+ */
+function geslib_theme() {
+  return array(
+    'geslib_report' => array(
+      'template' => 'geslib_report',
+      'arguments' => array('files' => NULL),
+    ),
   );
-  return $queues;
+}
+
+/**
+  * Report imported files page
+  */
+function geslib_files_report() {
+  $list = array();
+  # Get all geslib logs
+  $results = db_query("SELECT * FROM {geslib_log} ORDER BY start_date DESC LIMIT 30");
+  while ($record = db_fetch_object($results)) {
+    $list[] = $record;
+  }
+
+  return theme('geslib_report', $list);
 }
 
 function geslib_settings_form($form, &$form_state) {
@@ -53,188 +91,6 @@ function geslib_settings_form($form, &$form_state) {
     '#default_value' => variable_get('geslib_directory', 'sites/default/files/geslib'),
   );
   return system_settings_form($form);
-}
-
-/**
- * Process an item
- *
- * @param type $item
- */
-function geslib_process_item($item) {
-  $hook_name = 'geslib_'.$item['type'];
-  module_invoke_all($hook_name, $item['action'], $item);
-  db_delete('geslib7_lines')->condition('geslib_id', $item['geslib_id'])
-    ->condition('type', $item['type'])->execute();
-}
-
-
-function geslib_first_import_form($form, &$form_state) {
-  $geslib_dir = DRUPAL_ROOT.'/'.variable_get('geslib_directory', 'sites/default/files/geslib');
-  if (!file_exists($geslib_dir)) {
-    mkdir($geslib_dir);
-  }
-  $files = scandir($geslib_dir);
-  foreach ($files as $key => $value) {
-    if (strpos($value, '.') !== 0 AND $value != '..'){
-      $options[$geslib_dir.'/'.$value] = $value;
-    }
-  }
-  $form['geslib_file'] = array(
-    '#type' => 'select',
-    '#title' => 'Geslib File',
-    '#options' => $options,
-  );
-  $form['operations'] = array(
-    '#type' => 'fieldset',
-  );
-
-  $form['operations']['geslib_process_read_file'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Read file',
-    '#default_value' => 0,
-  );
-  $form['operations']['geslib_process_categories'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Process categories',
-    '#default_value' => 0,
-  );
-  $form['operations']['geslib_process_publishers'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Process publishers',
-    '#default_value' => 0,
-  );
-  $form['operations']['geslib_process_authors'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Process authors',
-    '#default_value' => 0,
-  );
-  $form['operations']['geslib_process_items'] = array(
-    '#type' => 'checkbox',
-    '#title' => 'Process books',
-    '#default_value' => 0,
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Submit',
-  );
-  $form['borrar items'] = array(
-    '#type' => 'submit',
-    '#value' => 'Borrar todo',
-  );
-
-  return $form;
-}
-
-function geslib_first_import_form_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == 'Borrar todo') {
-    $batch = array(
-      'title' => t('Eliminando todos los elementos'),
-      'operations' => array(
-        array('geslib_process_delete_categories', array()),
-        array('geslib_process_delete_products', array()),
-        array('geslib_process_delete_nodes', array()),
-      ),
-      'finished' => 'geslib_process_finish',
-      'file' => drupal_get_path('module', 'geslib').'/geslib.batch.inc',
-    );
-    batch_set($batch);
-  }
-  else {
-    $operations = array();
-    if ($form_state['values']['geslib_process_read_file'])
-      $operations[] = array('geslib_process_read_file', array($form_state['values']['geslib_file']));
-    if ($form_state['values']['geslib_process_categories'])
-      $operations[] = array('geslib_process_items', array('category', 25));
-    if ($form_state['values']['geslib_process_publishers'])
-      $operations[] = array('geslib_process_items', array('publisher', 50));
-    if ($form_state['values']['geslib_process_authors'])
-      $operations[] = array('geslib_process_items', array('author', 50));
-    if ($form_state['values']['geslib_process_items'])
-      $operations[] = array('geslib_process_items', array('product', 50));
-    $batch = array(
-      'title' => t('Importando artículos de geslib'),
-      'operations' => $operations,
-      'finished' => 'geslib_process_finish',
-      'file' => drupal_get_path('module', 'geslib').'/geslib.batch.inc',
-    );
-    batch_set($batch);
-  }
-}
-
-function geslib_cron() {
-  $geslib_dir = DRUPAL_ROOT.'/'.variable_get('geslib_directory', 'sites/default/files/geslib');
-  $file_to_process = _geslib_get_file_to_process();
-
-  if ($file_to_process) {
-    $geslib_file = file_get_contents($geslib_dir."/".$file_to_process);
-    $geslib_file_array = explode("\n", $geslib_file);
-
-    $line_count = count($geslib_file_array);
-    $item_count = 0;
-
-    $geslib_lines = array();
-    foreach ($geslib_file_array as $line) {
-      $line = explode("|", $line);
-      geslib_process_line($line, $geslib_lines);
-    }
-    foreach ($geslib_lines as $line) {
-    if (!isset($line['action'])) {
-      $product_db = db_select('geslib7_lines', 'g')
-        ->condition('geslib_id', $line['geslib_id'])->condition('type', 'product')
-        ->fields('g')->execute()->fetchObject();
-      $product = unserialize($product_db->content);
-
-      if ($line['type'] == 'product_author') {
-        $product['authors'][] = $line;
-      }
-      if ($line['type'] == 'description') {
-        $product['description'] = $line;
-      }
-      $product_db->content = serialize($product);
-      drupal_write_record('geslib7_lines', $product_db, array('id'));
-    }
-    else {
-      $record = array();
-      $record['geslib_id'] = $line['geslib_id'];
-      $record['type'] = $line['type'];
-      $record['inter_file'] = $file_to_process;
-      $record['content'] = serialize($line);
-
-      try {
-        drupal_write_record('geslib7_lines', $record);
-        $item_count++;
-      }
-      catch (Exception $e){
-        watchdog('geslib', "Geslib id: @id Type: @type Message: @message", array('@id' => $record['geslib_id'], '@type' => $record['type'], '@message' => $e->getMessage()));
-      }
-    }
-  }
-  $log = array(
-      'start_date' => REQUEST_TIME,
-      'end_date' => time(),
-      'imported_file' => $file_to_process,
-      'items' => $item_count,
-      'processed_lines' => $line_count,
-    );
-    drupal_write_record('geslib7_log', $log);
-
-  }
-  else {
-    $last_processed_file = db_select('geslib7_log', 'g')->fields('g', array('imported_file'))
-            ->orderBy('g.id', 'DESC')->execute()->fetchField();
-    //We avoid queueing lines of the first import
-    if ($last_processed_file) {
-      $lines = db_select('geslib7_lines', 'g')->condition('queued', 0)->fields('g')
-        ->execute()->fetchAll();
-      $queue = DrupalQueue::get('geslibCronQueue');
-      foreach ($lines as $line) {
-        $queue->createItem(unserialize($line->content));
-        db_update('geslib7_lines')->fields(array('queued' => 1))->condition('geslib_id', $line->geslib_id)
-          ->condition('type', $line->type)->execute();
-      }
-    }
-  }
-
 }
 
 function geslib_init() {
@@ -248,7 +104,7 @@ function _geslib_get_file_to_process() {
   $geslib_dir = DRUPAL_ROOT.'/'.variable_get('geslib_directory', 'sites/default/files/geslib');
   $files_tmp = scandir($geslib_dir);
 
-  $processed_files = db_select('geslib7_log', 'g')->fields('g', array('imported_file'))
+  $processed_files = db_select('geslib_log', 'g')->fields('g', array('imported_file'))
     ->execute()->fetchCol();
 
   if (empty($processed_files)) {
