@@ -91,20 +91,20 @@ class geslib_api {
     } else {
       $this->geslib_filename = $filename;
       $this->elements = array();
+      # Write reading file into log
+      $log_import = array('start_date' => time(),
+                          'component' => 'geslib_file',
+                          'imported_file' => basename($filename),
+                          'status' => 'working',
+                          'uid' => $this->user->uid, 'status' => 'working');
+      drupal_write_record('geslib_log', $log_import);
       # Check if there is a previously serialized version of file
-      if ( file_exists($filename . ".json") ) {
+      $processed_filename = $filename . ".serialized";
+      if ( file_exists($processed_filename) ) {
         $this->vprint(t("Reading previously serialized file"),1);
-        #$this->elements = unserialize(file_get_contents($filename . '.serialized'));
-        $this->elements = json_decode(file_get_contents($filename . '.json'), true);
+        $this->elements = unserialize(file_get_contents($processed_filename));
+        #$this->elements = json_decode(file_get_contents($processed_filename), true);
       } else {
-        # Write reading file into log
-        $log_import = array('start_date' => time(),
-                            'component' => 'geslib_file',
-                            'imported_file' => basename($filename),
-                            'status' => 'working',
-                            'uid' => $this->user->uid, 'status' => 'working');
-        drupal_write_record('geslib_log', $log_import);
-
         $reader = new GeslibReader($filename, $this->default_nom_collection, $this->default_nom_category);
         $this->elements = &$reader->getElements();
 
@@ -115,16 +115,15 @@ class geslib_api {
 
         # Write data to disk
         $this->vprint(t("Saving serialized file"),1);
-        #file_put_contents($filename . ".serialized",serialize($this->elements));
-        file_put_contents($filename . ".json",json_encode($this->elements));
-
-        # Write file readed into log
-        $this->vprint(t("Writing log file"),1);
-        $log_import['end_date'] = time();
-        $log_import['count'] = $processed_lines;
-        $log_import['status'] = 'ok';
-        drupal_write_record('geslib_log', $log_import, 'id');
+        file_put_contents($processed_filename,serialize($this->elements));
+        #file_put_contents($processed_filename,json_encode($this->elements));
       }
+      # Write file readed into log
+      $this->vprint(t("Writing log file"),1);
+      $log_import['end_date'] = time();
+      $log_import['count'] = $processed_lines;
+      $log_import['status'] = 'ok';
+      drupal_write_record('geslib_log', $log_import, 'id');
     }
   }
 
