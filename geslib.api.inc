@@ -67,9 +67,9 @@ class geslib_api {
     $files = array();
     # Comprueba que los "geslib_files" leidos en la inicializacion no esten ya procesados
     foreach($this->geslib_files as $file) {
-      $query = 'SELECT id FROM {geslib_log} WHERE component = "geslib_file" AND imported_file = "%s" AND (status = "ok" OR status ="working")';
-      $result = db_query($query, basename($file));
-      if (!$result || !$result->fetchObject()) {
+      $query = "SELECT id FROM {geslib_log} WHERE component = 'geslib_file' AND imported_file = :file AND status IN ('ok', 'working')";
+      $result = db_query($query, array(':file' => basename($file)));
+      if ($result->rowCount() == 0) {
         $files[] = $file;
       } else {
         $this->vprint(t("Excluded previously imported file") . " " . $file,1);

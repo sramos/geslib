@@ -140,7 +140,6 @@ function geslib_schema() {
       'end_date' => array(
         'description' => 'Importing ending date',
         'type' => 'int',
-        'not null' => TRUE,
       ),
       'imported_file' => array(
         'description' => 'Imported file',
