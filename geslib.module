@@ -65,7 +65,7 @@ function geslib_theme() {
   return array(
     'geslib_report' => array(
       'template' => 'geslib_report',
-      'arguments' => array('files' => NULL),
+      'variables' => array('items' => NULL),
     ),
   );
 }
@@ -74,14 +74,13 @@ function geslib_theme() {
   * Report imported files page
   */
 function geslib_files_report() {
-  $list = array();
+  $items = array();
   # Get all geslib logs
   $results = db_query("SELECT * FROM {geslib_log} ORDER BY start_date DESC LIMIT 30");
-  foreach ($results as $record) {
-    $list[] = $record;
+  foreach($results as $record) {
+    $items[] = $record;
   }
-
-  return theme('geslib_report', $list);
+  return theme('geslib_report', array('items' => $items);
 }
 
 function geslib_settings_form($form, &$form_state) {
