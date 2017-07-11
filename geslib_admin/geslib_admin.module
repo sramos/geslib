@@ -146,10 +146,10 @@ function geslib_admin_settings($form_state) {
       1 => t("Delete covers"),
     ),
   );
-  $form['storage']['geslib_product_download_info'] = array(
+  $form['storage']['geslib_book_download_info'] = array(
     '#type' => 'select',
     '#title' => t('Download book info if not exists'),
-    '#default_value' => variable_get('geslib_product_download_info', NULL),
+    '#default_value' => variable_get('geslib_book_download_info', NULL),
     '#description' => t('Search and use internet data for extended info (body, images, ...) if there is no data in geslib file.'),
     '#options' => array (
       NULL => t("Don't search"),
@@ -302,38 +302,38 @@ function geslib_admin_settings($form_state) {
     '#type'          => 'fieldset',
     '#title'         => t('Books settings'),
   );
-  $form['books']['geslib_product_node_type'] = array(
+  $form['books']['geslib_book_node_type'] = array(
     '#type' => 'select',
     '#title' => t('Book Node Type'),
-    '#default_value' => variable_get('geslib_product_node_type', NULL),
+    '#default_value' => variable_get('geslib_book_node_type', NULL),
     '#description' => t('Drupal node type for Books importing (Geslib code line "GP4").'),
     '#options' => $node_types,
   );
-  $form['books']['geslib_product_geslib_type'] = array(
+  $form['books']['geslib_book_geslib_type'] = array(
     '#type' => 'textfield',
     '#title' => t('Geslib type for books'),
-    '#default_value' => variable_get('geslib_product_geslib_type', NULL),
+    '#default_value' => variable_get('geslib_book_geslib_type', NULL),
     '#description' => t("Geslib type for book related products."),
   );
-  $form['books']['geslib_product_attribute_type'] = array(
+  $form['books']['geslib_book_attribute_type'] = array(
     '#type' => 'select',
     '#title' => t('Geslib Product type'),
-    '#default_value' => variable_get('geslib_product_attribute_type', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_type', NULL),
     '#description' => t("Drupal field used to store product type."),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_default_image'] = array(
+  $form['books']['geslib_book_default_image'] = array(
     '#type' => 'textfield',
     '#title' => t('Default cover image path'),
-    '#default_value' => variable_get('geslib_product_default_image', NULL),
+    '#default_value' => variable_get('geslib_book_default_image', NULL),
     '#description' => t("Path of the default cover image if the uploaded book doesn't have one."),
   );
-  $form['books']['geslib_product_body_from'] = array(
+  $form['books']['geslib_book_body_from'] = array(
     '#type' => 'select',
     '#title' => t('Get book body from field'),
-    '#default_value' => variable_get('geslib_product_body_from', NULL),
+    '#default_value' => variable_get('geslib_book_body_from', NULL),
     '#description' => t('Geslib field used to get book body.'),
     '#options' => array(
       'index' => 'Index',
@@ -342,37 +342,37 @@ function geslib_admin_settings($form_state) {
       'external_description' => t('External description (col 39)'),
     ),
   );
-  $form['books']['geslib_product_attribute_subtitle'] = array(
+  $form['books']['geslib_book_attribute_subtitle'] = array(
     '#type' => 'select',
     '#title' => t('Subtitle field'),
-    '#default_value' => variable_get('geslib_product_attribute_subtitle', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_subtitle', NULL),
     '#description' => t('Drupal field used to store subtitle (col 26).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_link_to_category'] = array(
+  $form['books']['geslib_book_link_to_category'] = array(
     '#type' => 'select',
     '#title' => t('Category relationship'),
-    '#default_value' => variable_get('geslib_product_link_to_category', NULL),
+    '#default_value' => variable_get('geslib_book_link_to_category', NULL),
     '#description' => t('Drupal field used to link books with category nodes (nodereference type) or to store category name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_link_to_author'] = array(
+  $form['books']['geslib_book_link_to_author'] = array(
     '#type' => 'select',
     '#title' => t('Author relationship'),
-    '#default_value' => variable_get('geslib_product_link_to_author', NULL),
+    '#default_value' => variable_get('geslib_book_link_to_author', NULL),
     '#description' => t('Drupal field used to link books with author nodes (nodereference type) or to store author name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_create_fake_author'] = array(
+  $form['books']['geslib_book_create_fake_author'] = array(
     '#type' => 'select',
     '#title' => t('Create Authors if not referenced'),
-    '#default_value' => variable_get('geslib_product_create_fake_author', NULL),
+    '#default_value' => variable_get('geslib_book_create_fake_author', NULL),
     '#description' => t('Search and create Authors if there is no reference for the book. This option only works when Author Relationship is defined for a nodereference field.'),
     '#options' => array (
       NULL => t("Don't create authors"),
@@ -380,192 +380,192 @@ function geslib_admin_settings($form_state) {
       2 => t("Try to find book authors on the net"),
     ),
   );
-  $form['books']['geslib_product_link_only_authors'] = array(
+  $form['books']['geslib_book_link_only_authors'] = array(
     '#type' => 'select',
     '#title' => t('Link only Author role'),
-    '#default_value' => variable_get('geslib_product_link_only_authors', NULL),
+    '#default_value' => variable_get('geslib_book_link_only_authors', NULL),
     '#description' => t('Link only the "Author" role of a book (excluding Ilustrators and Translators).'),
     '#options' => array (
       NULL => t("No"),
       1 => t("Yes"),
     ),
   );
-  $form['books']['geslib_product_link_to_publisher'] = array(
+  $form['books']['geslib_book_link_to_publisher'] = array(
     '#type' => 'select',
     '#title' => t('Publisher relationship'),
-    '#default_value' => variable_get('geslib_product_link_to_publisher', NULL),
+    '#default_value' => variable_get('geslib_book_link_to_publisher', NULL),
     '#description' => t('Drupal field used to link with publisher nodes (nodereference type) or to store publisher name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_link_to_collection'] = array(
+  $form['books']['geslib_book_link_to_collection'] = array(
     '#type' => 'select',
     '#title' => t('Collection relationship'),
-    '#default_value' => variable_get('geslib_product_link_to_collection', NULL),
+    '#default_value' => variable_get('geslib_book_link_to_collection', NULL),
     '#description' => t('Drupal field used to link with collection nodes (nodereference type) or to store collection name (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_isbn'] = array(
+  $form['books']['geslib_book_attribute_isbn'] = array(
     '#type' => 'select',
     '#title' => t('ISBN code field'),
-    '#default_value' => variable_get('geslib_product_attribute_isbn', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_isbn', NULL),
     '#description' => t('Drupal field used to store ISBN code (col 6). This field is also stored in uc_product.model field.'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
 
-  $form['books']['geslib_product_attribute_ean'] = array(
+  $form['books']['geslib_book_attribute_ean'] = array(
     '#type' => 'select',
     '#title' => t('EAN code field'),
-    '#default_value' => variable_get('geslib_product_attribute_ean', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_ean', NULL),
     '#description' => t('Drupal field used to store EAN code (col 7).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_link_to_index'] = array(
+  $form['books']['geslib_book_link_to_index'] = array(
     '#type' => 'select',
     '#title' => t('Index relationship'),
-    '#default_value' => variable_get('geslib_product_link_to_index', NULL),
+    '#default_value' => variable_get('geslib_book_link_to_index', NULL),
     '#description' => t('Drupal field used to link with publication index nodes (nodereference type) or to store it (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_link_to_library_reference'] = array(
+  $form['books']['geslib_book_link_to_library_reference'] = array(
     '#type' => 'select',
     '#title' => t('Library reference relationship'),
-    '#default_value' => variable_get('geslib_product_link_to_library_reference', NULL),
+    '#default_value' => variable_get('geslib_book_link_to_library_reference', NULL),
     '#description' => t('Drupal field used to store library reference nodes (nodereference type) or to store it (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_link_to_publisher_reference'] = array(
+  $form['books']['geslib_book_link_to_publisher_reference'] = array(
     '#type' => 'select',
     '#title' => t('Publisher reference relationship'),
-    '#default_value' => variable_get('geslib_product_link_to_publisher_reference', NULL),
+    '#default_value' => variable_get('geslib_book_link_to_publisher_reference', NULL),
     '#description' => t('Drupal field used to store publisher reference nodes (nodereference type) or to store it (text type).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_external_description'] = array(
+  $form['books']['geslib_book_attribute_external_description'] = array(
     '#type' => 'select',
     '#title' => t('External description'),
-    '#default_value' => variable_get('geslib_product_attribute_external_description', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_external_description', NULL),
     '#description' => t('Drupal field used to store external description (col 39).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_year'] = array(
+  $form['books']['geslib_book_attribute_year'] = array(
     '#type' => 'select',
     '#title' => t('Publication date field'),
-    '#default_value' => variable_get('geslib_product_attribute_year', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_year', NULL),
     '#description' => t('Drupal field used to store publication date (col 13).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_dat_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_edition'] = array(
+  $form['books']['geslib_book_attribute_edition'] = array(
     '#type' => 'select',
     '#title' => t('Edition field'),
-    '#default_value' => variable_get('geslib_product_attribute_edition', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_edition', NULL),
     '#description' => t('Drupal field used to store book edition (col 9).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_edition_date'] = array(
+  $form['books']['geslib_book_attribute_edition_date'] = array(
     '#type' => 'select',
     '#title' => t('Edition Date field'),
-    '#default_value' => variable_get('geslib_product_attribute_edition_date', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_edition_date', NULL),
     '#description' => t('Drupal field used to store book edition date (col 11).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_dat_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_registration_date'] = array(
+  $form['books']['geslib_book_attribute_registration_date'] = array(
     '#type' => 'select',
     '#title' => t('Registration Date field'),
-    '#default_value' => variable_get('geslib_product_attribute_registration_date', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_registration_date', NULL),
     '#description' => t('Drupal field used to store registration date (col 18).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_dat_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_pages'] = array(
+  $form['books']['geslib_book_attribute_pages'] = array(
     '#type' => 'select',
     '#title' => t('Pages field'),
-    '#default_value' => variable_get('geslib_product_attribute_pages', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_pages', NULL),
     '#description' => t('Drupal field used to store book pages (col 8).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_int_fields + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_language'] = array(
+  $form['books']['geslib_book_attribute_language'] = array(
     '#type' => 'select',
     '#title' => t('Language field'),
-    '#default_value' => variable_get('geslib_product_attribute_language', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_language', NULL),
     '#description' => t('Drupal field used to store language (col 20)).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_status'] = array(
+  $form['books']['geslib_book_attribute_status'] = array(
     '#type' => 'select',
     '#title' => t('Status field'),
-    '#default_value' => variable_get('geslib_product_attribute_status', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_status', NULL),
     '#description' => t('Drupal field used to store book status (col 27).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_format'] = array(
+  $form['books']['geslib_book_attribute_format'] = array(
     '#type' => 'select',
     '#title' => t('Format field'),
-    '#default_value' => variable_get('geslib_product_attribute_format', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_format', NULL),
     '#description' => t('Drupal field used to store book format (col 21).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_location'] = array(
+  $form['books']['geslib_book_attribute_location'] = array(
     '#type' => 'select',
     '#title' => t('Location field'),
-    '#default_value' => variable_get('geslib_product_attribute_location', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_location', NULL),
     '#description' => t('Drupal field used to store location (col 15).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $vocabularies,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_alt_location'] = array(
+  $form['books']['geslib_book_attribute_alt_location'] = array(
     '#type' => 'select',
     '#title' => t('Alternative location field'),
-    '#default_value' => variable_get('geslib_product_attribute_alt_location', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_alt_location', NULL),
     '#description' => t('Drupal field used to store alternative location (col 41).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $vocabularies,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_classification'] = array(
+  $form['books']['geslib_book_attribute_classification'] = array(
     '#type' => 'select',
     '#title' => t('Classification field'),
-    '#default_value' => variable_get('geslib_product_attribute_classification', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_classification', NULL),
     '#description' => t('Drupal field used to store book classification (col 31).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
-  $form['books']['geslib_product_attribute_vat'] = array(
+  $form['books']['geslib_book_attribute_vat'] = array(
     '#type' => 'select',
     '#title' => t('Vat field'),
-    '#default_value' => variable_get('geslib_product_attribute_vat', NULL),
+    '#default_value' => variable_get('geslib_book_attribute_vat', NULL),
     '#description' => t('Drupal field used to store book vat (42).'),
     '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_int_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
@@ -623,7 +623,7 @@ function geslib_admin_settings_validate($form, &$form_state) {
   }
 
   # Comprueba que existan usuario y password DILVE si se ha elegido la descarga desde alli
-  if ( $form_state['values']['geslib_product_download_info'] == 3 ) {
+  if ( $form_state['values']['geslib_book_download_info'] == 3 ) {
     if ( $form_state['values']['geslib_dilve_user'] == NULL ) {
       form_set_error('geslib_dilve_user', t('Please enter a DILVE username.'));
     }
@@ -633,8 +633,8 @@ function geslib_admin_settings_validate($form, &$form_state) {
   }
 
   # Comprueba que exista la imagen (si se ha especificado)
-  if ( $form_state['values']['geslib_product_default_image'] && !file_exists($form_state['values']['geslib_product_default_image']) ) {
-    form_set_error('geslib_product_default_image', t('You must enter a valid and readable image.'));
+  if ( $form_state['values']['geslib_book_default_image'] && !file_exists($form_state['values']['geslib_book_default_image']) ) {
+    form_set_error('geslib_book_default_image', t('You must enter a valid and readable image.'));
   }
 
   # Comprueba que exista la imagen de otros (si se ha especificado)
@@ -721,133 +721,133 @@ function geslib_admin_settings_validate($form, &$form_state) {
     }
   }
 
-  if ($form_state['values']['geslib_product_node_type']) {
-    $types = field_info_instances('node', $form_state['values']['geslib_product_node_type']);
+  if ($form_state['values']['geslib_book_node_type']) {
+    $types = field_info_instances('node', $form_state['values']['geslib_book_node_type']);
     if ($field = $form_state['values']['geslib_link_content_field']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_node_type', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_node_type', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_type']) {
+    if ($field = $form_state['values']['geslib_book_attribute_type']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_type', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_type', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_link_to_category']) {
+    if ($field = $form_state['values']['geslib_book_link_to_category']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_link_to_category', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_link_to_category', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_link_to_author']) {
+    if ($field = $form_state['values']['geslib_book_link_to_author']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_link_to_author', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_link_to_author', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_link_to_publisher']) {
+    if ($field = $form_state['values']['geslib_book_link_to_publisher']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_link_to_publisher', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_link_to_publisher', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_link_to_collection']) {
+    if ($field = $form_state['values']['geslib_book_link_to_collection']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_link_to_collection', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_link_to_collection', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_isbn']) {
+    if ($field = $form_state['values']['geslib_book_attribute_isbn']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_isbn', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_isbn', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_ean']) {
+    if ($field = $form_state['values']['geslib_book_attribute_ean']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_ean', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_ean', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_link_to_library_reference']) {
+    if ($field = $form_state['values']['geslib_book_link_to_library_reference']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_link_to_library_reference', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_link_to_library_reference', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_link_to_publisher_reference']) {
+    if ($field = $form_state['values']['geslib_book_link_to_publisher_reference']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_link_to_publisher_reference', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_link_to_publisher_reference', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_link_to_index']) {
+    if ($field = $form_state['values']['geslib_book_link_to_index']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_link_to_index', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_link_to_index', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_external_description']) {
+    if ($field = $form_state['values']['geslib_book_attribute_external_description']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_external_description', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_external_description', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_pages']) {
+    if ($field = $form_state['values']['geslib_book_attribute_pages']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_pages', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_pages', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_language']) {
+    if ($field = $form_state['values']['geslib_book_attribute_language']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_language', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_language', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_year']) {
+    if ($field = $form_state['values']['geslib_book_attribute_year']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_year', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_year', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_edition']) {
+    if ($field = $form_state['values']['geslib_book_attribute_edition']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_edition', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_edition', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_edition_date']) {
+    if ($field = $form_state['values']['geslib_book_attribute_edition_date']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_edition_date', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_edition_date', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_registration_date']) {
+    if ($field = $form_state['values']['geslib_book_attribute_registration_date']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_registration_date', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_registration_date', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_subtitle']) {
+    if ($field = $form_state['values']['geslib_book_attribute_subtitle']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_subtitle', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_subtitle', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_status']) {
+    if ($field = $form_state['values']['geslib_book_attribute_status']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_status', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_status', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_format']) {
+    if ($field = $form_state['values']['geslib_book_attribute_format']) {
         if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_format', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_format', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     # Extra check to avoid validations for vocabulary id
-    if ($field = $form_state['values']['geslib_product_attribute_location']) {
+    if ($field = $form_state['values']['geslib_book_attribute_location']) {
       if ( !(strpos($field, "#vid-") === 0) && !$type["fields"][$field] ) {
-        form_set_error('geslib_product_attribute_location', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_location', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     # Extra check to avoid validations for vocabulary id
-    if ($field = $form_state['values']['geslib_product_attribute_alt_location']) {
+    if ($field = $form_state['values']['geslib_book_attribute_alt_location']) {
       if ( !(strpos($field, "#vid-") === 0) && !$type["fields"][$field] ) {
-        form_set_error('geslib_product_attribute_alt_location', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_alt_location', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_classification']) {
+    if ($field = $form_state['values']['geslib_book_attribute_classification']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_classification', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_classification', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
-    if ($field = $form_state['values']['geslib_product_attribute_vat']) {
+    if ($field = $form_state['values']['geslib_book_attribute_vat']) {
       if ( !array_key_exists($field,$types) ) {
-        form_set_error('geslib_product_attribute_vat', t("Book node type doesn't have defined field")." '".$field."'.");
+        form_set_error('geslib_book_attribute_vat', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
   }
