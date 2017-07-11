@@ -29,7 +29,7 @@ class GeslibWriter {
   /**
   * Write elements to nodes
   */
-  function write_nodes() {
+  function save_nodes() {
     $query = 'SELECT id FROM {geslib_log} WHERE component = :component AND imported_file = :file AND (status = "ok" OR status ="working")';
     $result = db_query($query, array(':component' => $this->elements_type, ':file' => $this->geslib_filename));
     if ( $result->rowCount() == 0 && $this->elements &&
@@ -38,10 +38,13 @@ class GeslibWriter {
                            'component' => $this->elements_type,
                            'imported_file' => basename($this->geslib_filename),
                            'uid' => $this->user_uid, 'status' => 'ok');
-      if ($this->itemname == "category") {
-        $this->process_element($this->elements, $this->elements_type, $node_type, true);
+      if ($this->elements_type == "book" || $this->elements_type = "other") {
+        $this->process_products($node_type);
+      } elseif ($this->elements_type == "covers") {
+        $this->process_covers();
+      }
       } else {
-        $this->process_element($this->elements, $this->elements_type, $node_type, false);
+        $this->process_elements($node_type);
       }
       $this->flush_cache();
       $log_element['count'] = count($this->elements);
@@ -50,4 +53,159 @@ class GeslibWriter {
     }
   }
 
+  /**
+  * Write element to database
+  *
+  * @param drupal_node_type
+  *   drupal node type
+  */
+  function process_elements($drupal_node_type) {
+    # If true, link existing nodes with same title to geslib. If false, create node if there is no linked yet
+    $use_existing_nodes = ($this->elements_type == "category");
+
+    $counter = 0;
+    $total_counter = 0;
+    # Loop elements and send it to apropiate action
+    $this->vprint(t("Importing")." ".$this->elements_type, 1);
+    foreach ($elements as $object_id => $object) {
+      if ($counter == 1000) {
+        # Not sure if this clear internal node
+        #$this->flush_cache();
+        $counter = 0;
+      }
+      if ($object["action"] != "B") {
+        # If there is no action defined, try with add
+        if ($object["action"] == NULL) {
+          $object["action"] = "M";
+        }
+        # Create or update node and use it to modify parameters (linked or defined)
+        $node = $this->update_object($drupal_node_type, $object_id, $object, $use_existing_nodes);
+        if ( $node ) {
+          # Update node attributes, relationships and taxonomy terms
+          $this->update_attributes($node, $object);
+          $this->update_relationships($node, $drupal_node_type, $object);
+          // Remove object from memory
+          $node = NULL;
+        } else {
+          $this->vprint(t("Node @type with GeslibID @gid doesn't exist", array('@type' => $drupal_node_type, '@gid' => $object_id)), 0);
+        }
+      } else {
+        $this->delete_object($drupal_node_type, $object_id);
+      }
+      $counter += 1;
+      $total_counter += 1;
+    }
+    return $total_counter;
+  }
+
+  /**
+  * Write products (books and other) to database
+  *
+  * @param drupal_node_type
+  *   drupal node type
+  */
+  function process_products($drupal_node_type) {
+    # If true, link existing nodes with same title to geslib. If false, create node if there is no linked yet
+    $use_existing_nodes = ($this->elements_type == "category");
+
+    $counter = 0;
+    $total_counter = 0;
+    $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
+    # Loop elements and send it to apropiate action
+    $this->vprint(t("Importing Products"),1);
+    foreach ($elements as $object_id => $object) {
+      # Each 1000 objects, clear cache
+      if ( $counter == 1000 ) {
+        # Not sure if this clear internal node cache
+        #$this->flush_cache();
+        $counter = 0;
+      }
+    }
+  }
+
+  /**
+  * Process covers
+  */
+  function process_covers() {
+    $counter = 0;
+    $total_counter = 0;
+    $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
+    $geslib_book_node_type = variable_get('geslib_book_node_type', NULL);
+    # Loop elements and send it to apropiate action
+    $this->vprint(t("Searching book covers"),1);
+    foreach ($elements as $object_id => $object) {
+      # Each 1000 objects, clear cache
+      if ( $counter == 1000 ) {
+        # Not sure if this clear internal node cache
+        #$this->flush_cache();
+        $counter = 0;
+      }
+      if ( $object["action"] != "B" && $object["type"] == $geslib_book_type && $object["attribute"]["ean"] && $this->get_uploaded_book_image($object["attribute"]["ean"]) ) {
+        $node = $this->get_node_by_gid($object_id, "book", $geslib_book_node_type);
+        # If there is no cover, we define it
+        if ($node->nid) {
+          $this->vprint(t("Updating")." ".$node_type." '".$object["title"]."' (NID:".$node->nid."/GESLIB_ID:".$object_id."/TITLE:'".$node->title."')", 1);
+          $this->set_object_image($node, $object["*cover_url"]);
+        }
+        $counter += 1;
+        $total_counter += 1;
+      }
+      $node = NULL;
+    }
+    return $total_counter;
+  }
+
+  /**
+   * Get Node by GeslibID
+   *
+   * @param geslib_id
+   *    geslib object_id
+   * @param geslib_type
+   *    geslib type of object
+   * @param node_type
+   *    drupal node type
+   *
+   */
+   function get_node_by_gid($geslib_id, $node_type) {
+     $nid = $this->get_nid_by_gid($geslib_id, $node_type);
+     # If there is a node with that gid, load it
+     if ($nid) {
+       $node = node_load($nid, NULL, TRUE);
+     } else {
+       $node = NULL;
+     }
+     return $node;
+   }
+   /**
+   * Get NodeID by GeslibID
+   *
+   * @param geslib_id
+   *    geslib object_id
+   * @param geslib_type
+   *    geslib type of object
+   * @param node_type
+   *    drupal node type
+   *
+   */
+   function get_nid_by_gid($geslib_id, $node_type) {
+    $query = "SELECT node.nid FROM {content_". $cck_field ."} cck LEFT JOIN {node} ON node.nid = cck.nid WHERE ". $cck_field ."_value = '%s' AND node.type = '%s'";
+    $result = db_query_range($query, $geslib_id, $node_type, 0, 1);
+     # If there is a node with that gid, load it
+     if ($result && $row = db_fetch_object($result)) {
+       $nid = $row->nid;
+     } else {
+       $nid = NULL;
+     }
+     $row = NULL;
+     $result = NULL;
+     return $nid;
+   }
+
+  /**
+  * Flush all caches
+  */
+  function flush_cache() {
+    $this->vprint("\n---------------------- ".t("Flush all caches")."\n",2);
+    drupal_flush_all_caches();
+  }
 }

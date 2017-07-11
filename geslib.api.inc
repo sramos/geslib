@@ -143,7 +143,7 @@ class geslib_api {
                    'library_reference','index','book');
     foreach ($items as $item) {
       $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename));
-      $writer->write_nodes();
+      $writer->save_elements();
     }
     # Write finishing data into import table
     $log_import['end_date'] = time();
@@ -156,6 +156,14 @@ class geslib_api {
       #unlink($this->geslib_filename . ".json");
       unlink($this->geslib_filename . ".serialized");
     }
+  }
+
+  /**
+  * Import pending covers
+  */
+  function import_covers() {
+    $writer = new GeslibWriter('covers', $this->elements['book'], basename($this->geslib_filename));
+    $writer->save_elements();
   }
 
   /**

@@ -6,7 +6,6 @@
  */
 function geslib_install() {
   # Configure default geslib vars
-  variable_set('geslib_link_content_field', NULL);
   variable_set('geslib_upload_path', NULL);
   variable_set('geslib_delete_imported_files', NULL);
   variable_set('geslib_upload_cover_path', NULL);
@@ -64,7 +63,6 @@ function geslib_install() {
  */
 function geslib_uninstall() {
   # Clear geslib vars
-  variable_del('geslib_link_content_field');
   variable_del('geslib_upload_path');
   variable_del('geslib_delete_imported_files');
   variable_del('geslib_upload_cover_path');
