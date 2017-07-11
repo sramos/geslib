@@ -28,7 +28,7 @@ class geslib_api {
       throw new Exception('No rights to write in book covers path ('. $covers_path . ')' );
     }
     # Initialize Dilve access
-    if ( variable_get('geslib_book_download_info', NULL) == "5" ) {
+    if ( variable_get('geslib_product_download_info', NULL) == "5" ) {
       DilveSearch::set_user(variable_get('geslib_dilve_user', NULL));
       DilveSearch::set_pass(variable_get('geslib_dilve_pass', NULL));
     }
@@ -109,7 +109,7 @@ class geslib_api {
         $this->elements = &$reader->getElements();
 
         # If user wants to search book data
-        if (variable_get('geslib_book_download_info', NULL)) {
+        if (variable_get('geslib_product_download_info', NULL)) {
           $this->preprocess_book_data();
         }
 
@@ -127,6 +127,68 @@ class geslib_api {
     }
   }
 
+ /**
+  * Import all elements
+  */
+  function import_elements() {
+    # Write action in log table
+    $log_import = array('start_date' => time(),
+                        'component' => 'geslib_file',
+                        'imported_file' => basename($this->geslib_filename),
+                        'uid' => $this->user->uid, 'status' => 'working');
+    drupal_write_record('geslib_log', $log_import);
+    # For each element type process imported information if not null and drupal_node_type exists
+    $items = array('category','publisher','music_publisher',
+                   'author','collection','publisher_reference','library_reference','index',
+                   'product');
+    foreach ($items as $item) {
+      $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename));
+      $writer->write_nodes();
+    }
+    # Write finishing data into import table
+    $log_import['end_date'] = time();
+    $log_import['status'] = 'ok';
+    drupal_write_record('geslib_log', $log_import, 'id');
+    # Delete geslib file
+    if ( variable_get('geslib_delete_imported_files', NULL) ) {
+      $this->vprint("\n---------------------- ".t("Clear imported file")."\n",2);
+      unlink($this->geslib_filename);
+      #unlink($this->geslib_filename . ".json");
+      unlink($this->geslib_filename . ".serialized");
+    }
+  }
+  
+  /**
+  * Import all elements
+  */
+  function import_elements() {
+    # Write action in log table
+    $log_import = array('start_date' => time(),
+                        'component' => 'geslib_file',
+                        'imported_file' => basename($this->geslib_filename),
+                        'uid' => $this->user->uid, 'status' => 'working');
+    drupal_write_record('geslib_log', $log_import);
+    # For each element type process imported information if not null and drupal_node_type exists
+    $items = array('category','publisher','music_publisher',
+                   'author','collection','publisher_reference','library_reference','index',
+                   'product');
+    foreach ($items as $item) {
+      $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename));
+      $writer->write_nodes();
+    }
+    # Write finishing data into import table
+    $log_import['end_date'] = time();
+    $log_import['status'] = 'ok';
+    drupal_write_record('geslib_log', $log_import, 'id');
+    # Delete geslib file
+    if ( variable_get('geslib_delete_imported_files', NULL) ) {
+      $this->vprint("\n---------------------- ".t("Clear imported file")."\n",2);
+      unlink($this->geslib_filename);
+      #unlink($this->geslib_filename . ".json");
+      unlink($this->geslib_filename . ".serialized");
+    }
+  }
+
   /**
   * Get data from internet
   *
@@ -136,12 +198,12 @@ class geslib_api {
   function preprocess_book_data() {
     $this->vprint(t("Searching external book data"),1);
 
-    $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
+    $geslib_product_type = variable_get('geslib_product_geslib_type', NULL);
     # Loop all products
     $elements = $this->elements["product"];
     foreach ($elements as $object_id => $object) {
       # Only for books that will not be deleted
-      if ( $object["type"] == $geslib_book_type && $object["action"] != "B") {
+      if ( $object["type"] == $geslib_product_type && $object["action"] != "B") {
         $this->get_internet_book_data($object_id);
       }
     }
@@ -156,12 +218,12 @@ class geslib_api {
   *   book element id
   */
   function get_internet_book_data($object_id) {
-    $inet_search_type = variable_get('geslib_book_download_info', NULL);
+    $inet_search_type = variable_get('geslib_product_download_info', NULL);
     $ean = $this->elements["product"][$object_id]["attribute"]["ean"];
-    $needed_author = (variable_get('geslib_book_create_fake_author', NULL) == 2 || sizeof($this->elements["product"][$object_id]["*author"]) == 0) &&
+    $needed_author = (variable_get('geslib_product_create_fake_author', NULL) == 2 || sizeof($this->elements["product"][$object_id]["*author"]) == 0) &&
                      sizeof($this->elements["product"][$object_id]["relation"]["author"]) == 0;
-    $needed_description = variable_get('geslib_book_body_from', NULL) &&
-                          sizeof($this->elements["product"][$object_id]["relation"][variable_get('geslib_book_body_from', NULL)]) == 0;
+    $needed_description = variable_get('geslib_product_body_from', NULL) &&
+                          sizeof($this->elements["product"][$object_id]["relation"][variable_get('geslib_product_body_from', NULL)]) == 0;
 
     # Only search book if no geslib data available
     if ( $ean && ( $inet_search_type || ( $inet_search_type == "2" && ( $needed_description || $needed_author ) ) ) ) {
@@ -213,16 +275,16 @@ class geslib_api {
       }
       # Import description
       if ( $inet_data["*description"] && $needed_description ) {
-        if ( variable_get('geslib_book_body_from', NULL) == "external_description" ) {
+        if ( variable_get('geslib_product_body_from', NULL) == "external_description" ) {
           $this->elements["product"][$object_id]["body"] = $inet_data["*description"];
         } else {
-          $this->elements[variable_get('geslib_book_body_from', NULL)][$object_id . "_1"]["title"] = $inet_data["*description"];
-          $this->elements[variable_get('geslib_book_body_from', NULL)][$object_id . "_1"]["body"] = $inet_data["*description"];
-          $this->elements[variable_get('geslib_book_body_from', NULL)][$object_id . "_1"]["*title_from_related_book"] = $object_id;
-          $this->elements["product"][$object_id]["relation"][variable_get('geslib_book_body_from', NULL)][] = array("gid" => $object_id . "_1");
+          $this->elements[variable_get('geslib_product_body_from', NULL)][$object_id . "_1"]["title"] = $inet_data["*description"];
+          $this->elements[variable_get('geslib_product_body_from', NULL)][$object_id . "_1"]["body"] = $inet_data["*description"];
+          $this->elements[variable_get('geslib_product_body_from', NULL)][$object_id . "_1"]["*title_from_related_book"] = $object_id;
+          $this->elements["product"][$object_id]["relation"][variable_get('geslib_product_body_from', NULL)][] = array("gid" => $object_id . "_1");
         }
         $this->vprint(t("Loaded book description"));
-        #print_r($this->elements[variable_get('geslib_book_body_from', NULL)][$object_id . "_1"]);
+        #print_r($this->elements[variable_get('geslib_product_body_from', NULL)][$object_id . "_1"]);
       }
       # Import measurements
       if ( $inet_data["*weight"] && $this->elements["product"][$object_id]["uc_product"]["weight"] == "" ) {
@@ -264,7 +326,7 @@ class geslib_api {
           $this->elements["product"][$object_id]["*author"][0]["description"] = $tmp_data["*author"][0]["description"];
       }
       # Import author name
-      if ($inet_data["*author"] && (variable_get('geslib_book_create_fake_author', NULL) == 2 || sizeof($this->elements["product"][$object_id]["*author"]) == 0)) {
+      if ($inet_data["*author"] && (variable_get('geslib_product_create_fake_author', NULL) == 2 || sizeof($this->elements["product"][$object_id]["*author"]) == 0)) {
         $this->elements["product"][$object_id]["*author"] = $inet_data["*author"];
         $this->vprint(t("Loaded author"));
       }
