@@ -23,6 +23,7 @@ class GeslibWriter {
   function __construct($elements_type, $elements, $geslib_filename, $uid) {
     $this->elements_type = $elements_type;
     $this->node_type = variable_get('geslib_'.$this->elements_type.'_node_type', NULL);
+    $this->gid_field = variable_get('geslib_link_content_field', NULL);
     $this->elements = $elements;
     $this->geslib_filename = $geslib_filename;
     $this->user_uid = $uid;
@@ -201,7 +202,7 @@ class GeslibWriter {
      $nid = $this->get_nid_by_gid($geslib_id, $node_type);
      # If there is a node with that gid, load it
      if ($nid) {
-       $node = entity_load('node', $nid);
+       $node = entity_load('node', array($nid));
      } else {
        $node = NULL;
      }
@@ -229,8 +230,9 @@ class GeslibWriter {
      # If there is any result, return nodeid
      if (isset($result['node'])) {
        $nids = array_keys($result['node']);
-       $news_items = entity_load('node', $news_items_nids);
+       $nid = $nids[0];
      } else {
+       print_r("No tenemos resultados\n");
        $nid = NULL;
      }
      # Nullify variables to force garbage collection
