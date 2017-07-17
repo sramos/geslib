@@ -2,8 +2,9 @@
 /**
  * @author   "Santiago Ramos" <sramos@sitiodistinto.net>
  * @package  Geslib
- * @version  1.1
-  */
+ */
+
+include_once dirname(__FILE__) . '/lib/Encoding.php';
 
 class GeslibCommon {
 

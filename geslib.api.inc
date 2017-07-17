@@ -1,15 +1,12 @@
 <?php
 
-include_once dirname(__FILE__) . '/lib/Encoding.php';
 include_once dirname(__FILE__) . '/lib/GeslibCommon.php';
 include_once dirname(__FILE__) . '/lib/GeslibReader.php';
 include_once dirname(__FILE__) . '/lib/GeslibWriter.php';
 include_once dirname(__FILE__) . '/lib/InetBookSearch.php';
 include_once dirname(__FILE__) . '/lib/DilveSearch.php';
 
-
 class geslib_api {
-
   private $geslib_files;
   private $geslib_filename;
   private $elements;
@@ -20,10 +17,9 @@ class geslib_api {
   */
   function __construct($geslib_filepath, $verbose_level) {
     $this->user = user_load(array('uid' => 1));
+    GeslibCommon::$verbose_level = $verbose_level;
     $this->default_nom_category = GeslibCommon::utf8_encode(variable_get('geslib_category_default_name', NULL));
     $this->default_nom_collection = GeslibCommon::utf8_encode(variable_get('geslib_collection_default_name', NULL));
-    $this->verbose_level = $verbose_level;
-    GeslibCommon::$verbose_level = $verbose_level;
     $this->geslib_files = $this->select_geslib_files($geslib_filepath);
     # Check if covers upload path is writable
     $covers_path = drupal_realpath('public://book_covers');
