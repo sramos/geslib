@@ -1,7 +1,9 @@
 <?php
 
 include_once dirname(__FILE__) . '/lib/Encoding.php';
+include_once dirname(__FILE__) . '/lib/GeslibCommon.php';
 include_once dirname(__FILE__) . '/lib/GeslibReader.php';
+include_once dirname(__FILE__) . '/lib/GeslibWriter.php';
 include_once dirname(__FILE__) . '/lib/InetBookSearch.php';
 include_once dirname(__FILE__) . '/lib/DilveSearch.php';
 
@@ -18,9 +20,10 @@ class geslib_api {
   */
   function __construct($geslib_filepath, $verbose_level) {
     $this->user = user_load(array('uid' => 1));
-    $this->default_nom_category = $this->geslib_utf8_encode(variable_get('geslib_category_default_name', NULL));
-    $this->default_nom_collection = $this->geslib_utf8_encode(variable_get('geslib_collection_default_name', NULL));
+    $this->default_nom_category = GeslibCommon::utf8_encode(variable_get('geslib_category_default_name', NULL));
+    $this->default_nom_collection = GeslibCommon::utf8_encode(variable_get('geslib_collection_default_name', NULL));
     $this->verbose_level = $verbose_level;
+    GeslibCommon::$verbose_level = $verbose_level;
     $this->geslib_files = $this->select_geslib_files($geslib_filepath);
     # Check if covers upload path is writable
     $covers_path = drupal_realpath('public://book_covers');
@@ -72,7 +75,7 @@ class geslib_api {
       if ($result->rowCount() == 0) {
         $files[] = $file;
       } else {
-        $this->vprint(t("Excluded previously imported file") . " " . $file,1);
+        GeslibCommon::vprint(t("Excluded previously imported file") . " " . $file,1);
       }
     }
     sort($files);
@@ -91,17 +94,10 @@ class geslib_api {
     } else {
       $this->geslib_filename = $filename;
       $this->elements = array();
-      # Write reading file into log
-      $log_import = array('start_date' => time(),
-                          'component' => 'geslib_file',
-                          'imported_file' => basename($filename),
-                          'status' => 'working',
-                          'uid' => $this->user->uid, 'status' => 'working');
-      drupal_write_record('geslib_log', $log_import);
       # Check if there is a previously serialized version of file
       $processed_filename = $filename . ".serialized";
       if ( file_exists($processed_filename) ) {
-        $this->vprint(t("Reading previously serialized file"),1);
+        GeslibCommon::vprint(t("Reading previously serialized file"),1);
         $this->elements = unserialize(file_get_contents($processed_filename));
         #$this->elements = json_decode(file_get_contents($processed_filename), true);
       } else {
@@ -114,16 +110,10 @@ class geslib_api {
         }
 
         # Write data to disk
-        $this->vprint(t("Saving serialized file"),1);
+        GeslibCommon::vprint(t("Saving serialized file"),1);
         file_put_contents($processed_filename,serialize($this->elements));
         #file_put_contents($processed_filename,json_encode($this->elements));
       }
-      # Write file readed into log
-      $this->vprint(t("Writing log file"),1);
-      $log_import['end_date'] = time();
-      $log_import['count'] = $processed_lines;
-      $log_import['status'] = 'ok';
-      drupal_write_record('geslib_log', $log_import, 'id');
     }
   }
 
@@ -142,8 +132,8 @@ class geslib_api {
                    'author','collection','publisher_reference',
                    'library_reference','index','book');
     foreach ($items as $item) {
-      $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename));
-      $writer->save_elements();
+      $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename), $this->user->uid);
+      $writer->save_items();
     }
     # Write finishing data into import table
     $log_import['end_date'] = time();
@@ -151,7 +141,7 @@ class geslib_api {
     drupal_write_record('geslib_log', $log_import, 'id');
     # Delete geslib file
     if ( variable_get('geslib_delete_imported_files', NULL) ) {
-      $this->vprint("\n---------------------- ".t("Clear imported file")."\n",2);
+      GeslibCommon::vprint("\n---------------------- ".t("Clear imported file")."\n",2);
       unlink($this->geslib_filename);
       #unlink($this->geslib_filename . ".json");
       unlink($this->geslib_filename . ".serialized");
@@ -173,7 +163,7 @@ class geslib_api {
   *   reference to a book element
   */
   function preprocess_book_data() {
-    $this->vprint(t("Searching external book data"),1);
+    GeslibCommon::vprint(t("Searching external book data"),1);
 
     $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
     # Loop all books
@@ -185,7 +175,7 @@ class geslib_api {
       }
     }
     $elements = NULL;
-    $this->vprint(" ",1);
+    GeslibCommon::vprint(" ",1);
   }
 
   /**
@@ -205,7 +195,7 @@ class geslib_api {
     # Only search book if no geslib data available
     if ( $ean && ( $inet_search_type || ( $inet_search_type == "2" && ( $needed_description || $needed_author ) ) ) ) {
       $inet_data = array();
-      $this->vprint(t("Searching")." '".$this->elements["book"][$object_id]["title"]."' (EAN: ".$ean.")",2);
+      GeslibCommon::vprint(t("Searching")." '".$this->elements["book"][$object_id]["title"]."' (EAN: ".$ean.")",2);
 
       # Search for EAN code by priority
       if ($inet_search_type == "5") {
@@ -243,12 +233,12 @@ class geslib_api {
       # Import title
       if ( $inet_data["*title"] && $this->elements["book"][$object_id]["title"] == NULL ) {
         $this->elements["book"][$object_id]["title"] = $inet_data["*title"];
-        $this->vprint(t("Loaded title"));
+        GeslibCommon::vprint(t("Loaded title"));
       }
       # Import subtitle
       if ( $inet_data["*subtitle"] && $this->elements["book"][$object_id]["attribute"]["subtitle"] == NULL ) {
         $this->elements["book"][$object_id]["attribute"]["subtitle"] = $inet_data["*subtitle"];
-        $this->vprint(t("Loaded subtitle"));
+        GeslibCommon::vprint(t("Loaded subtitle"));
       }
       # Import description
       if ( $inet_data["*description"] && $needed_description ) {
@@ -260,7 +250,7 @@ class geslib_api {
           $this->elements[variable_get('geslib_book_body_from', NULL)][$object_id . "_1"]["*title_from_related_book"] = $object_id;
           $this->elements["book"][$object_id]["relation"][variable_get('geslib_book_body_from', NULL)][] = array("gid" => $object_id . "_1");
         }
-        $this->vprint(t("Loaded book description"));
+        GeslibCommon::vprint(t("Loaded book description"));
         #print_r($this->elements[variable_get('geslib_book_body_from', NULL)][$object_id . "_1"]);
       }
       # Import measurements
@@ -289,13 +279,13 @@ class geslib_api {
       # Import cover
       if ($inet_data["*cover_url"] && $inet_search_type != "2") {
         $this->elements["book"][$object_id]["*cover_url"] = $inet_data["*cover_url"];
-        $this->vprint(t("Loaded book cover URL"));
+        GeslibCommon::vprint(t("Loaded book cover URL"));
       }
 
       # Import preview file
       if ($inet_data["*preview_url"]) {
         $this->elements["book"][$object_id]["*preview_url"] = $inet_data["*preview_url"];
-        $this->vprint(t("Loaded preview URL"));
+        GeslibCommon::vprint(t("Loaded preview URL"));
       }
 
       # Import author description
@@ -305,47 +295,9 @@ class geslib_api {
       # Import author name
       if ($inet_data["*author"] && (variable_get('geslib_book_create_fake_author', NULL) == 2 || sizeof($this->elements["book"][$object_id]["*author"]) == 0)) {
         $this->elements["book"][$object_id]["*author"] = $inet_data["*author"];
-        $this->vprint(t("Loaded author"));
+        GeslibCommon::vprint(t("Loaded author"));
       }
 
-    }
-  }
-
-  /**
-  * Print output messages
-  *
-  * @param $string
-  *     Output message
-  * @param $verbose=3
-  *     Verbose level for message
-  */
-  function vprint($string, $level = 3, $type = NULL) {
-    # For errors, write it in logs
-    if ($level == 0) {
-      watchdog('geslib-import', $string, NULL, WATCHDOG_ERROR);
-    }
-    # Output message if verbose level is greater
-    if ($level < $this->verbose_level) {
-      # Output formating
-      $pre = array("\n*** ", "   * ", "       ", "          ");
-      drush_print($pre[$level].$string);
-    }
-  }
-
-  /**
-  * Convert and Fix UTF8 strings
-  *
-  * @param $string
-  *     String to be fixed
-  *
-  * Returns
-  *     $string
-  */
-  function geslib_utf8_encode($string) {
-    if ($string) {
-      return Encoding::fixUTF8(mb_check_encoding($string, 'UTF-8') ? $string : utf8_encode($string));
-    } else {
-      return NULL;
     }
   }
 }

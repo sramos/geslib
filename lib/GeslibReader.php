@@ -78,29 +78,29 @@ class GeslibReader {
         case "";
           $this->elements["user"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
-            $this->elements["user"][$myline[2]]["name"] = $this->utf8_encode($myline[3]);
-            $this->elements["user"][$myline[2]]["city"] = $this->utf8_encode($myline[4]);
-            $this->elements["user"][$myline[2]]["country"] = $this->utf8_encode($myline[5]);
-            $this->elements["user"][$myline[2]]["postal_code"] = $this->utf8_encode($myline[6]);
-            $this->elements["user"][$myline[2]]["phone"] = $this->utf8_encode($myline[7]);
-            $this->elements["user"][$myline[2]]["cif"] = $this->utf8_encode($myline[9]);
-            $this->elements["user"][$myline[2]]["mail"] = $this->utf8_encode($myline[10]);
-            $this->elements["user"][$myline[2]]["address"] = $this->utf8_encode($myline[11]);
-            $this->elements["user"][$myline[2]]["type"] = $this->utf8_encode($myline[13]);
+            $this->elements["user"][$myline[2]]["name"] = GeslibCommon::utf8_encode($myline[3]);
+            $this->elements["user"][$myline[2]]["city"] = GeslibCommon::utf8_encode($myline[4]);
+            $this->elements["user"][$myline[2]]["country"] = GeslibCommon::utf8_encode($myline[5]);
+            $this->elements["user"][$myline[2]]["postal_code"] = GeslibCommon::utf8_encode($myline[6]);
+            $this->elements["user"][$myline[2]]["phone"] = GeslibCommon::utf8_encode($myline[7]);
+            $this->elements["user"][$myline[2]]["cif"] = GeslibCommon::utf8_encode($myline[9]);
+            $this->elements["user"][$myline[2]]["mail"] = GeslibCommon::utf8_encode($myline[10]);
+            $this->elements["user"][$myline[2]]["address"] = GeslibCommon::utf8_encode($myline[11]);
+            $this->elements["user"][$myline[2]]["type"] = GeslibCommon::utf8_encode($myline[13]);
           }
           break;
         # Discograficas
         case "1A";
           $this->elements["music_publisher"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
-            $this->elements["music_publisher"][$myline[2]]["title"] = $this->utf8_encode($myline[4]);
+            $this->elements["music_publisher"][$myline[2]]["title"] = GeslibCommon::utf8_encode($myline[4]);
           }
           break;
         # Editoriales
         case "1L":
           $this->elements["publisher"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
-            $this->elements["publisher"][$myline[2]]["title"] = $this->utf8_encode($myline[4]);
+            $this->elements["publisher"][$myline[2]]["title"] = GeslibCommon::utf8_encode($myline[4]);
           }
           break;
         # Colecciones
@@ -113,7 +113,7 @@ class GeslibReader {
             if ($myline[3] == "1" && utf8_encode($myline[4]) == "< Genérica >" && $this->default_nom_collection) {
               $nom_col = $this->default_nom_collection;
             } else {
-              $nom_col = $this->utf8_encode($myline[4]);
+              $nom_col = GeslibCommon::utf8_encode($myline[4]);
             }
             $this->elements["collection"][$myline[2] . "_" . $myline[3]]["title"] = $nom_col;
           }
@@ -126,7 +126,7 @@ class GeslibReader {
             if ($myline[2] == "0" && $this->default_nom_category) {
               $nom_cat = $this->default_nom_category;
             } else {
-              $nom_cat = $this->utf8_encode($myline[3]);
+              $nom_cat = GeslibCommon::utf8_encode($myline[3]);
             }
             $this->elements["category"][$myline[2]]["title"] = $nom_cat;
           }
@@ -138,15 +138,15 @@ class GeslibReader {
         case "GP4":
           $this->elements["book"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
-            $this->elements["book"][$myline[2]]["title"] = $this->utf8_encode($myline[3]);
-            $authors = InetBookSearch::get_multiple_authors($this->utf8_encode($myline[4]));
+            $this->elements["book"][$myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
+            $authors = InetBookSearch::get_multiple_authors(GeslibCommon::utf8_encode($myline[4]));
             foreach($authors as $author) {
               $author_name = trim($author);
               if ($author_name != "") {
                 $this->elements["book"][$myline[2]]['*author'][] = array('name' => $author_name);
               }
             }
-            #$this->elements["book"][$myline[2]]["*author"][] = array('name' => $this->utf8_encode($myline[4]));
+            #$this->elements["book"][$myline[2]]["*author"][] = array('name' => GeslibCommon::utf8_encode($myline[4]));
             $this->elements["book"][$myline[2]]["attribute"]["isbn"] = $myline[6];	//ISBN (por si se quiere seleccionar)
             if ($myline[7]) {
               $this->elements["book"][$myline[2]]["attribute"]["ean"] = $myline[7];
@@ -155,14 +155,14 @@ class GeslibReader {
             }
             $this->elements["book"][$myline[2]]["attribute"]["pages"] = $myline[8];
             $this->elements["book"][$myline[2]]["attribute"]["edition"] = $myline[9];
-            $this->elements["book"][$myline[2]]["*origen_edicion"] = $this->utf8_encode($myline[10]);
+            $this->elements["book"][$myline[2]]["*origen_edicion"] = GeslibCommon::utf8_encode($myline[10]);
             $this->elements["book"][$myline[2]]["attribute"]["edition_date"] = $myline[11];
             $this->elements["book"][$myline[2]]["*fecha_reedicion"] = $myline[12];
             $this->elements["book"][$myline[2]]["attribute"]["year"] = $myline[13];
             $this->elements["book"][$myline[2]]["*anno_ultima_edicion"] = $myline[14];
-            $this->elements["book"][$myline[2]]["attribute"]["location"] = $this->utf8_encode($myline[15]);
+            $this->elements["book"][$myline[2]]["attribute"]["location"] = GeslibCommon::utf8_encode($myline[15]);
             $this->elements["book"][$myline[2]]["uc_product_stock"]["stock"] = intval($myline[16]);
-            $this->elements["book"][$myline[2]]["*materia"] = $this->utf8_encode($myline[17]);
+            $this->elements["book"][$myline[2]]["*materia"] = GeslibCommon::utf8_encode($myline[17]);
             $this->elements["book"][$myline[2]]["attribute"]["registration_date"] = $myline[18];
             if ( $this->elements["language"][$myline[20]] ) {
               $this->elements["book"][$myline[2]]["attribute"]["language"] = $this->elements["language"][$myline[20]];
@@ -176,7 +176,7 @@ class GeslibReader {
             }
             # Collection code is relative to publisher, so internal code should include it
             $this->elements["book"][$myline[2]]["relation"]["collection"][] = array("gid" => $myline[32] . "_" . $myline[24]);
-            $this->elements["book"][$myline[2]]["attribute"]["subtitle"] = $this->utf8_encode($myline[26]);
+            $this->elements["book"][$myline[2]]["attribute"]["subtitle"] = GeslibCommon::utf8_encode($myline[26]);
             if ( $this->elements["status"][$myline[27]] ) {
               $this->elements["book"][$myline[2]]["attribute"]["status"] = $this->elements["status"][$myline[27]];
             } else {
@@ -194,9 +194,9 @@ class GeslibReader {
             $this->elements["book"][$myline[2]]["uc_product"]["length"] = $myline[37];
             $this->elements["book"][$myline[2]]["*length_unit"] = "cm";
             if ($myline[39] != "") {
-              $this->elements["book"][$myline[2]]["body"] = $this->utf8_encode($myline[39]);
+              $this->elements["book"][$myline[2]]["body"] = GeslibCommon::utf8_encode($myline[39]);
             }
-            $this->elements["book"][$myline[2]]["attribute"]["alt_location"] = $this->utf8_encode($myline[41]);
+            $this->elements["book"][$myline[2]]["attribute"]["alt_location"] = GeslibCommon::utf8_encode($myline[41]);
             $this->elements["book"][$myline[2]]["attribute"]["vat"] = $myline[42];
             $this->elements["book"][$myline[2]]["*CDU"] = $myline[46];
           }
@@ -214,14 +214,14 @@ class GeslibReader {
         case "AUT":
           $this->elements["author"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
-            $this->elements["author"][$myline[2]]["title"] = $this->utf8_encode($myline[3]);
+            $this->elements["author"][$myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
             $this->elements["author"][$myline[2]]["type"] = $myline[4];
           }
           break;
         # Descripcion del autor
         # AUTBIO|42671|Kirsten Boie (Hamburgo, 1950) es una de las autoras de libros ...|
         case "AUTBIO":
-          $this->elements["author"][$myline[1]]["body"] = $this->utf8_encode($myline[2]);
+          $this->elements["author"][$myline[1]]["body"] = GeslibCommon::utf8_encode($myline[2]);
           break;
         # Autores asociados a los libros
         # LA|48253|2807|A|1|
@@ -250,8 +250,8 @@ class GeslibReader {
         # Referencias Libreria
         case "6":
           # Library reference code is relative to book, so internal code should include it
-          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = $this->utf8_encode($myline[3]);
-          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["body"] = $this->utf8_encode($myline[3]);
+          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["body"] = GeslibCommon::utf8_encode($myline[3]);
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["library_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
@@ -259,8 +259,8 @@ class GeslibReader {
         # 6E|48794|1|Palabra de moda, "populismo" significa cosas ...|
         case "6E":
           # Publisher reference code is relative to book, so internal code should include it
-	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = $this->utf8_encode($myline[3]);
-          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["body"] = $this->utf8_encode($myline[3]);
+	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["body"] = GeslibCommon::utf8_encode($myline[3]);
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["publisher_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
@@ -268,17 +268,17 @@ class GeslibReader {
         # 6I|50879|1|I. EL CAMINO DE LA REVOLUCIÓN Y SU ESTALLIDO ... |
         case "6I":
           # Index code is relative to book, so internal code should include it
-          $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = $this->utf8_encode($myline[3]);
-          $this->elements["index"][$myline[1] . "_" . $myline[2]]["body"] = $this->utf8_encode($myline[3]);
+          $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["index"][$myline[1] . "_" . $myline[2]]["body"] = GeslibCommon::utf8_encode($myline[3]);
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["index"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
         # Format
         case "7":
-          $this->elements["format"][$myline[1]] = $this->utf8_encode($myline[2]);
+          $this->elements["format"][$myline[1]] = GeslibCommon::utf8_encode($myline[2]);
           break;
         case "8":
-          $this->elements["language"][$myline[1]] = $this->utf8_encode($myline[2]);
+          $this->elements["language"][$myline[1]] = GeslibCommon::utf8_encode($myline[2]);
           break;
         # Modificacion del stock de un producto
         case "B":
@@ -286,11 +286,11 @@ class GeslibReader {
           break;
         # Estados de los articulos
         case "E":
-          $this->elements["status"][$myline[1]] = $this->utf8_encode($myline[2]);
+          $this->elements["status"][$myline[1]] = GeslibCommon::utf8_encode($myline[2]);
           break;
         # Tipos de articulos
         case "TIPART":
-          $this->elements["type"][$myline[1]] = $this->utf8_encode($myline[2]);
+          $this->elements["type"][$myline[1]] = GeslibCommon::utf8_encode($myline[2]);
           break;
         default:
           #print_r($line);

@@ -29,7 +29,7 @@ class GeslibWriter {
   /**
   * Write elements to nodes
   */
-  function save_nodes() {
+  function save_items() {
     $query = 'SELECT id FROM {geslib_log} WHERE component = :component AND imported_file = :file AND (status = "ok" OR status ="working")';
     $result = db_query($query, array(':component' => $this->elements_type, ':file' => $this->geslib_filename));
     if ( $result->rowCount() == 0 && $this->elements &&
@@ -37,17 +37,18 @@ class GeslibWriter {
       $log_element = array('start_date' => time(),
                            'component' => $this->elements_type,
                            'imported_file' => basename($this->geslib_filename),
-                           'uid' => $this->user_uid, 'status' => 'ok');
+                           'uid' => $this->user_uid, 'status' => 'working');
+      drupal_write_record('geslib_log', $log_element);
       if ($this->elements_type == "book" || $this->elements_type = "other") {
         $this->process_products($node_type);
       } elseif ($this->elements_type == "covers") {
         $this->process_covers();
-      }
       } else {
         $this->process_elements($node_type);
       }
       $this->flush_cache();
       $log_element['count'] = count($this->elements);
+      $log_element['status'] = 'ok';
       $log_element['end_date'] = time();
       drupal_write_record('geslib_log', $log_element);
     }
@@ -66,7 +67,7 @@ class GeslibWriter {
     $counter = 0;
     $total_counter = 0;
     # Loop elements and send it to apropiate action
-    $this->vprint(t("Importing")." ".$this->elements_type, 1);
+    GeslibCommon::vprint(t("Importing")." ".$this->elements_type, 1);
     foreach ($elements as $object_id => $object) {
       if ($counter == 1000) {
         # Not sure if this clear internal node
@@ -87,7 +88,7 @@ class GeslibWriter {
           // Remove object from memory
           $node = NULL;
         } else {
-          $this->vprint(t("Node @type with GeslibID @gid doesn't exist", array('@type' => $drupal_node_type, '@gid' => $object_id)), 0);
+          GeslibCommon::vprint(t("Node @type with GeslibID @gid doesn't exist", array('@type' => $drupal_node_type, '@gid' => $object_id)), 0);
         }
       } else {
         $this->delete_object($drupal_node_type, $object_id);
@@ -112,7 +113,7 @@ class GeslibWriter {
     $total_counter = 0;
     $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
     # Loop elements and send it to apropiate action
-    $this->vprint(t("Importing Products"),1);
+    GeslibCommon::vprint(t("Importing Products"),1);
     foreach ($elements as $object_id => $object) {
       # Each 1000 objects, clear cache
       if ( $counter == 1000 ) {
@@ -132,7 +133,7 @@ class GeslibWriter {
     $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
     $geslib_book_node_type = variable_get('geslib_book_node_type', NULL);
     # Loop elements and send it to apropiate action
-    $this->vprint(t("Searching book covers"),1);
+    GeslibCommon::vprint(t("Searching book covers"),1);
     foreach ($elements as $object_id => $object) {
       # Each 1000 objects, clear cache
       if ( $counter == 1000 ) {
@@ -144,7 +145,7 @@ class GeslibWriter {
         $node = $this->get_node_by_gid($object_id, "book", $geslib_book_node_type);
         # If there is no cover, we define it
         if ($node->nid) {
-          $this->vprint(t("Updating")." ".$node_type." '".$object["title"]."' (NID:".$node->nid."/GESLIB_ID:".$object_id."/TITLE:'".$node->title."')", 1);
+          GeslibCommon::vprint(t("Updating")." ".$node_type." '".$object["title"]."' (NID:".$node->nid."/GESLIB_ID:".$object_id."/TITLE:'".$node->title."')", 1);
           $this->set_object_image($node, $object["*cover_url"]);
         }
         $counter += 1;
@@ -153,6 +154,39 @@ class GeslibWriter {
       $node = NULL;
     }
     return $total_counter;
+  }
+
+  /**
+  * Insert or modify simple object
+  *
+  * @param node_type
+  *   drupal node type
+  * @param object_id
+  *   geslib object_id
+  * @param object
+  *   object properties
+  * @param use_existing_nodes
+  *   If true, link existing nodes with same title to geslib. If false, create node if there is no linked yet
+  */
+  function update_object($node_type, $object_id, &$object, $use_existing_nodes) {
+    $new_element = false;
+    # Get node if exists
+    $node = $this->get_node_by_gid($object_id, $geslib_type, $node_type);
+    # If node exists, only gets authorization for update
+    if ( $node ) {
+      print_r("ESTAMOS CON: ");
+      print_r($node);
+    # Return NULL if doesn't exists and there is no ADD or MODIFY action
+    } elseif ( $object["action"] != "A" && $object["action"] != "M" ) {
+      return NULL;
+    # Si no hay nodo vinculado al gid...
+    # If that node doesn't exist
+    } else {
+        $node = NULL;
+        $new_element = true;
+    }
+    #$node->save();
+    return $node;
   }
 
   /**
@@ -170,7 +204,7 @@ class GeslibWriter {
      $nid = $this->get_nid_by_gid($geslib_id, $node_type);
      # If there is a node with that gid, load it
      if ($nid) {
-       $node = node_load($nid, NULL, TRUE);
+       $node = entity_load('node', $nid);
      } else {
        $node = NULL;
      }
@@ -188,15 +222,22 @@ class GeslibWriter {
    *
    */
    function get_nid_by_gid($geslib_id, $node_type) {
-    $query = "SELECT node.nid FROM {content_". $cck_field ."} cck LEFT JOIN {node} ON node.nid = cck.nid WHERE ". $cck_field ."_value = '%s' AND node.type = '%s'";
-    $result = db_query_range($query, $geslib_id, $node_type, 0, 1);
-     # If there is a node with that gid, load it
-     if ($result && $row = db_fetch_object($result)) {
-       $nid = $row->nid;
+     $query = new EntityFieldQuery();
+     $query->entityCondition('entity_type', 'node')
+           ->entityCondition('bundle', $node_type)
+           ->fieldCondition($this->gid_field, 'value', $geslib_id, '=')
+           ->range(0, 1)
+           ->addMetaData('account', user_load($this->user_uid));
+     $result = $query->execute();
+     # If there is any result, return nodeid
+     if (isset($result['node'])) {
+       $nids = array_keys($result['node']);
+       $news_items = entity_load('node', $news_items_nids);
      } else {
        $nid = NULL;
      }
-     $row = NULL;
+     # Nullify variables to force garbage collection
+     $query = NULL;
      $result = NULL;
      return $nid;
    }
@@ -205,7 +246,7 @@ class GeslibWriter {
   * Flush all caches
   */
   function flush_cache() {
-    $this->vprint("\n---------------------- ".t("Flush all caches")."\n",2);
+    GeslibCommon::vprint("\n---------------------- ".t("Flush all caches")."\n",2);
     drupal_flush_all_caches();
   }
 }
