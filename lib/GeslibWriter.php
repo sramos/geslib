@@ -9,8 +9,6 @@
  * @package  Geslib
  */
 
-include_once dirname(__FILE__) . '/Encoding.php';
-
 class GeslibWriter {
 
   /**
@@ -24,6 +22,7 @@ class GeslibWriter {
   */
   function __construct($elements_type, $elements, $geslib_filename, $uid) {
     $this->elements_type = $elements_type;
+    $this->node_type = variable_get('geslib_'.$this->elements_type.'_node_type', NULL);
     $this->elements = $elements;
     $this->geslib_filename = $geslib_filename;
     $this->user_uid = $uid;
@@ -33,37 +32,34 @@ class GeslibWriter {
   * Write elements to nodes
   */
   function save_items() {
-    $query = 'SELECT id FROM {geslib_log} WHERE component = :component AND imported_file = :file AND (status = "ok" OR status ="working")';
+    $query = "SELECT id FROM {geslib_log} WHERE component = :component AND imported_file = :file AND status IN ('ok', 'working')";
     $result = db_query($query, array(':component' => $this->elements_type, ':file' => $this->geslib_filename));
-    if ( $result->rowCount() == 0 && $this->elements &&
-         ($node_type = variable_get('geslib_'.$this->elements_type.'_node_type', NULL))) {
+    if ( $result->rowCount() == 0 && $this->elements && $this->node_type ) {
       $log_element = array('start_date' => time(),
                            'component' => $this->elements_type,
                            'imported_file' => basename($this->geslib_filename),
                            'uid' => $this->user_uid, 'status' => 'working');
       drupal_write_record('geslib_log', $log_element);
-      if ($this->elements_type == "book" || $this->elements_type = "other") {
-        $this->process_products($node_type);
+      if ($this->elements_type == "book" || $this->elements_type == "other") {
+        $this->process_products();
       } elseif ($this->elements_type == "covers") {
         $this->process_covers();
       } else {
-        $this->process_elements($node_type);
+        $this->process_elements();
       }
       $this->flush_cache();
       $log_element['count'] = count($this->elements);
       $log_element['status'] = 'ok';
       $log_element['end_date'] = time();
-      drupal_write_record('geslib_log', $log_element);
+      drupal_write_record('geslib_log', $log_element, 'id');
     }
   }
 
   /**
   * Write element to database
-  *
-  * @param drupal_node_type
-  *   drupal node type
   */
-  function process_elements($drupal_node_type) {
+  function process_elements() {
+    $drupal_node_type = $this->node_type;
     # If true, link existing nodes with same title to geslib. If false, create node if there is no linked yet
     $use_existing_nodes = ($this->elements_type == "category");
 
@@ -104,11 +100,9 @@ class GeslibWriter {
 
   /**
   * Write products (books and other) to database
-  *
-  * @param drupal_node_type
-  *   drupal node type
   */
-  function process_products($drupal_node_type) {
+  function process_products() {
+    $drupal_node_type = $this->node_type;
     # If true, link existing nodes with same title to geslib. If false, create node if there is no linked yet
     $use_existing_nodes = ($this->elements_type == "category");
 
@@ -174,7 +168,7 @@ class GeslibWriter {
   function update_object($node_type, $object_id, &$object, $use_existing_nodes) {
     $new_element = false;
     # Get node if exists
-    $node = $this->get_node_by_gid($object_id, $geslib_type, $node_type);
+    $node = $this->get_node_by_gid($object_id, $node_type);
     # If node exists, only gets authorization for update
     if ( $node ) {
       print_r("ESTAMOS CON: ");

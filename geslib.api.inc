@@ -1,10 +1,10 @@
 <?php
+/**
+ * @author   "Santiago Ramos" <sramos@sitiodistinto.net>
+ * @package  Geslib
+ */
 
 include_once dirname(__FILE__) . '/lib/GeslibCommon.php';
-include_once dirname(__FILE__) . '/lib/GeslibReader.php';
-include_once dirname(__FILE__) . '/lib/GeslibWriter.php';
-include_once dirname(__FILE__) . '/lib/InetBookSearch.php';
-include_once dirname(__FILE__) . '/lib/DilveSearch.php';
 
 class geslib_api {
   private $geslib_files;
@@ -138,9 +138,9 @@ class geslib_api {
     # Delete geslib file
     if ( variable_get('geslib_delete_imported_files', NULL) ) {
       GeslibCommon::vprint("\n---------------------- ".t("Clear imported file")."\n",2);
-      unlink($this->geslib_filename);
+      #unlink($this->geslib_filename);
       #unlink($this->geslib_filename . ".json");
-      unlink($this->geslib_filename . ".serialized");
+      #unlink($this->geslib_filename . ".serialized");
     }
   }
 

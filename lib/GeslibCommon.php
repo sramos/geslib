@@ -4,7 +4,11 @@
  * @package  Geslib
  */
 
-include_once dirname(__FILE__) . '/lib/Encoding.php';
+include_once dirname(__FILE__) . '/Encoding.php';
+include_once dirname(__FILE__) . '/GeslibReader.php';
+include_once dirname(__FILE__) . '/GeslibWriter.php';
+include_once dirname(__FILE__) . '/InetBookSearch.php';
+include_once dirname(__FILE__) . '/DilveSearch.php';
 
 class GeslibCommon {
 
@@ -24,7 +28,7 @@ class GeslibCommon {
       watchdog('geslib-import', $string, NULL, WATCHDOG_ERROR);
     }
     # Output message if verbose level is greater
-    if ($level < $this->verbose_level) {
+    if ($level < GeslibCommon::$verbose_level) {
       # Output formating
       $pre = array("\n*** ", "   * ", "       ", "          ");
       drush_print($pre[$level].$string);
@@ -47,4 +51,5 @@ class GeslibCommon {
       return NULL;
     }
   }
+
 }
