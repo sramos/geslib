@@ -174,19 +174,107 @@ class GeslibWriter {
     $node = $this->get_node_by_gid($object_id, $node_type);
     # If node exists, only gets authorization for update
     if ( $node ) {
-      print_r("ESTAMOS CON: ");
-      print_r($node);
     # Return NULL if doesn't exists and there is no ADD or MODIFY action
+      print_r("Tenemos nodo!!!\n");
     } elseif ( $object["action"] != "A" && $object["action"] != "M" ) {
       return NULL;
     # Si no hay nodo vinculado al gid...
     # If that node doesn't exist
     } else {
-        $node = NULL;
-        $new_element = true;
+      print_r("No hemos encontrado el nodo... lo creamos\n");
+      $node = $this->create_empty_node($object_id);
     }
-    #$node->save();
+
+    # Basic node data
+    $node->uid = $this->user_uid;
+    $node->name = "admin";
+    $node->status = 1;
+    # Title
+    if (array_key_exists('title', $object)) {
+      $node->title = $object['title'];
+    }
+    # Body
+    if (array_key_exists('body', $object)) {
+      // Format 5: plaintext
+      $this->update_attribute($node, 'body', $object['body'], 5);
+    }
+
+    # Check that node is ready and save it
+    if ($node = node_submit($node)) {
+      node_save($node);
+      GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("updated correctly"), 2);
+      return $node;
+    } else {
+      GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("processed incorrectly"), 0);
+      return NULL;
+    }
+  }
+
+  /**
+  * Create empty node
+  *
+  * @param geslib_id
+  *    geslib object_id
+  */
+  function create_empty_node($geslib_id) {
+    $gid_field = $this->gid_field;
+    $node = new stdClass();
+    $node->type = $this->node_type;
+    $node->$gid_field = array('und' => array( array('value' => $geslib_id) ));;
+    $node->language = 'es';
+    $node->promote = 0; // Display on front page ? 1 : 0
+    $node->sticky = 0;  // Display top of page ? 1 : 0
+    $node->format = 1;  // 1:Filtered HTML, 2: Full HTML, 3: ???
+    $node->comment = variable_get('comment_'.$node_type, 0); // 0:Disabled, 1:Read, 2:Read/Write
+    node_object_prepare($node);
     return $node;
+  }
+
+  /**
+  * Update node fields
+  *
+  * @param node
+  *    Node object reference
+  * @param object_data
+  *    Node attributes
+  */
+  function update_attributes($node, $object_data) {
+    # Elimina los atributos restringidos
+    $bad_keys = array('action','title','type');
+    $good_data = array_diff_key($object_data,array_flip($bad_keys));
+    # Recorre el resto de atributos actualizando la info
+    foreach ($good_data as $attr_name => $attr_value) {
+      $this->update_attribute($node, $attr_name, $attr_value, 5);
+    }
+    # Check that node is ready and save it
+    if ($node = node_submit($node)) {
+      node_save($node);
+      GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes updated correctly"), 2);
+      return $node;
+    } else {
+      GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes processed incorrectly"), 0);
+      return NULL;
+    }
+  }
+
+  /**
+  * Update node field
+  *
+  * @param &node
+  *    Reference to node object
+  * @param attr_name
+  *    Attribute name
+  * @param attr_value
+  *    Attribute value
+  * @param attr_format (optiona)
+  *    Attribute format
+  */
+  function update_attribute(&$node, $attr_name, $attr_value, $attr_format=NULL) {
+    $value = array('value' => $attr_value);
+    if ($attr_format) {
+      $value['format'] = $attr_format;
+    }
+    $node->$attr_name = array('und' => array($value));
   }
 
   /**
@@ -202,13 +290,12 @@ class GeslibWriter {
    */
    function get_node_by_gid($geslib_id, $node_type) {
      $nid = $this->get_nid_by_gid($geslib_id, $node_type);
+     $nodes = array();
      # If there is a node with that gid, load it
      if ($nid) {
-       $node = entity_load('node', array($nid));
-     } else {
-       $node = NULL;
+       $nodes = entity_load('node', array($nid));
      }
-     return $node;
+     return reset($nodes);
    }
    /**
    * Get NodeID by GeslibID

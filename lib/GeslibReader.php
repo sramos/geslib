@@ -199,7 +199,7 @@ class GeslibReader {
             $this->elements["book"][$myline[2]]["uc_product"]["length"] = $myline[37];
             $this->elements["book"][$myline[2]]["*length_unit"] = "cm";
             if ($myline[39] != "") {
-              $this->elements["book"][$myline[2]]["body"] = GeslibCommon::utf8_encode($myline[39]);
+              $this->elements["book"][$myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[39]);
             }
             $this->elements["book"][$myline[2]]["attribute"]["alt_location"] = GeslibCommon::utf8_encode($myline[41]);
             $this->elements["book"][$myline[2]]["attribute"]["vat"] = $myline[42];
@@ -226,7 +226,7 @@ class GeslibReader {
         # Descripcion del autor
         # AUTBIO|42671|Kirsten Boie (Hamburgo, 1950) es una de las autoras de libros ...|
         case "AUTBIO":
-          $this->elements["author"][$myline[1]]["body"] = GeslibCommon::utf8_encode($myline[2]);
+          $this->elements["author"][$myline[1]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[2]);
           break;
         # Autores asociados a los libros
         # LA|48253|2807|A|1|
@@ -256,7 +256,7 @@ class GeslibReader {
         case "6":
           # Library reference code is relative to book, so internal code should include it
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
-          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["body"] = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[3]);
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["library_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
@@ -265,7 +265,7 @@ class GeslibReader {
         case "6E":
           # Publisher reference code is relative to book, so internal code should include it
 	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
-          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["body"] = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[3]);
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["publisher_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
@@ -274,7 +274,7 @@ class GeslibReader {
         case "6I":
           # Index code is relative to book, so internal code should include it
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
-          $this->elements["index"][$myline[1] . "_" . $myline[2]]["body"] = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["index"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[3]);
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["index"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
