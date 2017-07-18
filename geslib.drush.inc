@@ -91,7 +91,7 @@ function geslib_drush_import($geslib_file, $verbose_level=1) {
       $reader->read_file($file);
       drush_log(dt('Geslib file readed'), 'ok');
       drush_print(dt('Importing elements from Geslib file'));
-      #$reader->import_elements();
+      $reader->import_elements();
       drush_log(dt('Geslib elements imported sucessfully from') ." ". $file, 'ok');
     }
   } catch(Exception $e) {
