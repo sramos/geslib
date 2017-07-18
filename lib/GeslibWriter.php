@@ -9,6 +9,8 @@
  * @package  Geslib
  */
 
+include_once dirname(__FILE__) . '/GeslibCommon.php';
+
 class GeslibWriter {
 
   /**

@@ -5,10 +5,6 @@
  */
 
 include_once dirname(__FILE__) . '/Encoding.php';
-include_once dirname(__FILE__) . '/GeslibReader.php';
-include_once dirname(__FILE__) . '/GeslibWriter.php';
-include_once dirname(__FILE__) . '/InetBookSearch.php';
-include_once dirname(__FILE__) . '/DilveSearch.php';
 
 class GeslibCommon {
 

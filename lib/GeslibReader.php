@@ -9,7 +9,9 @@
  * @package  Geslib
  */
 
-include_once dirname(__FILE__) . '/Encoding.php';
+include_once dirname(__FILE__) . '/GeslibCommon.php';
+include_once dirname(__FILE__) . '/InetBookSearch.php';
+include_once dirname(__FILE__) . '/DilveSearch.php';
 
 class GeslibReader {
 
@@ -297,23 +299,6 @@ class GeslibReader {
           break;
         default:
           #print_r($line);
-    }
-  }
-
-  /**
-  * Convert and Fix UTF8 strings
-  *
-  * @param $string
-  *     String to be fixed
-  *
-  * Returns
-  *     $string
-  */
-  function utf8_encode($string) {
-    if ($string) {
-      return Encoding::fixUTF8(mb_check_encoding($string, 'UTF-8') ? $string : utf8_encode($string));
-    } else {
-      return NULL;
     }
   }
 

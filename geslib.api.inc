@@ -5,6 +5,8 @@
  */
 
 include_once dirname(__FILE__) . '/lib/GeslibCommon.php';
+include_once dirname(__FILE__) . '/lib/GeslibReader.php';
+include_once dirname(__FILE__) . '/lib/GeslibWriter.php';
 
 class geslib_api {
   private $geslib_files;
