@@ -232,29 +232,31 @@ class GeslibWriter {
   *    Node attributes
   */
   function update_attributes($node, $object_data) {
-    # Elimina los atributos restringidos
-    $bad_keys = array('action','title','type');
-    $good_data = array_diff_key($object_data['attribute'],array_flip($bad_keys));
-    # Recoge si el nodo ha cambiado
-    $changed = false;
+    if ($node->nid && ($attributes = $object['attribute'])) {
+      # Recoge si el nodo ha cambiado
+      $changed = false;
+      # Elimina los atributos restringidos
+      $bad_keys = array('action','title','type');
+      $good_data = array_diff_key($attributes,array_flip($bad_keys));
 
-    # Recorre el resto de atributos actualizando la info
-    foreach ($good_data as $attr_name => $attr_value) {
-      // Format 5: plaintext
-      if ($this->change_attribute($node, $attr_name, $attr_value, 5)) {
-        $changed = true;
+      # Recorre el resto de atributos actualizando la info
+      foreach ($good_data as $attr_name => $attr_value) {
+        // Format 5: plaintext
+        if ($this->change_attribute($node, $attr_name, $attr_value, 5)) {
+          $changed = true;
+        }
       }
-    }
-    # Check that node changed
-    if ($changed) {
-      # If and is ready and it can be saved
-      if ($node = node_submit($node)) {
-        node_save($node);
-        GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes updated correctly"), 2);
-        return $node;
-      } else {
-        GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes processed incorrectly"), 0);
-        return NULL;
+      # Check that node changed
+      if ($changed) {
+        # If and is ready and it can be saved
+        if ($node = node_submit($node)) {
+          node_save($node);
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes updated correctly"), 2);
+          return $node;
+        } else {
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes processed incorrectly"), 0);
+          return NULL;
+        }
       }
     }
   }
