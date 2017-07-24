@@ -356,7 +356,7 @@ class GeslibWriter {
   function update_relationships(&$node, &$object) {
     if ($node->nid && ($relations = $object['relation'])) {
       $updated = false;
-      # Allowed node fields for that node type
+      # Allowed node fields for that object
       $allowed = field_info_instances('node', $this->node_type);
 
       # Loop all relation array
@@ -375,7 +375,7 @@ class GeslibWriter {
               if ( $rel_name == "author" && variable_get('geslib_book_link_only_authors', NULL) && $rel_element["function"] != "A") {
                 GeslibCommon::vprint(t("Ignoring author relationship. The type is:") . " " . $rel_element["function"]);
               } else {
-                $linked_nid = $this->get_nid_by_gid($rel_element["gid"], $rel_name, $rel_node_type);
+                $linked_nid = $this->get_nid_by_gid($rel_element["gid"], $rel_node_type);
                 # If related object exists, link it
                 if ($linked_nid) {
                   GeslibCommon::vprint("Guardando la referencia a ".$rel_node_type." ('".$field_name."/NID:".$linked_nid."/GID:".$rel_element["gid"].")");
@@ -392,8 +392,8 @@ class GeslibWriter {
                   GeslibCommon::vprint("ERROR: El nodo ". $rel_node_type ." relacionado (GID:". $rel_element["gid"] .") no pudo encontrarse",0);
                 }
               }
-            # If related element could not be found, look it in geslib array
-            } else if ($allowed[fields][$field_name][type] != "nodereference" ) {
+              # If related element could not be found, look it in geslib array
+            } else if (preg_match('#^nodereference#', $allowed[$field_name]['widget_type']) !== 1) {
               $referenced_value = $this->elements[$rel_name][$rel_element["gid"]]["title"];
               if ( $referenced_value ) {
                 $linked_elements[] = array( 'value' => $referenced_value );
