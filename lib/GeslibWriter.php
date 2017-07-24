@@ -43,9 +43,7 @@ class GeslibWriter {
                            'imported_file' => basename($this->geslib_filename),
                            'uid' => $this->user_uid, 'status' => 'working');
       drupal_write_record('geslib_log', $log_element);
-      if ($this->elements_type == "book" || $this->elements_type == "other") {
-        $this->process_products();
-      } elseif ($this->elements_type == "covers") {
+      if ($this->elements_type == "covers") {
         $this->process_covers();
       } else {
         $this->process_elements();
@@ -85,6 +83,7 @@ class GeslibWriter {
         if ( $node ) {
           # Update node attributes, relationships and taxonomy terms
           $this->update_attributes($node, $object);
+          $this->update_uc_attributes($node, $object);
           $this->update_relationships($node, $object);
           // Remove object from memory
           $node = NULL;
@@ -98,28 +97,6 @@ class GeslibWriter {
       $total_counter += 1;
     }
     return $total_counter;
-  }
-
-  /**
-  * Write products (books and other) to database
-  */
-  function process_products() {
-    # If true, link existing nodes with same title to geslib. If false, create node if there is no linked yet
-    $use_existing_nodes = ($this->elements_type == "category");
-
-    $counter = 0;
-    $total_counter = 0;
-    $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
-    # Loop elements and send it to apropiate action
-    GeslibCommon::vprint(t("Importing Products"),1);
-    foreach ($elements as $object_id => $object) {
-      # Each 1000 objects, clear cache
-      if ( $counter == 1000 ) {
-        # Not sure if this clear internal node cache
-        #$this->flush_cache();
-        $counter = 0;
-      }
-    }
   }
 
   /**
@@ -174,6 +151,7 @@ class GeslibWriter {
     if ( $node ) {
     # Return NULL if doesn't exists and there is no ADD or MODIFY action
       print_r("Tenemos nodo!!!\n");
+      $this->get_access($node, "update");
     } elseif ( $object["action"] != "A" && $object["action"] != "M" ) {
       return NULL;
     # Si no hay nodo vinculado al gid...
@@ -220,6 +198,7 @@ class GeslibWriter {
     $node->format = 1;  // 1:Filtered HTML, 2: Full HTML, 3: ???
     $node->comment = variable_get('comment_'.$node_type, 0); // 0:Disabled, 1:Read, 2:Read/Write
     node_object_prepare($node);
+    $this->get_access($node, "create");
     return $node;
   }
 
@@ -232,7 +211,7 @@ class GeslibWriter {
   *    Node attributes
   */
   function update_attributes($node, $object_data) {
-    if ($node->nid && ($attributes = $object['attribute'])) {
+    if ($node->nid && ($attributes = $object_data['attribute'])) {
       # Recoge si el nodo ha cambiado
       $changed = false;
       # Elimina los atributos restringidos
@@ -255,6 +234,50 @@ class GeslibWriter {
           return $node;
         } else {
           GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes processed incorrectly"), 0);
+          return NULL;
+        }
+      }
+    }
+  }
+
+  /**
+  * Update ubercart node fields
+  *
+  * @param node
+  *    Node object reference
+  * @param object_data
+  *    Ubercart node attributes
+  */
+  function update_uc_attributes($node, $object_data) {
+    if ($node->nid && ($attributes = $object_data['uc_product'])) {
+      # Recoge si el nodo ha cambiado
+      $changed = false;
+
+      # Recorre los atributos UC actualizando la info
+      foreach ($attributes as $attr_name => $attr_value) {
+        # Hace un procesado especial del stock para ajustar tambien
+        # si el producto es ordenable o no
+        if ( $attr_name == "stock" ) {
+          # REVISAR!!!
+          #uc_stock_set($node->model, $attr_value);
+          uc_stock_adjust($node->model, $attr_value);
+          $node->qty = $attr_value;
+          $node->ordering = ( $attr_value == 0 ? 0 : 1 );
+        } else {
+          $node->$attr_name = $attr_value;
+        }
+        $changed = true;
+      }
+
+      # Check that node changed
+      if ($changed) {
+        # If and is ready and it can be saved
+        if ($node = node_submit($node)) {
+          node_save($node);
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("ubercart attributes updated correctly"), 2);
+          return $node;
+        } else {
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("ubercart attributes processed incorrectly"), 0);
           return NULL;
         }
       }
@@ -353,8 +376,8 @@ class GeslibWriter {
   * @param object
   *   object properties
   */
-  function update_relationships(&$node, &$object) {
-    if ($node->nid && ($relations = $object['relation'])) {
+  function update_relationships(&$node, &$object_data) {
+    if ($node->nid && ($relations = $object_data['relation'])) {
       $updated = false;
       # Allowed node fields for that object
       $allowed = field_info_instances('node', $this->node_type);
@@ -479,6 +502,23 @@ class GeslibWriter {
      $result = NULL;
      return $nid;
    }
+
+  /**
+   * Get account access to the node
+   *
+   * @param node
+   * @param op ("view","update","create","delete")
+   */
+  function get_access(&$node, $op) {
+    $account = user_load($this->user_uid);
+    if (!node_access($op, $node, $account)) {
+      if (!db_query('UPDATE {node} SET uid=%d WHERE nid=%d', $this->user_uid, $node->nid)) {
+        throw new Exception('User ' . $this->user_uid . ' not authorized to ' . $op . ' content type ' . $node->type);
+      }
+      watchdog('geslib-import', "$node->type: Changed ownership of '%node' to user '%user'", array('%node'=>$node->title, '%user'=>$account->name));
+      GeslibCommon::vprint(t("Changed ownership of"). " ". $node->nid . " (". $node->type ."/". $node->title .") " . t("to user")." ". $account->name, 2);
+    }
+  }
 
   /**
   * Flush all caches

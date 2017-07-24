@@ -153,10 +153,17 @@ class GeslibReader {
             }
             #$this->elements["book"][$myline[2]]["*author"][] = array('name' => GeslibCommon::utf8_encode($myline[4]));
             $this->elements["book"][$myline[2]]["attribute"]["isbn"] = $myline[6];	//ISBN (por si se quiere seleccionar)
+            # Si hay EAN, lo asignamos y tambien al model de UC
             if ($myline[7]) {
               $this->elements["book"][$myline[2]]["attribute"]["ean"] = $myline[7];
-            } else {
+              $this->elements["book"][$myline[2]]["uc_product"]["model"] = $myline[7];
+            # Si no hay EAN pero si ISBN, cogemos el ISBN sin guiones
+            } else if ($myline[6]) {
               $this->elements["book"][$myline[2]]["attribute"]["ean"] = str_replace('-','',$myline[6]);
+              $this->elements["book"][$myline[2]]["uc_product"]["model"] = str_replace('-','',$myline[6]);
+            # y si tampoco hay ISBN, tomamos el GID como model UC
+            } else {
+              $this->elements["book"][$myline[2]]["uc_product"]["model"] = "GID-".$myline[2];
             }
             $this->elements["book"][$myline[2]]["attribute"]["pages"] = $myline[8];
             $this->elements["book"][$myline[2]]["attribute"]["edition"] = $myline[9];
@@ -166,7 +173,7 @@ class GeslibReader {
             $this->elements["book"][$myline[2]]["attribute"]["year"] = $myline[13];
             $this->elements["book"][$myline[2]]["*anno_ultima_edicion"] = $myline[14];
             $this->elements["book"][$myline[2]]["attribute"]["location"] = GeslibCommon::utf8_encode($myline[15]);
-            $this->elements["book"][$myline[2]]["uc_product_stock"]["stock"] = intval($myline[16]);
+            $this->elements["book"][$myline[2]]["uc_product"]["stock"] = intval($myline[16]);
             $this->elements["book"][$myline[2]]["*materia"] = GeslibCommon::utf8_encode($myline[17]);
             $this->elements["book"][$myline[2]]["attribute"]["registration_date"] = $myline[18];
             if ( $this->elements["language"][$myline[20]] ) {
@@ -195,9 +202,12 @@ class GeslibReader {
             $this->elements["book"][$myline[2]]["relation"]["publisher"][] = array("gid" => $myline[32]);
             $this->elements["book"][$myline[2]]["uc_product"]["cost"] = str_replace(",", ".", $myline[33]);
             $this->elements["book"][$myline[2]]["uc_product"]["weight"] = $myline[35];
+            $this->elements["book"][$myline[2]]["uc_product"]["weight_units"] = "g";
             $this->elements["book"][$myline[2]]["uc_product"]["width"] = $myline[36];
             $this->elements["book"][$myline[2]]["uc_product"]["length"] = $myline[37];
-            $this->elements["book"][$myline[2]]["*length_unit"] = "cm";
+            $this->elements["book"][$myline[2]]["uc_product"]["length_units"] = "cm";
+            $this->elements["book"][$myline[2]]["uc_product"]["default_qty"] = 1;
+            $this->elements["book"][$myline[2]]["uc_product"]["pkg_qty"] = 1;
             if ($myline[39] != "") {
               $this->elements["book"][$myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[39]);
             }
@@ -287,7 +297,7 @@ class GeslibReader {
           break;
         # Modificacion del stock de un producto
         case "B":
-          $this->elements["book"][$myline[1]]["uc_product_stock"]["stock"] = intval($myline[2]);
+          $this->elements["book"][$myline[1]]["uc_product"]["stock"] = intval($myline[2]);
           break;
         # Estados de los articulos
         case "E":
