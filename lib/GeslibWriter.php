@@ -150,14 +150,14 @@ class GeslibWriter {
     # If node exists, only gets authorization for update
     if ( $node ) {
     # Return NULL if doesn't exists and there is no ADD or MODIFY action
-      print_r("Tenemos nodo!!!\n");
+      #print_r("Tenemos nodo!!!\n");
       $this->get_access($node, "update");
     } elseif ( $object["action"] != "A" && $object["action"] != "M" ) {
       return NULL;
     # Si no hay nodo vinculado al gid...
     # If that node doesn't exist
     } else {
-      print_r("No hemos encontrado el nodo... lo creamos\n");
+      #print_r("No hemos encontrado el nodo... lo creamos\n");
       $node = $this->create_empty_node($object_id);
     }
 
@@ -262,7 +262,6 @@ class GeslibWriter {
       }
       # Recorre los atributos UC actualizando la info
       foreach ($attributes as $attr_name => $attr_value) {
-        print_r("Actualizando " . $attr_name . "\n");
         # Hace un procesado especial del stock para ajustar tambien
         # si el producto es ordenable o no
         $node->$attr_name = $attr_value;
@@ -270,7 +269,6 @@ class GeslibWriter {
       }
       # Despues de cambiar todo, modifica el stock
       if ( $stock !== NULL ) {
-        print_r("Actualizando STOCK\n");
         # Cambia el valor del stock
         uc_stock_set($node->model, $attr_value);
         # Hace un procesado especial del stock para ajustar tambien
