@@ -18,7 +18,8 @@ class geslib_api {
   *     Geslib export file
   */
   function __construct($geslib_filepath, $verbose_level) {
-    $this->user = user_load(array('uid' => 1));
+    global $user;
+    $this->user = $user;
     GeslibCommon::$verbose_level = $verbose_level;
     $this->default_nom_category = GeslibCommon::utf8_encode(variable_get('geslib_category_default_name', NULL));
     $this->default_nom_collection = GeslibCommon::utf8_encode(variable_get('geslib_collection_default_name', NULL));
@@ -130,7 +131,7 @@ class geslib_api {
                    'author','collection','publisher_reference',
                    'library_reference','index','book');
     foreach ($items as $item) {
-      $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename), $this->user->uid);
+      $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename), $this->user);
       $writer->save_items();
     }
     # Write finishing data into import table
@@ -150,7 +151,7 @@ class geslib_api {
   * Import pending covers
   */
   function import_covers() {
-    $writer = new GeslibWriter('covers', $this->elements['book'], basename($this->geslib_filename));
+    $writer = new GeslibWriter('covers', $this->elements['book'], basename($this->geslib_filename), $this->user);
     $writer->save_elements();
   }
 

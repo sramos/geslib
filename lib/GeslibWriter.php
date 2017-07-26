@@ -22,13 +22,13 @@ class GeslibWriter {
   * @param $default_nom_category
   *
   */
-  function __construct($elements_type, $elements, $geslib_filename, $uid) {
+  function __construct($elements_type, $elements, $geslib_filename, $user) {
     $this->elements_type = $elements_type;
     $this->node_type = variable_get('geslib_'.$this->elements_type.'_node_type', NULL);
     $this->gid_field = variable_get('geslib_link_content_field', NULL);
     $this->elements = $elements;
     $this->geslib_filename = $geslib_filename;
-    $this->user_uid = $uid;
+    $this->user = $user;
   }
 
   /**
@@ -41,7 +41,7 @@ class GeslibWriter {
       $log_element = array('start_date' => time(),
                            'component' => $this->elements_type,
                            'imported_file' => basename($this->geslib_filename),
-                           'uid' => $this->user_uid, 'status' => 'working');
+                           'uid' => $this->user->uid, 'status' => 'working');
       drupal_write_record('geslib_log', $log_element);
       if ($this->elements_type == "covers") {
         $this->process_covers();
@@ -162,7 +162,7 @@ class GeslibWriter {
     }
 
     # Basic node data
-    $node->uid = $this->user_uid;
+    $node->uid = $this->user->uid;
     $node->name = "admin";
     $node->status = 1;
     # Title
@@ -487,7 +487,7 @@ class GeslibWriter {
            ->entityCondition('bundle', $node_type)
            ->fieldCondition($this->gid_field, 'value', $geslib_id, '=')
            ->range(0, 1)
-           ->addMetaData('account', user_load($this->user_uid));
+           ->addMetaData('account', user_load($this->user->uid));
      $result = $query->execute();
      # If there is any result, return nodeid
      if (isset($result['node'])) {
@@ -510,13 +510,12 @@ class GeslibWriter {
    * @param op ("view","update","create","delete")
    */
   function get_access(&$node, $op) {
-    $account = user_load($this->user_uid);
-    if (!node_access($op, $node, $account)) {
-      if (!db_query('UPDATE {node} SET uid=%d WHERE nid=%d', $this->user_uid, $node->nid)) {
-        throw new Exception('User ' . $this->user_uid . ' not authorized to ' . $op . ' content type ' . $node->type);
+    if (!node_access($op, $node, $this->user)) {
+      if (!db_query('UPDATE {node} SET uid=%d WHERE nid=%d', $this->user->uid, $node->nid)) {
+        throw new Exception('User ' . $this->user->uid . ' not authorized to ' . $op . ' content type ' . $node->type);
       }
-      watchdog('geslib-import', "$node->type: Changed ownership of '%node' to user '%user'", array('%node'=>$node->title, '%user'=>$account->name));
-      GeslibCommon::vprint(t("Changed ownership of"). " ". $node->nid . " (". $node->type ."/". $node->title .") " . t("to user")." ". $account->name, 2);
+      watchdog('geslib-import', "$node->type: Changed ownership of '%node' to user '%user'", array('%node'=>$node->title, '%user'=>$this->user->name));
+      GeslibCommon::vprint(t("Changed ownership of"). " ". $node->nid . " (". $node->type ."/". $node->title .") " . t("to user")." ". $this->user->name, 2);
     }
   }
 
