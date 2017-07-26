@@ -3,7 +3,7 @@
 /**
  * @file
  * Define how to interact with geslib files
- * Info: http://www.unleashed-technologies.com/blog/2010/07/16/drupal-6-inserting-updating-nodes-programmatically
+ * Info: http://timonweb.com/posts/how-to-programmatically-create-nodes-comments-and-taxonomies-in-drupal-7/
  *
  * @author   "Santiago Ramos" <sramos@sitiodistinto.net>
  * @package  Geslib
@@ -197,6 +197,7 @@ class GeslibWriter {
     $node->sticky = 0;  // Display top of page ? 1 : 0
     $node->format = 1;  // 1:Filtered HTML, 2: Full HTML, 3: ???
     $node->comment = variable_get('comment_'.$node_type, 0); // 0:Disabled, 1:Read, 2:Read/Write
+    $node->is_new = true;
     node_object_prepare($node);
     $this->get_access($node, "create");
     return $node;
@@ -230,10 +231,10 @@ class GeslibWriter {
         # If and is ready and it can be saved
         if ($node = node_submit($node)) {
           node_save($node);
-          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes updated correctly"), 2);
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid.") ".t("attributes updated correctly"), 2);
           return $node;
         } else {
-          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("attributes processed incorrectly"), 0);
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid.") ".t("attributes processed incorrectly"), 0);
           return NULL;
         }
       }
@@ -253,31 +254,40 @@ class GeslibWriter {
       # Recoge si el nodo ha cambiado
       $changed = false;
 
+      # Primero comprueba si se esta modificando el stock
+      # y si es asi lo deja para lo ultimo
+      if (array_key_exists('stock',$attributes)) {
+        $stock = $attributes['stock'];
+        unset($attributes['stock']);
+      }
       # Recorre los atributos UC actualizando la info
       foreach ($attributes as $attr_name => $attr_value) {
+        print_r("Actualizando " . $attr_name . "\n");
         # Hace un procesado especial del stock para ajustar tambien
         # si el producto es ordenable o no
-        if ( $attr_name == "stock" ) {
-          # REVISAR!!!
-          #uc_stock_set($node->model, $attr_value);
-          uc_stock_adjust($node->model, $attr_value);
-          $node->qty = $attr_value;
-          $node->ordering = ( $attr_value == 0 ? 0 : 1 );
-        } else {
-          $node->$attr_name = $attr_value;
-        }
+        $node->$attr_name = $attr_value;
         $changed = true;
       }
-
+      # Despues de cambiar todo, modifica el stock
+      if ( $stock !== NULL ) {
+        print_r("Actualizando STOCK\n");
+        # Cambia el valor del stock
+        uc_stock_set($node->model, $attr_value);
+        # Hace un procesado especial del stock para ajustar tambien
+        # si el producto se puede coger o no
+        $node->qty = $attr_value;
+        $node->ordering = ( $attr_value == 0 ? 0 : 1 );
+        $changed = true;
+      }
       # Check that node changed
       if ($changed) {
         # If and is ready and it can be saved
         if ($node = node_submit($node)) {
           node_save($node);
-          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("ubercart attributes updated correctly"), 2);
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid.") ".t("ubercart attributes updated correctly"), 2);
           return $node;
         } else {
-          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("ubercart attributes processed incorrectly"), 0);
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid.") ".t("ubercart attributes processed incorrectly"), 0);
           return NULL;
         }
       }
