@@ -7,45 +7,6 @@
 
 class InetBookSearch {
 
-  private static $user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1";
-
-  /**
-  * Function InetBookSearch::download_file
-  *
-  * @param string url
-  *   URI of the image to be downloaded
-  * @param string path
-  *   path where image will be stored
-  * @return string
-  *   filename of downloaded image
-  */
-  static function download_file($url, $path, $isbn) {
-    $saved_file = NULL;
-    $context = stream_context_create(array('http' => array('header' => 'Host: '.parse_url($url, PHP_URL_HOST), 'user_agent' => self::$user_agent)));
-    $orig_file = file_get_contents($url,0,$context);
-    if (!($orig_file === false)) {
-      # Gets file content type
-      foreach ($http_response_header as $header) {
-        preg_match("/^Content-Type: .+\/(.+)/", $header, $matches);
-        if ( $matches ) {
-          $ext = $matches[1];
-        }
-      }
-      # If no extension was returned in content type headers, get it from url
-      if (! $ext) {
-        #print "----------> No existe content type para el elemento!!!\n";
-        $ext = pathinfo($url, PATHINFO_EXTENSION);
-      }
-      $filename = $path . '/' . $isbn . "." . strtolower($ext);
-      # Write file to disk
-      file_put_contents($filename, $orig_file);
-      if ( file_exists($filename) ) {
-        $saved_file = $filename;
-      }
-    }
-    return $saved_file;
-  }
-
   /**
   * Function InetBookSearch::search_google
   *

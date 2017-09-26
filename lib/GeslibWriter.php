@@ -85,6 +85,7 @@ class GeslibWriter {
           $this->update_attributes($node, $object);
           $this->update_uc_attributes($node, $object);
           $this->update_relationships($node, $object);
+          $this->update_object_image($node, $object);
           // Remove object from memory
           $node = NULL;
         } else {
@@ -457,6 +458,49 @@ class GeslibWriter {
       $node_to_save = NULL;
     }
   }
+
+  /**
+    * Save associated image of the node
+    *
+    * @param $node
+    *     Drupal Node
+    * @param object
+    *   object properties
+    */
+    function update_object_image(&$node,&$object_data) {
+      $image_file = NULL;
+      if ($node->nid && (!$node->field_image_cache[0] || $node->field_image_cache[0]['filepath'] == variable_get('geslib_book_default_image', NULL)) ) {
+        $cover_url = $object_data["*cover_url"];
+        #$uploaded_cover = $this->get_uploaded_book_image($node->model);
+        $uploaded_cover = NULL;
+        # If not book cover exists try to download it
+        if (!$uploaded_cover && $cover_url) {
+          GeslibCommon::vprint(t("Downloading remote book cover"));
+          $public_path =  file_stream_wrapper_get_instance_by_uri('public://')->getDirectoryPath();
+          $image_file = GeslibCommon::download_file($cover_url, $public_path . "/book_covers", $node->model);
+          # If content type is not an image, delete it
+          $ext = pathinfo($image_file, PATHINFO_EXTENSION);
+          if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
+            $this->vprint(t("Remote book cover not valid").": ".$image_file);
+            $image_file=NULL;
+            unlink($image_file);
+          }
+        }
+        # Use default one
+        if (!$image_file && !$node->field_image_cache[0]) {
+          if ( $node->type == variable_get('geslib_book_node_type', NULL)) {
+            $image_file = variable_get('geslib_book_default_image', NULL);
+          } else {
+            $image_file = variable_get('geslib_other_default_image', NULL);
+          }
+          if ($image_file) {
+            $this->vprint(t("Using default cover"));
+          }
+        }
+      }
+      # Return cover path
+      return $image_file;
+    }
 
   /**
    * Get Node by GeslibID
