@@ -191,12 +191,11 @@ class geslib_api {
     $needed_description = variable_get('geslib_book_body_from', NULL) &&
                           sizeof($this->elements["book"][$object_id]["relation"][variable_get('geslib_book_body_from', NULL)]) == 0;
 
-    # Only search book if no geslib data available
-    if ( $ean && ( $inet_search_type || ( $inet_search_type == "2" && ( $needed_description || $needed_author ) ) ) ) {
+    if ( $ean && $inet_search_type ) {
       $inet_data = array();
       GeslibCommon::vprint(t("Searching")." '".$this->elements["book"][$object_id]["title"]."' (EAN: ".$ean.")",2);
 
-      # Search for EAN code by priority
+      # Search in DILVE from EAN code
       if ($inet_search_type == "5") {
         $inet_data = DilveSearch::search($ean);
       }
@@ -204,6 +203,7 @@ class geslib_api {
            ( $inet_data["*author"] == NULL && $needed_author ) ||
            ( $inet_data["*description"] == NULL && $needed_description ) ) {
         $tmp_data = InetBookSearch::search_ttl($ean);
+        # Clear cover url if DILVE search is selected
         if ($inet_search_type == "5" && $tmp_data["*cover_url"]) {
           unset($tmp_data["*cover_url"]);
         }
@@ -217,8 +217,12 @@ class geslib_api {
           }
         }
       }
-      if ( ($inet_search_type != "2" && $inet_data["*cover_url"] == NULL) ||
-           ( $inet_data["*description"] == NULL && $needed_description ) ) {
+      # Si nos falta la portada y se esta pidiendo buscar
+      if ( $inet_search_type != "2" && $inet_search_type != "5" && $inet_data["*cover_url"] == NULL ) {
+        # La descargamos de CDL con URL directa
+        $inet_data["*cover_url"] = InetBookSearch::search_cdl_cover($ean);
+      }
+      if ( $inet_data["*description"] == NULL && $needed_description ) {
         $tmp_data = InetBookSearch::search_google($ean);
         foreach ($tmp_data as $key => $value) {
           if ( ! $inet_data[$key] ) {

@@ -1,8 +1,8 @@
 <?php
 /**
- * @author   Santiago Ramos <sramos@semillasl.com>
+ * @author   Santiago Ramos <sramos@sitiodistinto.net>
  * @package  InetBookSearch
- * @version  0.1
+ * @version  0.2
   */
 
 class InetBookSearch {
@@ -57,7 +57,7 @@ class InetBookSearch {
   static function search_google($isbn) {
     libxml_use_internal_errors(true);
     $book = array();
-    $url = 'http://books.google.com/books?q=isbn%3A'.$isbn;
+    $url = 'https://books.google.com/books?q=isbn%3A'.$isbn;
     $book_data = drupal_http_request($url);
     #dpm($book_data);
     #print "\n------------------> ".$book_data."\n";
@@ -100,6 +100,24 @@ class InetBookSearch {
   }
 
   /**
+  * Function InetBookSearch::search_cdl_cover
+  *
+  * @param string $isbn
+  *   ISBN code to search
+  * @return url
+  *   url string for book cover
+  */
+  static function search_cdl_cover($isbn) {
+    $url = sprintf("https://imagessl.casadellibro.com/a/l/t0/%s/%s.jpg", substr($isbn, 11, 2), $isbn);
+    $cover_request = drupal_http_request($url);
+    if ($cover_request->code != 200) {
+      return NULL;
+    } else {
+      return $url;
+    }
+  }
+
+  /**
   * Function InetBookSearch::search_ttl
   *
   * @param string $isbn
@@ -111,7 +129,7 @@ class InetBookSearch {
     libxml_use_internal_errors(true);
     $book = array();
 
-    $url = 'http://www.todostuslibros.com';
+    $url = 'https://www.todostuslibros.com';
     #print "----------------> " . $url;
     $book_data = drupal_http_request(sprintf("%s/busquedas/?keyword=%s", $url, $isbn));
     #print "\n------------------> ".$book_data."\n";

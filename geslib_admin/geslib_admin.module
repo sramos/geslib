@@ -156,6 +156,7 @@ function geslib_admin_settings($form_state) {
       5 => t("Lookup book info in DILVE"),
       1 => t("Lookup Internet info"),
       2 => t("Lookup Internet info without book covers"),
+      3 => t("Lookup covers only"),
     ),
   );
   $form['storage']['geslib_dilve_user'] = array(
@@ -628,7 +629,7 @@ function geslib_admin_settings_validate($form, &$form_state) {
   }
 
   # Comprueba que existan usuario y password DILVE si se ha elegido la descarga desde alli
-  if ( $form_state['values']['geslib_book_download_info'] == 3 ) {
+  if ( $form_state['values']['geslib_book_download_info'] == 5 ) {
     if ( $form_state['values']['geslib_dilve_user'] == NULL ) {
       form_set_error('geslib_dilve_user', t('Please enter a DILVE username.'));
     }

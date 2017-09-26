@@ -157,7 +157,7 @@ class GeslibWriter {
     # Si no hay nodo vinculado al gid...
     # If that node doesn't exist
     } else {
-      #print_r("No hemos encontrado el nodo... lo creamos\n");
+      # print_r("No hemos encontrado el nodo... lo creamos\n");
       $node = $this->create_empty_node($object_id);
     }
 
