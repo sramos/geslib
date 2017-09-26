@@ -156,7 +156,6 @@ function geslib_admin_settings($form_state) {
       5 => t("Lookup book info in DILVE"),
       1 => t("Lookup Internet info"),
       2 => t("Lookup Internet info without book covers"),
-      3 => t("Lookup covers only"),
     ),
   );
   $form['storage']['geslib_dilve_user'] = array(
