@@ -11,7 +11,6 @@ include_once dirname(__FILE__) . '/GeslibCommon.php';
 class GeslibCovers {
 
   public static $user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1";
-  public static $covers_path = "public://book_covers/";
 
   /**
   * Function GeslibCovers::download_file
@@ -66,9 +65,7 @@ class GeslibCovers {
       # If not book cover exists try to download it
       if (!$uploaded_cover && $cover_url) {
         GeslibCommon::vprint(t("Downloading remote book cover"));
-        #$public_path =  file_stream_wrapper_get_instance_by_uri('public://')->getDirectoryPath();
-        #$image_file = GeslibCovers::download_file($cover_url, $public_path . "/book_covers", $node->model);
-        $image_file = GeslibCovers::download_file($cover_url, self::$covers_path, $node->model);
+        $image_file = GeslibCovers::download_file($cover_url, GeslibCommon::$covers_path, $node->model);
         # If content type is not an image, delete it
         $ext = pathinfo($image_file, PATHINFO_EXTENSION);
         if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {

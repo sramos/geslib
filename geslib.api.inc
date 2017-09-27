@@ -7,6 +7,7 @@
 include_once dirname(__FILE__) . '/lib/GeslibCommon.php';
 include_once dirname(__FILE__) . '/lib/GeslibReader.php';
 include_once dirname(__FILE__) . '/lib/GeslibWriter.php';
+include_once dirname(__)
 
 class geslib_api {
   private $geslib_files;
@@ -25,7 +26,7 @@ class geslib_api {
     $this->default_nom_collection = GeslibCommon::utf8_encode(variable_get('geslib_collection_default_name', NULL));
     $this->geslib_files = $this->select_geslib_files($geslib_filepath);
     # Check if covers upload path is writable
-    $covers_path = drupal_realpath('public://book_covers');
+    $covers_path = drupal_realpath(GeslibCommon::$covers_path);
     if ( !file_prepare_directory($covers_path, FILE_CREATE_DIRECTORY) ) {
       throw new Exception('No rights to write in book covers path ('. $covers_path . ')' );
     }

@@ -9,6 +9,7 @@
 class GeslibCommon {
 
   public static $verbose_level=3;
+  public static $covers_path = "public://book_covers/";
 
   /**
   * Print output messages
