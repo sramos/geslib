@@ -10,6 +10,7 @@
  */
 
 include_once dirname(__FILE__) . '/GeslibCommon.php';
+include_once dirname(__FILE__) . '/GeslibCovers.php';
 
 class GeslibWriter {
 
@@ -468,38 +469,40 @@ class GeslibWriter {
     *   object properties
     */
     function update_object_image(&$node,&$object_data) {
-      $image_file = NULL;
-      if ($node->nid && (!$node->field_image_cache[0] || $node->field_image_cache[0]['filepath'] == variable_get('geslib_book_default_image', NULL)) ) {
-        $cover_url = $object_data["*cover_url"];
-        #$uploaded_cover = $this->get_uploaded_book_image($node->model);
-        $uploaded_cover = NULL;
-        # If not book cover exists try to download it
-        if (!$uploaded_cover && $cover_url) {
-          GeslibCommon::vprint(t("Downloading remote book cover"));
-          $public_path =  file_stream_wrapper_get_instance_by_uri('public://')->getDirectoryPath();
-          $image_file = GeslibCommon::download_file($cover_url, $public_path . "/book_covers", $node->model);
-          # If content type is not an image, delete it
-          $ext = pathinfo($image_file, PATHINFO_EXTENSION);
-          if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
-            $this->vprint(t("Remote book cover not valid").": ".$image_file);
-            $image_file=NULL;
-            unlink($image_file);
-          }
-        }
-        # Use default one
-        if (!$image_file && !$node->field_image_cache[0]) {
-          if ( $node->type == variable_get('geslib_book_node_type', NULL)) {
-            $image_file = variable_get('geslib_book_default_image', NULL);
-          } else {
-            $image_file = variable_get('geslib_other_default_image', NULL);
-          }
-          if ($image_file) {
-            $this->vprint(t("Using default cover"));
-          }
+      $filename = GeslibCovers::get_cover_file($node,$object_data);
+      # If there is no cover loaded in database, do it
+      if ( $filename && !($image = GeslibCovers::drupal_file_load($filename)) ) {
+        // Create file object and update files table
+        $file = new stdClass();
+        $file->filename  = basename($filename);
+        # FILEPATH para usar en la tabla files
+        $file->filepath  = $filename;
+        # URI se usa en la tabla file_managed (file_save)
+        $file->uri       = $filename;
+        $file->filemime  = mime_content_type($filename);
+        $file->filesize  = filesize($filename);
+        $file->uid       = 1;
+        $file->timestamp = time();
+        # Files se usaba en D6, tambien en D7?
+        #drupal_write_record('files', $file);
+        # Esta es la alternativa para D7?
+        file_save($file);
+        $image = GeslibCovers::drupal_file_load($filename);
+      }
+      if ( $image && $image[fid] ) {
+        $image['alt'] = t("Cover Image") . ": " . $node->title;
+        $image['title'] = $node->title;
+        $node->field_image_cache['und'][0] = $image;
+        # Check that node is ready to save
+        if ($node = node_submit($node)) {
+          node_save($node);
+          GeslibCommon::vprint(t("Cover image stored"),2);
+        } else {
+          GeslibCommon::vprint(t("Error storing cover image"),0);
         }
       }
-      # Return cover path
-      return $image_file;
+      $file = NULL;
+      $image = NULL;
     }
 
   /**
