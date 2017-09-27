@@ -476,9 +476,9 @@ class GeslibWriter {
         $file = new stdClass();
         $file->filename  = basename($filename);
         # FILEPATH para usar en la tabla files
-        $file->filepath  = $filename;
+        #$file->filepath  = $filename;
         # URI se usa en la tabla file_managed (file_save)
-        $file->uri       = $filename;
+        $file->uri       = GeslibCovers::$covers_path . "/". basename($filename);
         $file->filemime  = mime_content_type($filename);
         $file->filesize  = filesize($filename);
         $file->uid       = 1;

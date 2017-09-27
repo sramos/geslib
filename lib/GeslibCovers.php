@@ -10,7 +10,8 @@ include_once dirname(__FILE__) . '/GeslibCommon.php';
 
 class GeslibCovers {
 
-  private static $user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1";
+  public static $user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1";
+  public static $covers_path = "public://portadas";
 
   /**
   * Function GeslibCovers::download_file
@@ -65,12 +66,13 @@ class GeslibCovers {
       # If not book cover exists try to download it
       if (!$uploaded_cover && $cover_url) {
         GeslibCommon::vprint(t("Downloading remote book cover"));
-        $public_path =  file_stream_wrapper_get_instance_by_uri('public://')->getDirectoryPath();
-        $image_file = GeslibCovers::download_file($cover_url, $public_path . "/book_covers", $node->model);
+        #$public_path =  file_stream_wrapper_get_instance_by_uri('public://')->getDirectoryPath();
+        #$image_file = GeslibCovers::download_file($cover_url, $public_path . "/book_covers", $node->model);
+        $image_file = GeslibCovers::download_file($cover_url, self::$covers_path, $node->model);
         # If content type is not an image, delete it
         $ext = pathinfo($image_file, PATHINFO_EXTENSION);
         if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
-          $this->vprint(t("Remote book cover not valid").": ".$image_file);
+          GeslibCommon::vprint(t("Remote book cover not valid").": ".$image_file);
           $image_file=NULL;
           unlink($image_file);
         }
@@ -104,10 +106,10 @@ class GeslibCovers {
     }
 
     static function drupal_file_load($filename) {
-      $fid = db_select('file_managed', 'f')->condition('uri', $filename)
-                                    ->fields('f', array('fid'))
-                                    ->execute()
-                                    ->fetchAll();
+      $fid = db_select('file_managed', 'f')->condition('filename', basename($filename))
+                                           ->fields('f', array('fid'))
+                                           ->execute()
+                                           ->fetchAll();
       if ($fid) {
         return (array)file_load($fid[0]->fid);
       } else {
