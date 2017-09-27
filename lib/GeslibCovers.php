@@ -11,7 +11,7 @@ include_once dirname(__FILE__) . '/GeslibCommon.php';
 class GeslibCovers {
 
   public static $user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:15.0) Gecko/20100101 Firefox/15.0.1";
-  public static $covers_path = "public://portadas";
+  public static $covers_path = "public://book_covers/";
 
   /**
   * Function GeslibCovers::download_file
