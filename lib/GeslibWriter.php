@@ -292,6 +292,12 @@ class GeslibWriter {
       }
       # Despues de cambiar todo, modifica el stock
       if ( $stock !== NULL ) {
+        # Por defecto, tiene el valor "0"
+        if (empty($stock)) {
+          $attr_value = 0;
+        } else {
+          $attr_value = $stock;
+        }
         # Cambia el valor del stock
         uc_stock_set($node->model, $attr_value);
         # Hace un procesado especial del stock para ajustar tambien
