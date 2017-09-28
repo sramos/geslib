@@ -23,7 +23,7 @@ class GeslibWriter {
   * @param $default_nom_category
   *
   */
-  function __construct($elements_type, $elements, $geslib_filename, $user) {
+  function __construct($elements_type, &$elements, $geslib_filename, $user) {
     $this->elements_type = $elements_type;
     $this->node_type = variable_get('geslib_'.$this->elements_type.'_node_type', NULL);
     $this->gid_field = variable_get('geslib_link_content_field', NULL);
@@ -38,7 +38,7 @@ class GeslibWriter {
   function save_items() {
     $query = "SELECT id FROM {geslib_log} WHERE component = :component AND imported_file = :file AND status IN ('ok', 'working')";
     $result = db_query($query, array(':component' => $this->elements_type, ':file' => $this->geslib_filename));
-    if ( $result->rowCount() == 0 && $this->elements && $this->node_type ) {
+    if ( $result->rowCount() == 0 && $this->elements[$this->elements_type] && $this->node_type ) {
       $log_element = array('start_date' => time(),
                            'component' => $this->elements_type,
                            'imported_file' => basename($this->geslib_filename),
@@ -50,7 +50,7 @@ class GeslibWriter {
         $this->process_elements();
       }
       $this->flush_cache();
-      $log_element['count'] = count($this->elements);
+      $log_element['count'] = count($this->elements[$this->elements_type]);
       $log_element['status'] = 'ok';
       $log_element['end_date'] = time();
       drupal_write_record('geslib_log', $log_element, 'id');
@@ -68,7 +68,7 @@ class GeslibWriter {
     $total_counter = 0;
     # Loop elements and send it to apropiate action
     GeslibCommon::vprint(t("Importing")." ".$this->elements_type, 1);
-    foreach ($this->elements as $object_id => $object) {
+    foreach ($this->elements[$this->elements_type] as $object_id => $object) {
       if ($counter == 1000) {
         # Not sure if this clear internal node
         #$this->flush_cache();
@@ -82,6 +82,10 @@ class GeslibWriter {
         # Create or update node and use it to modify parameters (linked or defined)
         $node = $this->update_object($object_id, $object, $use_existing_nodes);
         if ( $node ) {
+          # Update body
+          if ( variable_get('geslib_' . $this->elements_type . '_body_from', NULL) ) {
+            $this->update_body($node, $object, variable_get('geslib_' . $this->elements_type . '_body_from', NULL));
+          }
           # Update node attributes, relationships and taxonomy terms
           $this->update_attributes($node, $object);
           $this->update_uc_attributes($node, $object);
@@ -111,7 +115,7 @@ class GeslibWriter {
     $geslib_book_node_type = variable_get('geslib_book_node_type', NULL);
     # Loop elements and send it to apropiate action
     GeslibCommon::vprint(t("Searching book covers"),1);
-    foreach ($elements as $object_id => $object) {
+    foreach ($this->elements[$this->elements_type] as $object_id => $object) {
       # Each 1000 objects, clear cache
       if ( $counter == 1000 ) {
         # Not sure if this clear internal node cache
@@ -223,6 +227,32 @@ class GeslibWriter {
     node_object_prepare($node);
     $this->get_access($node, "create");
     return $node;
+  }
+
+  /**
+  * Updates body for books
+  *
+  * @param node
+  *   node to be updated
+  * @param object
+  *   object element
+  */
+  function update_body(&$node, $object, $body_from) {
+    if ( $object["relation"][$body_from] ) {
+      $body_gid = $object["relation"][$body_from][0]["gid"];
+      $tmp_body = $this->elements[$body_from][$body_gid]["title"];
+      if ($tmp_body) {
+        # Guardamos el body en full_html (format: 2)
+        $node->body['und'][0] = array('value' => $tmp_body, 'format' => 2);
+        # Check that node is ready and save it
+        if ($node = node_submit($node)) {
+          node_save($node);
+          GeslibCommon::vprint(t("Updated body product"),2);
+        } else {
+          GeslibCommon::vprint(t("Body for node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("processed incorrectly"), 0);
+        }
+      }
+    }
   }
 
   /**

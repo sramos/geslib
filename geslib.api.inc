@@ -131,7 +131,7 @@ class geslib_api {
                    'author','collection','publisher_reference',
                    'library_reference','index','book');
     foreach ($items as $item) {
-      $writer = new GeslibWriter($item, $this->elements[$item], basename($this->geslib_filename), $this->user);
+      $writer = new GeslibWriter($item, $this->elements, basename($this->geslib_filename), $this->user);
       $writer->save_items();
     }
     # Write finishing data into import table
