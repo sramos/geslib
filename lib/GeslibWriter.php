@@ -93,7 +93,7 @@ class GeslibWriter {
           GeslibCommon::vprint(t("Node @type with GeslibID @gid doesn't exist", array('@type' => $this->node_type, '@gid' => $object_id)), 0);
         }
       } else {
-        $this->delete_object($this->node_type, $object_id);
+        $this->delete_object($object_id);
       }
       $counter += 1;
       $total_counter += 1;
@@ -181,6 +181,27 @@ class GeslibWriter {
       GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("processed incorrectly"), 0);
       return NULL;
     }
+  }
+
+  /**
+  * Delete object if exists
+  *
+  * @param object_id
+  *   geslib object_id
+  */
+  function delete_object($object_id) {
+    $ret = false;
+    # Get node if exists
+    $node = $this->get_node_by_gid($object_id, $this->node_type);
+    if ($node) {
+      #print_r("Tenemos nodo!!!\n");
+      $this->get_access($node, "delete");
+      node_delete($node->nid);
+      GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("removed"), 2);
+      $ret = true;
+    }
+    $node = NULL;
+    return $ret;
   }
 
   /**
@@ -549,7 +570,7 @@ class GeslibWriter {
        $nids = array_keys($result['node']);
        $nid = $nids[0];
      } else {
-       print_r("No tenemos resultados\n");
+       GeslibCommon::vprint("No results for " . $node_type . " (GID " . $geslib_id . ")", 2);
        $nid = NULL;
      }
      # Nullify variables to force garbage collection
