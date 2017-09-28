@@ -419,18 +419,26 @@ class GeslibWriter {
   *   object terms separated by comma
   */
   function update_vocabulary_terms(&$node, $vid, $values) {
-    if ($values && $values != "") {
-      GeslibCommon::vprint(t("Updating vocabulary")." ".$vid." with: ".$values);
-      $terms = array();
-      $terms['tags'] = array($vid => $values);
-      taxonomy_node_save($node, $terms);
-      # Another way to do it
-      /*
-      foreach (explode(",", $values) as $term) {
-        $new_term = array('name' => $term, 'parent' => 0, 'vid' => $vid);
-        taxonomy_save_term($autoterm);
+    if (!empty($values)) {
+      GeslibCommon::vprint(t("Updating vocabulary")." ".$vid." : ".$values, 2);
+      $tids = array();
+      # Recorremos todos los valores
+      foreach ( explode(",",$values) as $value ) {
+        # Primero buscamos el termino en la taxonomia
+        $tid = $this->get_tid_by_name($vid, $value);
+        # y lo incluimos si no existe
+        $term = new stdClass();
+        if (empty($tid)) {
+          $term->vid = $vid;
+          $term->name = $value;
+          taxonomy_term_save($term);
+        } else {
+          $term->tid = $tid;
+        }
+        $tids[] = array('tid' => $term->tid);
       }
-      */
+      # por ultimo, asociamos el tid al nodo
+      $node->taxonomyextra['und'] = $tids;
     }
   }
 
@@ -581,6 +589,7 @@ class GeslibWriter {
      }
      return reset($nodes);
    }
+
    /**
    * Get NodeID by GeslibID
    *
@@ -612,6 +621,34 @@ class GeslibWriter {
      $query = NULL;
      $result = NULL;
      return $nid;
+   }
+
+   /**
+   * Get TermID of a vocabulary by term
+   *
+   * @param vid
+   *    vocabulary id
+   * @param term
+   *    term name
+   *
+   */
+   function get_tid_by_name($vid, $term) {
+     $query = new EntityFieldQuery;
+     $query->entityCondition('entity_type', 'taxonomy_term')
+           ->propertyCondition('name', $term)
+           ->propertyCondition('vid', $vid);
+     $result = $query->execute();
+     # If there is any result, return termid
+     if (isset($result['taxonomy_term'])) {
+       $tids = array_keys($result['taxonomy_term']);
+       $tid = $tids[0];
+     } else {
+       GeslibCommon::vprint("No results for term " . $term . " in vocabulary ID " . $vid . ")", 2);
+       $tid = NULL;
+     }
+     $query = NULL;
+     $result = NULL;
+     return $tid;
    }
 
   /**
