@@ -172,7 +172,7 @@ class GeslibWriter {
     }
 
     # Check that node is ready and save it
-    if ($node = node_submit($node)) {
+    if ($node->title && ($node = node_submit($node))) {
       node_save($node);
       GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("updated correctly"), 2);
       return $node;
