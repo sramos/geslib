@@ -77,7 +77,7 @@ class GeslibWriter {
       if ($object["action"] != "B") {
         # If there is no action defined, try with add
         if ($object["action"] == NULL) {
-          $object["action"] = "M";
+          $object["action"] = "STOCK";
         }
         # Create or update node and use it to modify parameters (linked or defined)
         $node = $this->update_object($object_id, $object, $use_existing_nodes);
@@ -172,7 +172,7 @@ class GeslibWriter {
     }
 
     # Check that node is ready and save it
-    if ($node->title && ($node = node_submit($node))) {
+    if ($node = node_submit($node)) {
       node_save($node);
       GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."/GID:".$object_id.") ".t("updated correctly"), 2);
       return $node;
