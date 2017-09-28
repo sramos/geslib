@@ -390,7 +390,7 @@ class GeslibWriter {
   */
   function update_vocabulary_terms(&$node, $vid, $values) {
     if ($values && $values != "") {
-      GeslibCommon::vprint(t("Updating vocabulary").": ".$values);
+      GeslibCommon::vprint(t("Updating vocabulary")." ".$vid." with: ".$values);
       $terms = array();
       $terms['tags'] = array($vid => $values);
       taxonomy_node_save($node, $terms);
