@@ -151,16 +151,15 @@ class GeslibWriter {
     $node = $this->get_node_by_gid($object_id, $this->node_type);
     # If node exists, only gets authorization for update
     if ( $node ) {
-    # Return NULL if doesn't exists and there is no ADD or MODIFY action
       #print_r("Tenemos nodo!!!\n");
       $this->get_access($node, "update");
-    } elseif ( $object["action"] != "A" && $object["action"] != "M" ) {
-      return NULL;
-    # Si no hay nodo vinculado al gid...
     # If that node doesn't exist
-    } else {
+    } elseif ( $object["action"] == "A" || $object["action"] == "M" ) {
       # print_r("No hemos encontrado el nodo... lo creamos\n");
       $node = $this->create_empty_node($object_id);
+    # Return NULL if doesn't exists and there is no ADD or MODIFY action
+    } else {
+      return NULL;
     }
 
     # Basic node data
