@@ -152,15 +152,18 @@ class GeslibReader {
               }
             }
             #$this->elements["book"][$myline[2]]["*author"][] = array('name' => GeslibCommon::utf8_encode($myline[4]));
-            $this->elements["book"][$myline[2]]["attribute"]["isbn"] = $myline[6];	//ISBN (por si se quiere seleccionar)
+            //ISBN (por si se quiere seleccionar)
+            $this->elements["book"][$myline[2]]["attribute"]["isbn"] = GeslibCommon::utf8_encode($myline[6]);
             # Si hay EAN, lo asignamos y tambien al model de UC
             if ($myline[7]) {
-              $this->elements["book"][$myline[2]]["attribute"]["ean"] = $myline[7];
-              $this->elements["book"][$myline[2]]["uc_product"]["model"] = $myline[7];
+              $code = GeslibCommon::utf8_encode($myline[7]);
+              $this->elements["book"][$myline[2]]["attribute"]["ean"] = $code;
+              $this->elements["book"][$myline[2]]["uc_product"]["model"] = $code;
             # Si no hay EAN pero si ISBN, cogemos el ISBN sin guiones
             } else if ($myline[6]) {
-              $this->elements["book"][$myline[2]]["attribute"]["ean"] = str_replace('-','',$myline[6]);
-              $this->elements["book"][$myline[2]]["uc_product"]["model"] = str_replace('-','',$myline[6]);
+              $code = GeslibCommon::utf8_encode($myline[6]);
+              $this->elements["book"][$myline[2]]["attribute"]["ean"] = str_replace('-','',$code);
+              $this->elements["book"][$myline[2]]["uc_product"]["model"] = str_replace('-','',$code);
             # y si tampoco hay ISBN, tomamos el GID como model UC
             } else {
               $this->elements["book"][$myline[2]]["uc_product"]["model"] = "GID-".$myline[2];
