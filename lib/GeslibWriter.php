@@ -271,14 +271,38 @@ class GeslibWriter {
       $bad_keys = array('action','title','type');
       $good_data = array_diff_key($attributes,array_flip($bad_keys));
 
-      # Si hay algún atributo inicializa los vinculos de taxonomia
-      if ( count($good_data) > 0 ) {
-        $node->taxonomyextra['und'] = array();
-      }
+      # Variable para almacenar las taxonomias multivaluadas ya usadas
+      $taxonomy_fields_used = array();
       # Recorre el resto de atributos actualizando la info
       foreach ($good_data as $attr_name => $attr_value) {
-        // Format 5: plaintext
-        if ($this->change_attribute($node, $attr_name, $attr_value, 5)) {
+        # Averigua el nombre mapeado del campo
+        # El body siempre sera igual
+        if ($attr_name == 'body') {
+          $field_name = 'body';
+        } else {
+          # Obtenemos el campo a mapear de la configuracion del modulo
+          $field_name = variable_get('geslib_'.$this->elements_type.'_attribute_'.$attr_name, NULL);
+        }
+        # Si tenemos campo mapeado...
+        if ($field_name) {
+          # Si el campo corresponde a una taxonomia
+          if (strpos($field_name, "#tax-") === 0) {
+            $tax_field_name = substr($field_name,5);
+            # Si el campo de enlace no ha sido usado aun, lo limpia
+            if (!in_array($tax_field_name,$taxonomy_fields_used)) {
+              $node->{$tax_field_name}['und'] = array();
+              $taxonomy_fields_used[] = $tax_field_name;
+            }
+            # Obtiene el vid desde el primer vocabulario permitido para el campo
+            $info = field_info_field($tax_field_name);
+            $vocab = taxonomy_vocabulary_machine_name_load($info['settings']['allowed_values'][0]['vocabulary']);
+            # Pide actualizar el vocabulario
+            $this->update_vocabulary_terms($node,$tax_field_name,$vocab->vid,$attr_value);
+          // El resto de campos, los guarda como atributos
+          } else {
+            // Format 5: plaintext
+            $this->change_attribute($node, $field_name, $attr_value, 5);
+          }
           $changed = true;
         }
       }
@@ -366,66 +390,45 @@ class GeslibWriter {
   * @param attr_format (optiona)
   *    Attribute format
   */
-  function change_attribute(&$node, $attr_name, $attr_value, $attr_format=NULL) {
-    $changed = false;
-    # El body siempre lo mapeamos igual
-    if ($attr_name == 'body') {
-      $field_name = 'body';
+  function change_attribute(&$node, $field_name, $attr_value, $attr_format=NULL) {
+    # Construimos un array de valores
+    $field_values = array();
+    # Si los valores ya son un array los cargaremos de ahi
+    if (is_array($attr_value)) {
+      $attr_values = $attr_value;
+    # En caso contrario, construimos un array de un solo valor
     } else {
-      # Obtenemos el campo a mapear de la configuracion del modulo
-      $field_name = variable_get('geslib_'.$this->elements_type.'_attribute_'.$attr_name, NULL);
+      $attr_values = array($attr_value);
     }
-
-    # Si existe mapeo para el campo, lo actualiza
-    if ($field_name) {
-      # Si hemos dicho que esta vinculado a una taxonomia
-      if (strpos($field_name, "#vid-") === 0) {
-        $vid = substr($field_name,5);
-        # Pide actualizar el vocabulario
-        $this->update_vocabulary_terms($node,$vid,$attr_value);
-      # El resto de atributos los actualizamos de forma normal
-      } else {
-        # Construimos un array de valores
-        $field_values = array();
-        # Si los valores ya son un array los cargaremos de ahi
-        if (is_array($attr_value)) {
-          $attr_values = $attr_value;
-        # En caso contrario, construimos un array de un solo valor
-        } else {
-          $attr_values = array($attr_value);
-        }
-        # Recorremos el array de todos los valores
-        foreach ( $attr_values as $attr_element ) {
-          # construimos el elemento
-          $field_value = array( 'value' => $attr_element );
-          if ($attr_format) {
-            $field_value['format'] = $attr_format;
-          }
-          # asignamos el valor al array de campos
-          $field_values[] = $field_value;
-        }
-        # y lo asociamos al nodo
-        $node->$field_name = array('und' => $field_values);
+    # Recorremos el array de todos los valores
+    foreach ( $attr_values as $attr_element ) {
+      # construimos el elemento
+      $field_value = array( 'value' => $attr_element );
+      if ($attr_format) {
+        $field_value['format'] = $attr_format;
       }
-      $changed = true;
+      # asignamos el valor al array de campos
+      $field_values[] = $field_value;
     }
-    return $changed;
+    # y lo asociamos al nodo
+    $node->$field_name = array('und' => $field_values);
   }
 
   /**
   * Update vocabulary terms
   *
-  * @node
-  *   drupal node
-  * @vid
+  * @param node
+  *   reference to drupal node
+  * @param field_name
+  *   node field name for taxonomy reference
+  * @param vid
   *   vocabulary ID
   * @param values
   *   object terms separated by comma
   */
-  function update_vocabulary_terms(&$node, $vid, $values) {
+  function update_vocabulary_terms(&$node, $field_name, $vid, $values) {
     if (!empty($values)) {
-      GeslibCommon::vprint(t("Updating vocabulary")." ".$vid." : ".$values, 2);
-
+      GeslibCommon::vprint(t("Updating vocabulary")." ".$field_name.": ".$values, 2);
       # Recorremos todos los valores
       foreach ( explode(",",$values) as $value ) {
         # Primero buscamos el termino en la taxonomia
@@ -433,13 +436,14 @@ class GeslibWriter {
         # y lo incluimos si no existe
         $term = new stdClass();
         if (empty($tid)) {
+          GeslibCommon::vprint(t("Updating vocabulary")." (VID ".$vid."): ".$value, 2);
           $term->vid = $vid;
           $term->name = $value;
           taxonomy_term_save($term);
         } else {
           $term->tid = $tid;
         }
-        $node->taxonomyextra['und'][] = array('tid' => $term->tid);
+        $node->{$field_name}['und'][] = array('tid' => $term->tid);
       }
     }
   }

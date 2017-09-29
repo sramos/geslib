@@ -48,17 +48,12 @@ function geslib_admin_settings($form_state) {
     $node_types[$node_type] = $node_label . " (" . $node_type . ")";
   }
 
-  // Get vocabularies
-  $vocabularies = array();
-  foreach ( taxonomy_get_vocabularies() as $vocab) {
-    $vocabularies["#vid-".$vocab->vid] = "(". t("Vocabulary") ." #vid-" .$vocab->vid.") ". $vocab->name;
-  }
-
   // Get field by type
   $type_txt_fields = array();
   $type_ref_fields = array();
   $type_int_fields = array();
   $type_dat_fields = array();
+  $type_tax_fields = array();
   # For all node types
   foreach ( field_info_instances('node', NULL) as $node_name => $node_data ) {
     # And all fields
@@ -91,6 +86,13 @@ function geslib_admin_settings($form_state) {
           $type_dat_fields[$field_name] .= ", " . $node_name;
         } else {
           $type_dat_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+        }
+      }
+      if ($field_data[widget][module] == "taxonomy") {
+        if (array_key_exists("#tax-".$field_name,$type_tax_fields)) {
+          $type_tax_fields["#tax-".$field_name] .= ", " . $node_name;
+        } else {
+          $type_tax_fields["#tax-".$field_name]  = t("Vocabulary") . " ". $field_data[label] . " (". $field_name .") @ " . $node_name;
         }
       }
     }
@@ -540,7 +542,7 @@ function geslib_admin_settings($form_state) {
     '#title' => t('Location field'),
     '#default_value' => variable_get('geslib_book_attribute_location', NULL),
     '#description' => t('Drupal field used to store location (col 15).'),
-    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $vocabularies,
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $type_tax_field,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
@@ -549,7 +551,7 @@ function geslib_admin_settings($form_state) {
     '#title' => t('Alternative location field'),
     '#default_value' => variable_get('geslib_book_attribute_alt_location', NULL),
     '#description' => t('Drupal field used to store alternative location (col 41).'),
-    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $vocabularies,
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $type_tax_field,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
