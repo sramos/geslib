@@ -402,6 +402,11 @@ class GeslibWriter {
     }
     # Recorremos el array de todos los valores
     foreach ( $attr_values as $attr_element ) {
+      # Ajusta los vacios segun el tipo de campo
+      # Valido no solo para field_info_field($field_name)['type'] == 'datetime'
+      if ( $attr_element == '' ) {
+        $attr_element = NULL;
+      }
       # construimos el elemento
       $field_value = array( 'value' => $attr_element );
       if ($attr_format) {
