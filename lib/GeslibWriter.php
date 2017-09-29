@@ -271,6 +271,10 @@ class GeslibWriter {
       $bad_keys = array('action','title','type');
       $good_data = array_diff_key($attributes,array_flip($bad_keys));
 
+      # Si hay algún atributo inicializa los vinculos de taxonomia
+      if ( count($good_data) > 0 ) {
+        $node->taxonomyextra['und'] = array();
+      }
       # Recorre el resto de atributos actualizando la info
       foreach ($good_data as $attr_name => $attr_value) {
         // Format 5: plaintext
@@ -421,7 +425,7 @@ class GeslibWriter {
   function update_vocabulary_terms(&$node, $vid, $values) {
     if (!empty($values)) {
       GeslibCommon::vprint(t("Updating vocabulary")." ".$vid." : ".$values, 2);
-      $tids = array();
+
       # Recorremos todos los valores
       foreach ( explode(",",$values) as $value ) {
         # Primero buscamos el termino en la taxonomia
@@ -435,10 +439,8 @@ class GeslibWriter {
         } else {
           $term->tid = $tid;
         }
-        $tids[] = array('tid' => $term->tid);
+        $node->taxonomyextra['und'][] = array('tid' => $term->tid);
       }
-      # por ultimo, asociamos el tid al nodo
-      $node->taxonomyextra['und'] = $tids;
     }
   }
 
