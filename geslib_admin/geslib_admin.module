@@ -542,7 +542,7 @@ function geslib_admin_settings($form_state) {
     '#title' => t('Location field'),
     '#default_value' => variable_get('geslib_book_attribute_location', NULL),
     '#description' => t('Drupal field used to store location (col 15).'),
-    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $type_tax_field,
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $type_tax_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
@@ -551,7 +551,7 @@ function geslib_admin_settings($form_state) {
     '#title' => t('Alternative location field'),
     '#default_value' => variable_get('geslib_book_attribute_alt_location', NULL),
     '#description' => t('Drupal field used to store alternative location (col 41).'),
-    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $type_tax_field,
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_txt_fields + $type_tax_fields,
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
