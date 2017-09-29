@@ -51,6 +51,7 @@ function geslib_install() {
   variable_set('geslib_book_attribute_registration_date', NULL);
   variable_set('geslib_book_attribute_status', NULL);
   variable_set('geslib_book_attribute_format', 'field_formato');
+  variable_set('geslib_book_attribute_alt_location', NULL);
   variable_set('geslib_book_attribute_location', NULL);
   variable_set('geslib_book_attribute_classification', NULL);
   variable_set('geslib_book_attribute_vat', NULL);
@@ -109,6 +110,7 @@ function geslib_uninstall() {
   variable_del('geslib_book_attribute_registration_date');
   variable_del('geslib_book_attribute_status');
   variable_del('geslib_book_attribute_format');
+  variable_del('geslib_book_attribute_alt_location');
   variable_del('geslib_book_attribute_location');
   variable_del('geslib_book_attribute_classification');
   variable_del('geslib_book_attribute_vat');
