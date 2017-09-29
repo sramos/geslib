@@ -837,13 +837,13 @@ function geslib_admin_settings_validate($form, &$form_state) {
     }
     # Extra check to avoid validations for vocabulary id
     if ($field = $form_state['values']['geslib_book_attribute_location']) {
-      if ( !(strpos($field, "#vid-") === 0) && !$type["fields"][$field] ) {
+      if ( !(strpos($field, "#tax-") === 0) && !$type["fields"][$field] ) {
         form_set_error('geslib_book_attribute_location', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     # Extra check to avoid validations for vocabulary id
     if ($field = $form_state['values']['geslib_book_attribute_alt_location']) {
-      if ( !(strpos($field, "#vid-") === 0) && !$type["fields"][$field] ) {
+      if ( !(strpos($field, "#tax-") === 0) && !$type["fields"][$field] ) {
         form_set_error('geslib_book_attribute_alt_location', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
