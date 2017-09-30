@@ -269,7 +269,7 @@ class GeslibReader {
         case "6":
           # Library reference code is relative to book, so internal code should include it
           $descr = GeslibCommon::utf8_encode($myline[3]);
-          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = substr($descr,0,128);
+          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = $descr;
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["library_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
@@ -279,7 +279,7 @@ class GeslibReader {
         case "6E":
           # Publisher reference code is relative to book, so internal code should include it
           $descr = GeslibCommon::utf8_encode($myline[3]);
-	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = substr($descr,0,128);
+	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = $descr;
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["publisher_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
@@ -289,7 +289,7 @@ class GeslibReader {
         case "6I":
           # Index code is relative to book, so internal code should include it
           $descr = GeslibCommon::utf8_encode($myline[3]);
-          $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = substr($descr,0,128);
+          $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = $descr;
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["index"][] = array("gid" => $myline[1] . "_" . $myline[2]);

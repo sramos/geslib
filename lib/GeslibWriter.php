@@ -172,7 +172,8 @@ class GeslibWriter {
     $node->status = 1;
     # Title
     if (array_key_exists('title', $object)) {
-      $node->title = $object['title'];
+      $node->title = substr($object['title'],0,128);
+      #$node->title = mb_substr($object['title'],0,128,'UTF-8');
     }
 
     # Check that node is ready and save it
@@ -241,6 +242,7 @@ class GeslibWriter {
     if ( $object["relation"][$body_from] ) {
       $body_gid = $object["relation"][$body_from][0]["gid"];
       $tmp_body = $this->elements[$body_from][$body_gid]["title"];
+      #$tmp_body = $this->elements[$body_from][$body_gid]["attribute"]["body"];
       if ($tmp_body) {
         # Guardamos el body en full_html (format: 2)
         $node->body['und'][0] = array('value' => $tmp_body, 'format' => 2);
