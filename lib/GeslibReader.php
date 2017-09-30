@@ -268,8 +268,9 @@ class GeslibReader {
         # Referencias Libreria
         case "6":
           # Library reference code is relative to book, so internal code should include it
-          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = $myline[1];
-          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[3]);
+          $descr = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = substr($descr,0,128);
+          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["library_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
@@ -277,8 +278,9 @@ class GeslibReader {
         # 6E|48794|1|Palabra de moda, "populismo" significa cosas ...|
         case "6E":
           # Publisher reference code is relative to book, so internal code should include it
-	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = $myline[1];
-          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[3]);
+          $descr = GeslibCommon::utf8_encode($myline[3]);
+	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = substr($descr,0,128);
+          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["publisher_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
@@ -286,8 +288,9 @@ class GeslibReader {
         # 6I|50879|1|I. EL CAMINO DE LA REVOLUCIÓN Y SU ESTALLIDO ... |
         case "6I":
           # Index code is relative to book, so internal code should include it
-          $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = $myline[1];
-          $this->elements["index"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[3]);
+          $descr = GeslibCommon::utf8_encode($myline[3]);
+          $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = substr($descr,0,128);
+          $this->elements["index"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["index"][] = array("gid" => $myline[1] . "_" . $myline[2]);
           break;
