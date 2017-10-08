@@ -82,7 +82,7 @@ class GeslibCovers {
           $image_file = variable_get('geslib_other_default_image', NULL);
         }
         if ($image_file) {
-          $this->vprint(t("Using default cover"));
+          GeslibCommon::vprint(t("Using default cover"));
         }
       }
     }
