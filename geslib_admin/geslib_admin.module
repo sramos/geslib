@@ -371,6 +371,24 @@ function geslib_admin_settings($form_state) {
     '#attributes' => array('style' => 'max-width:100%;'),
     '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
+  $form['books']['geslib_book_link_to_illustrator'] = array(
+    '#type' => 'select',
+    '#title' => t('Illustrators relationship'),
+    '#default_value' => variable_get('geslib_book_link_to_illustrator', NULL),
+    '#description' => t('Drupal field used to link books with book illustrators (nodereference type).'),
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
+  );
+  $form['books']['geslib_book_link_to_translator'] = array(
+    '#type' => 'select',
+    '#title' => t('Translators relationship'),
+    '#default_value' => variable_get('geslib_book_link_to_translator', NULL),
+    '#description' => t('Drupal field used to link books with book translator (nodereference type).'),
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_ref_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
+  );
   $form['books']['geslib_book_create_fake_author'] = array(
     '#type' => 'select',
     '#title' => t('Create Authors if not referenced'),
@@ -380,16 +398,6 @@ function geslib_admin_settings($form_state) {
       NULL => t("Don't create authors"),
       1 => t("Search and create if there is no reference"),
       2 => t("Try to find book authors on the net"),
-    ),
-  );
-  $form['books']['geslib_book_link_only_authors'] = array(
-    '#type' => 'select',
-    '#title' => t('Link only Author role'),
-    '#default_value' => variable_get('geslib_book_link_only_authors', NULL),
-    '#description' => t('Link only the "Author" role of a book (excluding Ilustrators and Translators).'),
-    '#options' => array (
-      NULL => t("No"),
-      1 => t("Yes"),
     ),
   );
   $form['books']['geslib_book_link_to_publisher'] = array(
@@ -748,6 +756,16 @@ function geslib_admin_settings_validate($form, &$form_state) {
     if ($field = $form_state['values']['geslib_book_link_to_author']) {
       if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_author', t("Book node type doesn't have defined field")." '".$field."'.");
+      }
+    }
+    if ($field = $form_state['values']['geslib_book_link_to_illustrator']) {
+      if ( !array_key_exists($field,$types) ) {
+        form_set_error('geslib_book_link_to_illustrator', t("Book node type doesn't have defined field")." '".$field."'.");
+      }
+    }
+    if ($field = $form_state['values']['geslib_book_link_to_translator']) {
+      if ( !array_key_exists($field,$types) ) {
+        form_set_error('geslib_book_link_to_translator', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
     if ($field = $form_state['values']['geslib_book_link_to_publisher']) {

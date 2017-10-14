@@ -244,6 +244,11 @@ class GeslibReader {
         # Autores asociados a los libros
         # LA|48253|2807|A|1|
         # LA|43071|32477|T|1|
+        # A: Autor
+        # T: Traductor
+        # I: Ilustrador
+        # IC: Ilustrador contraportada
+        # IP: Ilustrador portada
         case "LA":
           $this->elements["book"][$myline[1]]["relation"]["author"][] = array("gid" => $myline[2], "function" => $myline[3]);
           break;

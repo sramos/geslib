@@ -32,8 +32,9 @@ function geslib_install() {
   variable_set('geslib_book_body_from', 'publisher_reference');
   variable_set('geslib_book_link_to_category', 'field_materia');
   variable_set('geslib_book_link_to_author', 'field_autor');
+  variable_set('geslib_book_link_to_illustrator', 'field_autor');
+  variable_set('geslib_book_link_to_translator', NULL);
   variable_set('geslib_book_create_fake_author', NULL);
-  variable_set('geslib_book_link_only_authors', NULL);
   variable_set('geslib_book_link_to_publisher', 'field_editorial');
   variable_set('geslib_book_link_to_collection', 'field_coleccion');
   variable_set('geslib_book_attribute_subtitle', NULL);
@@ -91,6 +92,8 @@ function geslib_uninstall() {
   variable_del('geslib_book_body_from');
   variable_del('geslib_book_link_to_category');
   variable_del('geslib_book_link_to_author');
+  variable_del('geslib_book_link_to_illustrator');
+  variable_del('geslib_book_link_to_translator');
   variable_del('geslib_book_create_fake_author');
   variable_del('geslib_book_link_only_authors');
   variable_del('geslib_book_link_to_publisher');
