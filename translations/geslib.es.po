@@ -1,0 +1,649 @@
+# $Id$
+#
+# Spanish translation of Geslib Drupal Module
+# Copyright 2012-2017 Santiago Ramos <sramos@sitiodistinto.net>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Geslib Drupal Module 0.7\n"
+"POT-Creation-Date: 2017-10-14 16:32+0100\n"
+"PO-Revision-Date: 2017-10-14 21:18+0100\n"
+"Last-Translator: Santiago Ramos <sramos@sitiodistinto.net>\n"
+"Language-Team: Spanish <sramos@sitiodistinto.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "Geslib File"
+msgstr "Fichero Geslib"
+
+msgid "Element"
+msgstr "Elemento"
+
+msgid "Starting Date"
+msgstr "Fecha de Inicio"
+
+msgid "Ending Date"
+msgstr "Fecha de Fin"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Excluded previously imported file"
+msgstr "Excluido fichero ya importado"
+
+msgid "Flush all caches"
+msgstr "Limpiando todas las cachés"
+
+msgid "Searching external book data"
+msgstr "Buscando datos externos del libro"
+
+msgid "Searching"
+msgstr "Buscando"
+
+msgid "Loaded title"
+msgstr "Importado título"
+
+msgid "Loaded subtitle"
+msgstr "Importado subtítulo"
+
+msgid "Loaded book description"
+msgstr "Importada descripción del libro"
+
+msgid "Loaded book cover URL"
+msgstr "Importada URL de la portada del libro"
+
+msgid "Loaded preview URL"
+msgstr "Importada URL de vista previa"
+
+msgid "Loaded author"
+msgstr "Importado autor"
+
+msgid "Searching book covers"
+msgstr "Buscando portadas de libros"
+
+msgid "Updating"
+msgstr "Actualizando"
+
+msgid "Importing Products"
+msgstr "Importando productos"
+
+msgid "Product with GeslibID @gid doesn't exist"
+msgstr "Producto con GeslibID @gid no existe"
+
+msgid "Importing"
+msgstr "Importando"
+
+msgid "Node @type with GeslibID @gid doesn't exist"
+msgstr "Nodo @type con GeslibID @gid no exite"
+
+msgid "Changed ownership of"
+msgstr "Cambiada pertenencia de"
+
+msgid "to user"
+msgstr "al usuario"
+
+msgid "Attributes updated correctly"
+msgstr "Atributos actualizados correctamente"
+
+msgid "Node"
+msgstr "Nodo"
+
+msgid "not updated"
+msgstr "no actualizado"
+
+msgid "Updating vocabulary"
+msgstr "Actualizando vocabulario"
+
+msgid "Ignoring author relationship. The type is:"
+msgstr "Ignorando relación de autoría. El tipo del autor es:"
+
+msgid "relationships updated correctly"
+msgstr "vínculos actualizados correctamente"
+
+msgid "Relationships for node"
+msgstr "Vínculos del nodo"
+
+msgid "There is no relationships to update"
+msgstr "No hay vínculos a actualizar"
+
+msgid "Updated body product"
+msgstr "Actualizada descripción del producto"
+
+msgid "processed incorrectly"
+msgstr "procesado con problemas"
+
+msgid "Body for node"
+msgstr "Contenido del nodo"
+
+msgid "Updated ubercart product attributes"
+msgstr "Actualizados atributos de producto de ubercart"
+
+msgid "Ubercart attributes for node"
+msgstr "Atributos de ubercart para el nodo"
+
+msgid "Updated stock"
+msgstr "Stock actualizado"
+
+msgid "Error updating stock"
+msgstr "Error actualizando stock"
+
+msgid "removed"
+msgstr "eliminado"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "created correctly"
+msgstr "creado correctamente"
+
+msgid "could not be created"
+msgstr "no pudo ser creado"
+
+msgid "updated correctly"
+msgstr "actualizado correctamente"
+
+msgid "Authors"
+msgstr "Autores"
+
+msgid "Cover Image"
+msgstr "Imagen de cubierta"
+
+msgid "Cover image stored"
+msgstr "Guardada imagen de portada"
+
+msgid "Error storing cover image"
+msgstr "Error guardando imagen de portada"
+
+msgid "Downloading remote book cover"
+msgstr "Descargando portada remota del libro"
+
+msgid "Using default cover"
+msgstr "Usando portada del libro por defecto"
+
+msgid "Using uploaded book cover"
+msgstr "Usando portada del libro enviada"
+
+msgid "Geslib file not valid."
+msgstr "Fichero Geslib no válido."
+
+msgid "Reading previously serialized file"
+msgstr "Leyendo fichero previamente procesado"
+
+msgid "Saving serialized file"
+msgstr "Guardando fichero procesado"
+
+msgid "Upload Geslib file"
+msgstr "Subir fichero geslib"
+
+msgid "Import Geslib File"
+msgstr "Importar fichero Geslib"
+
+msgid "Imported Geslib Files Report"
+msgstr "Informe de ficheros Geslib Importados"
+
+msgid "Delete log line"
+msgstr "Eliminar entrada de log"
+
+msgid "ERROR uploading the file."
+msgstr "ERROR subiendo el fichero."
+
+msgid "Import Geslib File."
+msgstr "Importar fichero Geslib."
+
+msgid "Geslib Integration"
+msgstr "Integración con Geslib"
+
+msgid "Geslib data import/export module."
+msgstr "Módulo de importación/exportación de datos de Geslib."
+
+msgid "Ubercart - extra"
+msgstr ""
+
+msgid "Don't import"
+msgstr "No importar"
+
+msgid "Vocabulary"
+msgstr "Vocabulario"
+
+msgid "Storage and Search settings"
+msgstr "Opciones de búsqueda y almacenamiento"
+
+msgid "Drupal text field used to link with geslib"
+msgstr "Campo drupal (de texto) usado para almacenar el vínculo con geslib"
+
+msgid "Drupal field used to link with geslib. All node types from above must have this field."
+msgstr "Campo de drupal usado para almacenar el vículo con geslib. Todos los tipos de nodos seleccionados abajo deberán incluirlo."
+
+msgid "Temporaly upload path"
+msgstr "Directorio temporal de subida"
+
+msgid "Temporary upload path for Geslib files. It should not have public access."
+msgstr "Directorio de subida de archivos Geslib. Es conveniente que no tenga acceso público."
+
+msgid "Delete imported geslib files"
+msgstr "Borrar ficheros geslib importados"
+
+msgid "Don't delete"
+msgstr "No borrar"
+
+msgid "Path for uploaded covers"
+msgstr "Directorio de subida de imágenes de cubierta."
+
+msgid "Full path if there are covers uploaded."
+msgstr "Si hay portadas subidas al servidor, directorio donde se almacenan."
+
+msgid "Delete imported covers from upload cover path"
+msgstr "Borrar portadas importadas del directorio de subida"
+
+msgid "Delete covers"
+msgstr "Borrar portadas"
+
+msgid "Use Geslib module tables"
+msgstr "Usar las tablas del módulo"
+
+msgid "Download book info if not exists"
+msgstr "Descargar información del libro si ésta no existe"
+
+msgid "Search and use internet data for extended info (body, images, ...) if there is no data in geslib file."
+msgstr "Buscar en internet y usar los datos que se encuentren para la información del libro (sinopsis, autor, ...) si esta no existe en el fichero geslib."
+
+msgid "Don't search"
+msgstr "No buscar"
+
+msgid "Lookup book info in DILVE"
+msgstr "Buscar información en DILVE"
+
+msgid "Lookup Internet info"
+msgstr "Buscar información en Internet"
+
+msgid "Lookup Internet info without book covers"
+msgstr "Buscar información en Internet excluyendo la portada del libro"
+
+msgid "DILVE username"
+msgstr "Usuario DILVE"
+
+msgid "Registered username account in"
+msgstr "Usuario de la cuenta registrada en"
+
+msgid "DILVE password"
+msgstr "Password DILVE"
+
+msgid "Registered password account in"
+msgstr "Password de la cuenta registrada en"
+
+msgid "Categories settings"
+msgstr "Opciones de Materias"
+
+msgid "Category Node Type"
+msgstr "Tipo de nodo para Materia"
+
+msgid "Drupal node type for Categories importing (Geslib code line \"5\")."
+msgstr "Tipo de nodo para la importación de Materias (Líneas \"5\" en fichero geslib)."
+
+msgid "Name for default category"
+msgstr "Nombre para Materia por defecto"
+
+msgid "Name used for default geslib Category (geslib_id=0). If empty will use default value."
+msgstr "Nombre usado para sustituir la Materia por defecto de Geslib (código geslib 0). Déjelo vacío para usar el valor por defecto."
+
+msgid "Publishers settings"
+msgstr "Opciones de Editorial"
+
+msgid "Publisher Node Type"
+msgstr "Tipo de nodo para Editorial"
+
+msgid "Drupal node type for Publishers importing (Geslib code line \"1L\")."
+msgstr "Tipo de nodo para la importación de Editoriales (Líneas \"1L\" en fichero geslib)."
+
+msgid "Music Publishers settings"
+msgstr "Opciones de Discográficas"
+
+msgid "Music publisher Node Type"
+msgstr "Tipo de nodo para Discográfica"
+
+msgid "Drupal node type for Music Publishers importing (Geslib code line \"1A\")."
+msgstr "Tipo de nodo para la importación de Discográficas (Líneas \"1A\" en fichero geslib)."
+
+msgid "Collections settings"
+msgstr "Opciones de Colecciones"
+
+msgid "Publisher's Collection Node Type"
+msgstr "Tipo de nodo para Colecciones de Editoriales"
+
+msgid "Drupal node type for Geslib Collections importing."
+msgstr "Tipo de nodo para la importación de las Colecciones de las Editoriales."
+
+msgid "Publisher relationship"
+msgstr "Relaciones con Editorial"
+
+msgid "Drupal field used to link with publisher nodes (nodereference type) or to store publisher name (text type)."
+msgstr "Campo usado para vincular con los nodos de editoriales (tipo nodereference) o para almacenar el nombre de la editorial (tipo texto)."
+
+msgid "Don't link to publishers"
+msgstr "No vincular con editoriales"
+
+msgid "Name for default Collection"
+msgstr "Nombre por defecto para Colecciones de Editoriales"
+
+msgid "Name used for default geslib Publisher Collection (geslib_id=1). If empty will use default value."
+msgstr "Nombre usado para sustituir la Colección por defecto de Geslib (códigos geslib 1). Déjelo vacío para usar el valor por defecto."
+
+msgid "Indexes settings"
+msgstr "Opciones de Índices"
+
+msgid "Index Node Type"
+msgstr "Tipo de nodo para Índice"
+
+msgid "Drupal node type for Index importing (Geslib code line \"6I\")."
+msgstr "Tipo de nodo para la importación de Índices (Líneas \"6I\" en fichero geslib)."
+
+msgid "Publisher Reference settings"
+msgstr "Opciones de Referencia de la Editorial"
+
+msgid "Publisher Reference Node Type"
+msgstr "Tipo de nodo para Referencia de la Editorial"
+
+msgid "Drupal node type for Publisher Reference importing (Geslib code line \"6E\")."
+msgstr "Tipo de nodo para importar las Referencias del Editor (Líneas \"6E\" en fichero geslib)."
+
+msgid "Library Reference settings"
+msgstr "Opciones de Referencia de Librería"
+
+msgid "Library Reference Node Type"
+msgstr "Tipo de nodo para Referencia de Librería"
+
+msgid "Drupal node type for Library Reference importing (Geslib code line \"6\")."
+msgstr "Tipo de nodo para importar las Referencias de la Librería (Líneas \"6\" en fichero geslib)."
+
+msgid "Authors settings"
+msgstr "Opciones de Autores"
+
+msgid "Author Node Type"
+msgstr "Tipo de nodo para Autor"
+
+msgid "Drupal node type for Authors importing (Geslib code line \"AUT\")."
+msgstr "Tipo de nodo para la importación de Autores (Líneas \"AUT\" en fichero geslib)."
+
+msgid "Books settings"
+msgstr "Opciones de Libros"
+
+msgid "Book Node Type"
+msgstr "Tipo de nodo para Libros"
+
+msgid "Drupal node type for Books importing (Geslib code line \"GP4\")."
+msgstr "Tipo de nodo para la importación de Libros (Líneas \"GP4\" en fichero geslib)."
+
+msgid "Geslib type for books"
+msgstr "Código Geslib para libros"
+
+msgid "Geslib type for book related products."
+msgstr "Código Geslib usado para describir el \"tipo\" libros."
+
+msgid "Default cover image path"
+msgstr "Ruta de la imagen de cubierta por defecto"
+
+msgid "Path of the default cover image if the uploaded book doesn't have one."
+msgstr "Ruta de la imagen de cubierta por defecto si el libro importado no tiene una."
+
+msgid "Get book body from field"
+msgstr "Obtener la descripción del libro del campo"
+
+msgid "Geslib field used to get book body."
+msgstr "Campo a usar para la importación"
+
+msgid "First library reference (geslib code line \"6\")"
+msgstr "Primera referencia de la librería (líneas \"6\" en fichero geslib)"
+
+msgid "First publisher reference (geslib code line \"6E\")"
+msgstr "Primera referencia del editor (líneas \"6E\" en fichero geslib)"
+
+msgid "External description (col 39)"
+msgstr "Descripción Externa (columna 39)"
+
+msgid "Subtitle field"
+msgstr "Campo de Subtítulo"
+
+msgid "Drupal field used to store subtitle (col 26)."
+msgstr "Campo usado para almacenar el subtítulo (columna 26)."
+
+msgid "Don't store this field"
+msgstr "No almacenar este campo"
+
+msgid "Category relationship"
+msgstr "Relaciones con Categoría"
+
+msgid "Drupal field used to link books with category nodes (nodereference type) or to store category name (text type)."
+msgstr "Campo usado para vincular los libros con las categorías (tipo nodereference) o para almacenar el nombre (tipo texto)."
+
+msgid "Author relationship"
+msgstr "Relaciones con Autores"
+
+msgid "Drupal field used to link books with author nodes (nodereference type) or to store author name (text type)."
+msgstr "Campo usado para vincular los libros con los autores (tipo nodereference) o para almacenar el nombre (tipo texto)."
+
+
+msgid "Drupal field used to link books with book ilustrator (nodereference type)."
+msgstr "Campo usado para vincular los libros con sus ilustradores (tipo nodereference)."
+
+msgid "Drupal field used to link books with book translator (nodereference type)."
+msgstr "Campo usado para vincular los libros con sus traductores (tipo nodereference)."
+
+msgid "Create Authors if not referenced"
+msgstr "Crear autores si no están referenciados"
+
+msgid "Search and create Authors if there is no reference for the book. This option only works when Author Relationship is defined for a nodereference field."
+msgstr "Buscar y crear nodos Autores si no existe referencia para el libro. Esta opción sólo funciona cuando se define el campo anterior como \"nodereference\"."
+
+msgid "Don't create authors"
+msgstr "No crear autores"
+
+msgid "Search and create if there is no reference"
+msgstr "Buscar y crear si no existe referencia"
+
+msgid "Try to find book authors on the net"
+msgstr "Intenta obtener los autores de internet"
+
+msgid "Link only Author role"
+msgstr "Vincular sólo con rol de autor"
+
+msgid "Link only the \"Author\" role of a book (excluding Ilustrators and Translators)."
+msgstr "Vincular sólo el rol \"Autor\" de un libro (excluyendo Ilustradores y Traductores)."
+
+msgid "No"
+msgstr ""
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "Collection relationship"
+msgstr "Relaciones con Colecciones"
+
+msgid "Drupal field used to link with collection nodes (nodereference type) or to store collection name (text type)."
+msgstr "Campo usado para vincular los libros con las colecciones (tipo nodereference) o para almacenar su nombre (tipo texto)."
+
+msgid "ISBN code field"
+msgstr "Código ISBN"
+
+msgid "Drupal field used to store ISBN code (col 6). This field is also stored in uc_product.model field."
+msgstr "Campo usado para almacenar el código ISBN (columna 6). Este código se almacena también en el campo uc_product.model"
+
+msgid "EAN code field"
+msgstr "Código EAN"
+
+msgid "Drupal field used to store EAN code (col 7)."
+msgstr "Campo usado para almacenar el código EAN (columna 7)."
+
+msgid "Index relationship"
+msgstr "Relaciones con Índices"
+
+msgid "Drupal field used to link with publication index nodes (nodereference type) or to store it (text type)."
+msgstr "Campo usado para vincular con los Índices (tipo nodereference) o para almacenarlo (tipo texto)."
+
+msgid "Library reference relationship"
+msgstr "Relaciones con referencia de librería"
+
+msgid "Drupal field used to store library reference nodes (nodereference type) or to store it (text type)."
+msgstr "Campo usado para vincular con las Referencias de Librería (tipo nodereference) o para almacenarlo (tipo texto)."
+
+msgid "Publisher reference relationship"
+msgstr "Relaciones con referencia de editor"
+
+msgid "Drupal field used to store publisher reference nodes (nodereference type) or to store it (text type)."
+msgstr "Campo usado para vincular con las Referencias del Editor (tipo nodereference) o para almacenarlo (tipo texto)."
+
+msgid "External description"
+msgstr "Descripción externa"
+
+msgid "Drupal field used to store external description (col 39)."
+msgstr "Campo usado para almacenar la descripción externa (columna 39)."
+
+msgid "Publication date field"
+msgstr "Fecha de publicación"
+
+msgid "Drupal field used to store publication date (col 13)."
+msgstr "Campo usado para almacenar la fecha de publicación (columna 13)."
+
+msgid "Edition field"
+msgstr "Edición"
+
+msgid "Drupal field used to store book edition (col 9)."
+msgstr "Campo usado para almacenar la edición del libro (columna 9)."
+
+msgid "Edition Date field"
+msgstr "Fecha de Edición"
+
+msgid "Drupal field used to store book edition date (col 11)."
+msgstr "Campo usado para almacenar la fecha de edición (columna 11)."
+
+msgid "Registration Date field"
+msgstr "Fecha de Alta"
+
+msgid "Drupal field used to store registration date (col 18)."
+msgstr "Campo usado para almacenar la fecha de alta (columna 18)."
+
+msgid "Pages field"
+msgstr "Número de páginas"
+
+msgid "Drupal field used to store book pages (col 8)."
+msgstr "Campo usado para almacenar el número de páginas (columna 8)."
+
+msgid "Language field"
+msgstr "Idioma"
+
+msgid "Drupal field used to store language (col 20))."
+msgstr "Campo usado para almacenar el idioma del libro (columna 20)."
+
+msgid "Status field"
+msgstr "Estado"
+
+msgid "Drupal field used to store book status (col 27)."
+msgstr "Campo usado para almacenar el estado del libro (columna 27)."
+
+msgid "Format field"
+msgstr "Formato"
+
+msgid "Drupal field used to store book format (col 21)."
+msgstr "Campo usado para almacenar el formato (columna 21)."
+
+msgid "Location field"
+msgstr "Ubicación"
+
+msgid "Drupal field used to store location (col 15)."
+msgstr "Campo usado para almacenar la ubicación (columna 15)."
+
+msgid "Alternative location field"
+msgstr "Ubicación Alternativa"
+
+msgid "Drupal field used to store alternative location (col 41)."
+msgstr "Campo usado para almacenar la ubicación alternativa (columna 41)."
+
+msgid "Classification field"
+msgstr "Clasificación"
+
+msgid "Drupal field used to store book classification (col 31)."
+msgstr "Campo usado para almacenar la clasificación del libro (columna 31)."
+
+msgid "Vat field"
+msgstr "IVA"
+
+msgid "Drupal field used to store book vat (42)."
+msgstr "Campo usado para almacenar el IVA (columna 42)."
+
+msgid "Other products settings"
+msgstr "Opciones de Otros Productos"
+
+msgid "Other Product Node Type"
+msgstr "Tipo de nodo para Otros Productos"
+
+msgid "Drupal node type for Geslib Other Product importing."
+msgstr "Tipo de nodo para la importación de Otros Productos."
+
+msgid "Get other product body from field"
+msgstr "Obtener descripción de otros productos del campo"
+
+msgid "Geslib field used to get other product body."
+msgstr "Campo usado por geslib para almacenar la descripción de otros productos."
+
+msgid "Default cover image path for other products"
+msgstr "Imagen de cubierta por defecto para otros productos"
+
+msgid "Path of the default cover image if the uploaded product doesn't have one."
+msgstr "Path de la imagen de cubierta por defecto si el producto subido no tiene una."
+
+msgid "Please enter a valid directory path."
+msgstr "Por favor, introduzca un directorio válido."
+
+msgid "Please enter a DILVE username."
+msgstr "Por favor, introduzca un usuario para DILVE."
+
+msgid "Please enter a DILVE password."
+msgstr "Por favor, introduzca una password para DILVE."
+
+msgid "You must enter a valid and readable image."
+msgstr "Debe introducir una imagen válida y con permisos de lectura."
+
+msgid "Category node type doesn't have defined field"
+msgstr "El tipo de nodo Categoría no tiene el campo definido"
+
+msgid "Publisher node type doesn't have defined field"
+msgstr "El tipo de nodo Editorial no tiene el campo definido"
+
+msgid "Music publisher node type doesn't have defined field"
+msgstr "El tipo de nodo Discográfica no tiene el campo definido"
+
+msgid "Collection node type doesn't have defined field"
+msgstr "El tipo de nodo Colección no tiene el campo definido"
+
+msgid "Author node type doesn't have defined field"
+msgstr "El tipo de nodo Autor no tiene el campo definido"
+
+msgid "Index node type doesn't have defined field"
+msgstr "El tipo de nodo Índice no tiene el campo definido"
+
+msgid "Library Reference node type doesn't have defined field"
+msgstr "El tipo de nodo Referencia de la Librería no tiene el campo definido"
+
+msgid "Publisher Reference node type doesn't have defined field"
+msgstr "El tipo de nodo Referencia del Editor no tiene el campo definido"
+
+msgid "Book node type doesn't have defined field"
+msgstr "El tipo de nodo Libro no tiene el campo definido"
+
+msgid "Other Product node type doesn't have defined field"
+msgstr "El tipo de nodo Otros Productos no tiene el campo definido"
+
+msgid "Geslib Import Settings"
+msgstr "Configuración de Importación de Geslib"
+
+msgid "Geslib settings used for integration."
+msgstr "Configuración de los valores de importación."
+
+msgid "Geslib data files management"
+msgstr "Gestión de ficheros Geslib"
+
+msgid "Geslib Import/Export and admin settings"
+msgstr "Importación/Exportación de Geslib y opciones de configuración"
+

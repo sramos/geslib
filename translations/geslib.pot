@@ -1,0 +1,856 @@
+# $Id$
+#
+# LANGUAGE translation of Geslib Drupal Module
+# Copyright 2012-2017 Santiago Ramos <sramos@sitiodistinto.net>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Geslib Drupal Module 0.7\n"
+"POT-Creation-Date: 2017-10-14 16:32+0100\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: geslib_report.tpl.php:4
+msgid "Geslib File"
+msgstr ""
+
+#: geslib_report.tpl.php:5
+msgid "Element"
+msgstr ""
+
+#: geslib_report.tpl.php:6
+msgid "Starting Date"
+msgstr ""
+
+#: geslib_report.tpl.php:7
+msgid "Ending Date"
+msgstr ""
+
+#: geslib_report.tpl.php:9
+msgid "Status"
+msgstr ""
+
+#: geslib.api.inc:78
+msgid "Excluded previously imported file"
+msgstr ""
+
+#: geslib.api.inc:151
+msgid "Flush all caches"
+msgstr ""
+
+#: geslib.api.inc:171
+msgid "Searching external book data"
+msgstr ""
+
+#: geslib.api.inc:203
+msgid "Searching"
+msgstr ""
+
+#: geslib.api.inc:241
+msgid "Loaded title"
+msgstr ""
+
+#: geslib.api.inc:246
+msgid "Loaded subtitle"
+msgstr ""
+
+#: geslib.api.inc:252
+msgid "Loaded book description"
+msgstr ""
+
+#: geslib.api.inc:275
+msgid "Loaded book cover URL"
+msgstr ""
+
+#: geslib.api.inc:288
+msgid "Loaded preview URL"
+msgstr ""
+
+#: geslib.api.inc:286
+msgid "Loaded author"
+msgstr ""
+
+#: geslib.api.inc:304
+msgid "Searching book covers"
+msgstr ""
+
+#: geslib.api.inc:316;706
+msgid "Updating"
+msgstr ""
+
+#: geslib.api.inc:337
+msgid "Importing Products"
+msgstr ""
+
+#: geslib.api.inc:391
+msgid "Product with GeslibID @gid doesn't exist"
+msgstr ""
+
+#: geslib.api.inc:418
+msgid "Importing"
+msgstr ""
+
+#: geslib.api.inc:435
+msgid "Node @type with GeslibID @gid doesn't exist"
+msgstr ""
+
+#: geslib.api.inc:457
+msgid "Changed ownership of"
+msgstr ""
+
+#: geslib.api.inc:457
+msgid "to user"
+msgstr ""
+
+#: geslib.api.inc:504
+msgid "Attributes updated correctly"
+msgstr ""
+
+#: geslib.api.inc:507;612;819;823;899;973;975
+msgid "Node"
+msgstr ""
+
+#: geslib.api.inc:507;615
+msgid "not updated"
+msgstr ""
+
+#: geslib.api.inc:526
+msgid "Updating vocabulary"
+msgstr ""
+
+#: geslib.api.inc:590
+msgid "Ignoring author relationship. The type is:"
+msgstr ""
+
+#: geslib.api.inc:612
+msgid "relationships updated correctly"
+msgstr ""
+
+#: geslib.api.inc:615
+msgid "Relationships for node"
+msgstr ""
+
+#: geslib.api.inc:618
+msgid "There is no relationships to update"
+msgstr ""
+
+#: geslib.api.inc:761;845
+msgid "Updated body product"
+msgstr ""
+
+#: geslib.api.inc:819;973
+msgid "updated correctly"
+msgstr ""
+
+#: geslib.api.inc:823;847;975
+msgid "processed incorrectly"
+msgstr ""
+
+#: geslib.api.inc:847
+msgid "Body for node"
+msgstr ""
+
+#: geslib.api.inc:927
+msgid "Updated ubercart product attributes"
+msgstr ""
+
+#: geslib.api.inc:929
+msgid "Ubercart attributes for node"
+msgstr ""
+
+#: geslib.api.inc:873
+msgid "Updated stock"
+msgstr ""
+
+#: geslib.api.inc:875
+msgid "Error updating stock"
+msgstr ""
+
+#: geslib.api.inc:899
+msgid "removed"
+msgstr ""
+
+#: geslib.api.inc:956;958
+msgid "Author"
+msgstr ""
+
+#: geslib.api.inc:956
+msgid "created correctly"
+msgstr ""
+
+#: geslib.api.inc:958
+msgid "could not be created"
+msgstr ""
+
+#: geslib.api.inc:973;975
+msgid "Authors"
+msgstr ""
+
+#: geslib.api.inc:1008;1009
+msgid "Cover Image"
+msgstr ""
+
+#: geslib.api.inc:1014
+msgid "Cover image stored"
+msgstr ""
+
+#: geslib.api.inc:1016
+msgid "Error storing cover image"
+msgstr ""
+
+#: geslib.api.inc:1037
+msgid "Downloading remote book cover"
+msgstr ""
+
+#: geslib.api.inc:1043
+msgid "Using default cover"
+msgstr ""
+
+#: geslib.api.inc:1070;1080
+msgid "Using uploaded book cover"
+msgstr ""
+
+#: geslib.api.inc:1097
+msgid "Geslib file not valid."
+msgstr ""
+
+#: geslib.api.inc:1104
+msgid "Reading previously serialized file"
+msgstr ""
+
+#: geslib.api.inc:1120
+msgid "Saving serialized file"
+msgstr ""
+
+#: geslib.module:130
+msgid "Upload Geslib file"
+msgstr ""
+
+#: geslib.module:135;25
+msgid "Import Geslib File"
+msgstr ""
+
+#: geslib.module:171
+msgid "ERROR uploading the file."
+msgstr ""
+
+#: geslib.module:26
+msgid "Import Geslib File."
+msgstr ""
+
+#: geslib.module:35;36
+msgid "Imported Geslib Files Report"
+msgstr ""
+
+#: geslib.module:43
+msgid "Delete log line"
+msgstr ""
+
+#: geslib.info:0
+msgid "Geslib Integration"
+msgstr ""
+
+#: geslib.info:0
+msgid "Geslib data import/export module."
+msgstr ""
+
+#: geslib.info:0 geslib_admin/geslib_admin.info:0
+msgid "Ubercart - extra"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:45
+msgid "Don't import"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:50
+msgid "Vocabulary"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:80
+msgid "Storage and Search settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:84
+msgid "Drupal text field used to link with geslib"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:86
+msgid "Drupal field used to link with geslib. All node types from above must have this field."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:87
+msgid "Use Geslib module tables"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:91
+msgid "Temporaly upload path"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:93
+msgid "Temporary upload path for Geslib files. It should not have public access."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:98;100;103
+msgid "Delete imported geslib files"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:102;118
+msgid "Don't delete"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:97
+msgid "Path for uploaded covers"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:99
+msgid "Full path if there are covers uploaded."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:114;116
+msgid "Delete imported covers from upload cover path"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:119
+msgid "Delete covers"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:103
+msgid "Download book info if not exists"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:105
+msgid "Search and use internet data for extended info (body, images, ...) if there is no data in geslib file."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:107
+msgid "Don't search"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:108
+msgid "Lookup book info in DILVE"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:109
+msgid "Lookup Internet info"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:110
+msgid "Lookup Internet info without book covers"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:115
+msgid "DILVE username"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:117
+msgid "Registered username account in"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:121
+msgid "DILVE password"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:123
+msgid "Registered password account in"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:130
+msgid "Categories settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:134
+msgid "Category Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:136
+msgid "Drupal node type for Categories importing (Geslib code line \"5\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:141
+msgid "Name for default category"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:143
+msgid "Name used for default geslib Category (geslib_id=0). If empty will use default value."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:149
+msgid "Publishers settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:153
+msgid "Publisher Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:155
+msgid "Drupal node type for Publishers importing (Geslib code line \"1L\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:162
+msgid "Music Publishers settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:166
+msgid "Music publisher Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:168
+msgid "Drupal node type for Music Publishers importing (Geslib code line \"1A\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:175
+msgid "Collections settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:179
+msgid "Publisher's Collection Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:181
+msgid "Drupal node type for Geslib Collections importing."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:186;320
+msgid "Publisher relationship"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:188;322
+msgid "Drupal field used to link with publisher nodes (nodereference type) or to store publisher name (text type)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:189
+msgid "Don't link to publishers"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:193
+msgid "Name for default Collection"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:195
+msgid "Name used for default geslib Publisher Collection (geslib_id=1). If empty will use default value."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:201
+msgid "Indexes settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:205
+msgid "Index Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:207
+msgid "Drupal node type for Index importing (Geslib code line \"6I\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:214
+msgid "Publisher Reference settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:218
+msgid "Publisher Reference Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:220
+msgid "Drupal node type for Publisher Reference importing (Geslib code line \"6E\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:227
+msgid "Library Reference settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:231
+msgid "Library Reference Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:233
+msgid "Drupal node type for Library Reference importing (Geslib code line \"6\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:240
+msgid "Authors settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:244
+msgid "Author Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:246
+msgid "Drupal node type for Authors importing (Geslib code line \"AUT\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:253
+msgid "Books settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:257
+msgid "Book Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:259
+msgid "Drupal node type for Books importing (Geslib code line \"GP4\")."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:264
+msgid "Geslib type for books"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:266
+msgid "Geslib type for book related products."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:270
+msgid "Default cover image path"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:272
+msgid "Path of the default cover image if the uploaded book doesn't have one."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:276
+msgid "Get book body from field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:278
+msgid "Geslib field used to get book body."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:281
+msgid "First library reference (geslib code line \"6\")"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:282
+msgid "First publisher reference (geslib code line \"6E\")"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:283
+msgid "External description (col 39)"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:288
+msgid "Subtitle field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:290
+msgid "Drupal field used to store subtitle (col 26)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:291;298;305;323;330;337;345;352;359;366;373;380;387;394;401;408;415;422;429;436;443;450;457
+msgid "Don't store this field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:295
+msgid "Category relationship"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:297
+msgid "Drupal field used to link books with category nodes (nodereference type) or to store category name (text type)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:302
+msgid "Author relationship"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:304
+msgid "Drupal field used to link books with author nodes (nodereference type) or to store author name (text type)."
+msgstr ""
+
+msgid "Drupal field used to link books with book ilustrator (nodereference type)."
+msgstr ""
+
+msgid "Drupal field used to link books with book translator (nodereference type)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:309
+msgid "Create Authors if not referenced"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:311
+msgid "Search and create Authors if there is no reference for the book. This option only works when Author Relationship is defined for a nodereference field."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:313
+msgid "Don't create authors"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:314
+msgid "Search and create if there is no reference"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:315
+msgid "Try to find book authors on the net"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:320
+msgid "Link only Author role"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:322
+msgid "Link only the \"Author\" role of a book (excluding Ilustrators and Translators)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:324
+msgid "No"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:325
+msgid "Yes"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:327
+msgid "Collection relationship"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:329
+msgid "Drupal field used to link with collection nodes (nodereference type) or to store collection name (text type)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:334
+msgid "ISBN code field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:336
+msgid "Drupal field used to store ISBN code (col 6). This field is also stored in uc_product.model field."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:342
+msgid "EAN code field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:344
+msgid "Drupal field used to store EAN code (col 7)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:349
+msgid "Index relationship"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:351
+msgid "Drupal field used to link with publication index nodes (nodereference type) or to store it (text type)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:356
+msgid "Library reference relationship"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:358
+msgid "Drupal field used to store library reference nodes (nodereference type) or to store it (text type)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:363
+msgid "Publisher reference relationship"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:365
+msgid "Drupal field used to store publisher reference nodes (nodereference type) or to store it (text type)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:370
+msgid "External description"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:372
+msgid "Drupal field used to store external description (col 39)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:377
+msgid "Publication date field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:379
+msgid "Drupal field used to store publication date (col 13)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:384
+msgid "Edition field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:386
+msgid "Drupal field used to store book edition (col 9)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:391
+msgid "Edition Date field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:393
+msgid "Drupal field used to store book edition date (col 11)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:398
+msgid "Registration Date field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:400
+msgid "Drupal field used to store registration date (col 18)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:405
+msgid "Pages field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:407
+msgid "Drupal field used to store book pages (col 8)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:412
+msgid "Language field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:414
+msgid "Drupal field used to store language (col 20))."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:419
+msgid "Status field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:421
+msgid "Drupal field used to store book status (col 27)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:426
+msgid "Format field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:428
+msgid "Drupal field used to store book format (col 21)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:433
+msgid "Location field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:435
+msgid "Drupal field used to store location (col 15)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:440
+msgid "Alternative location field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:442
+msgid "Drupal field used to store alternative location (col 41)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:447
+msgid "Classification field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:449
+msgid "Drupal field used to store book classification (col 31)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:454
+msgid "Vat field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:456
+msgid "Drupal field used to store book vat (42)."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:463
+msgid "Other products settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:467
+msgid "Other Product Node Type"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:469
+msgid "Drupal node type for Geslib Other Product importing."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:505
+msgid "Get other product body from field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:507
+msgid "Geslib field used to get other product body."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:484
+msgid "Default cover image path for other products"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:486
+msgid "Path of the default cover image if the uploaded product doesn't have one."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:484;489
+msgid "Please enter a valid directory path."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:495
+msgid "Please enter a DILVE username."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:498
+msgid "Please enter a DILVE password."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:504
+msgid "You must enter a valid and readable image."
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:513
+msgid "Category node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:522
+msgid "Publisher node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:531
+msgid "Music publisher node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:540;545
+msgid "Collection node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:554
+msgid "Author node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:563
+msgid "Index node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:572
+msgid "Library Reference node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:581
+msgid "Publisher Reference node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:590;595;600;605;610;615;620;625;630;635;640;645;650;655;660;665;670;675;680;685;691;697;702;707
+msgid "Book node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:716
+msgid "Other Product node type doesn't have defined field"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:26
+msgid "Geslib Import Settings"
+msgstr ""
+
+#: geslib_admin/geslib_admin.module:27
+msgid "Geslib settings used for integration."
+msgstr ""
+
+#: geslib_admin/geslib_admin.info:0
+msgid "Geslib data files management"
+msgstr ""
+
+#: geslib_admin/geslib_admin.info:0
+msgid "Geslib Import/Export and admin settings"
+msgstr ""
+
