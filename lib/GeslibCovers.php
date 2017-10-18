@@ -61,7 +61,8 @@ class GeslibCovers {
     $image_file = NULL;
     $image_field_name = variable_get('geslib_'.$element_type.'_file_cover_field', NULL);
     $image_field = $node->$image_field_name;
-    if ($node->nid && (!$image_field[0] || $image_field[0]['filepath'] == variable_get('geslib_'.$element_type.'_default_image', NULL)) ) {
+    // Hay que revisar la comparacion entre la configuracion y el resultado de uri
+    if ($node->nid && (!$image_field['und'][0] || drupal_realpath($image_field['und'][0]['uri']) == variable_get('geslib_'.$element_type.'_default_image', NULL)) ) {
       $cover_url = $object_data["*cover_url"];
       $uploaded_cover = GeslibCovers::get_uploaded_cover_file($node);
       # If not book cover exists try to download it
@@ -73,10 +74,11 @@ class GeslibCovers {
         if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
           GeslibCommon::vprint(t("Remote book cover not valid").": ".$image_file,2);
           unlink($image_file);
+          $image_dile = NULL;
         }
       }
       # Use default one
-      if (!$image_file && !$image_field[0]) {
+      if (!$image_file && !$image_field['und'][0]) {
         $image_file = variable_get('geslib_'.$element_type.'_default_image', NULL);
         if ($image_file) {
           GeslibCommon::vprint(t("Using default cover"));
@@ -85,6 +87,36 @@ class GeslibCovers {
     }
     # Return cover path
     return $image_file;
+  }
+
+  /**
+    * Save and return associated image of the node
+    *
+    * @param $node
+    *     Drupal Node
+    * @param object
+    *   object properties
+    */
+  static function get_attachment_file(&$node,&$object_data,$element_type) {
+    $attachment_file = NULL;
+    $attachment_field_name = variable_get('geslib_'.$element_type.'_file_preview_field', NULL);
+    $attachment_field = $node->$attachment_field_name;
+    if ($node->nid && !$attachment_field['und'][0] ) {
+      $preview_url = $object_data["*preview_url"];
+      if ($preview_url) {
+        GeslibCommon::vprint(t("Downloading remote book attachment") . ": " . $preview_url,2);
+        $attachment_file = GeslibCovers::download_file($preview_url, GeslibCommon::$attachments_path, $node->model);
+        # If content type is not an image, delete it
+        $ext = pathinfo($attachment_file, PATHINFO_EXTENSION);
+        if ($ext != "pdf") {
+          GeslibCommon::vprint(t("Remote book attachment not valid").": ".$attachment_file,2);
+          unlink($attachment_file);
+          $attachment_file = NULL;
+        }
+      }
+    }
+    # Return cover path
+    return $attachment_file;
   }
 
   /**

@@ -91,6 +91,7 @@ class GeslibWriter {
           $this->update_uc_attributes($node, $object);
           $this->update_relationships($node, $object);
           $this->update_object_image($node, $object);
+          $this->update_object_attachment($node, $object);
           // Remove object from memory
           $node = NULL;
         } else {
@@ -623,8 +624,8 @@ class GeslibWriter {
   function update_object_attachment(&$node,&$object_data) {
     $field_name = variable_get('geslib_'.$this->elements_type.'_file_preview_field', NULL);
     if ($field_name) {
-      $filename = GeslibCovers::get_cover_file($node,$object_data,$field_name);
-      $filename = $object_data["*cover_url"];
+      $filename = GeslibCovers::get_attachment_file($node,$object_data,$field_name);
+      #$filename = $object_data["*preview_url"];
       # If there is no cover loaded in database, do it
       if ( $filename && !($attachment = GeslibCovers::drupal_file_load($filename)) ) {
         // Create file object and update files table
