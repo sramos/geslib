@@ -1,12 +1,13 @@
-<?php 
+<?php
 /**
  * @author   Santiago Ramos <sramos@semillasl.com>
- * @package  DilveSearch 
+ * @package  DilveSearch
  * @version  0.1
   */
 
 class DilveSearch {
 
+  private static $url_proto = "https";
   private static $url_host = "www.dilve.es";
   private static $url_path = "/dilve/dilve";
   private static $url_user;
@@ -18,7 +19,7 @@ class DilveSearch {
   static function set_pass($pass) {
     self::$url_pass = $pass;
   }
-  
+
   /**
   * Function DilveSearch::search
   *
@@ -26,17 +27,17 @@ class DilveSearch {
   *   ISBN code to search
   * @return hash
   *   hash data of book
-  */ 
+  */
   static function search($isbn) {
     $book=array();
-    $query  = 'http://'.self::$url_host.'/'.self::$url_path.'/getRecordsX.do?user='.self::$url_user.'&password='.self::$url_pass.'&identifier='.$isbn;
+    $query  = self.$url_proto.'://'.self::$url_host.'/'.self::$url_path.'/getRecordsX.do?user='.self::$url_user.'&password='.self::$url_pass.'&identifier='.$isbn;
     # Get xml in ONIX version 2.1
     $query .= '&metadataformat=ONIX&version=2.1';
     # Get xml in CEGAL version 3
     #$query .= '&metadataformat=CEGAL&version=3&formatdetail=C';
     # By default responses are UTF-8 encoded, but force it
     $query .= '&encoding=UTF-8';
- 
+
     $xml = simplexml_load_file($query);
     #print_r($xml);
     $xml_book = $xml->ONIXMessage->Product[0];
@@ -167,14 +168,14 @@ class DilveSearch {
   * @param string $isbn
   *   ISBN code to search
   * @return string
-  *   Full URL of requested resource 
+  *   Full URL of requested resource
   */
   private static function get_file_url($filename, $isbn) {
     # If URL is a DILVE reference, complete full request
     if (!strncmp($filename, 'http://', 7) || !strncmp($filename, 'https://', 8)) {
       $url = $filename;
     } else {
-      $url  = 'http://'.self::$url_host.'/'.self::$url_path.'/getResourceX.do?user='.self::$url_user.'&password='.self::$url_pass;
+      $url  = self::$url_proto.'://'.self::$url_host.'/'.self::$url_path.'/getResourceX.do?user='.self::$url_user.'&password='.self::$url_pass;
       $url .= '&identifier='.$isbn.'&resource='.urlencode($filename);
     }
     return $url;
