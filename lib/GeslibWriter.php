@@ -571,8 +571,10 @@ class GeslibWriter {
     * @param object
     *   object properties
     */
-    function update_object_image(&$node,&$object_data) {
-      $filename = GeslibCovers::get_cover_file($node,$object_data);
+  function update_object_image(&$node,&$object_data) {
+    $field_name = variable_get('geslib_'.$this->elements_type.'_file_cover_field', NULL);
+    if ($field_name) {
+      $filename = GeslibCovers::get_cover_file($node,$object_data,$field_name);
       # If there is no cover loaded in database, do it
       if ( $filename && !($image = GeslibCovers::drupal_file_load($filename)) ) {
         // Create file object and update files table
@@ -595,7 +597,8 @@ class GeslibWriter {
       if ( $image && $image[fid] ) {
         $image['alt'] = t("Cover Image") . ": " . $node->title;
         $image['title'] = $node->title;
-        $node->field_image_cache['und'][0] = $image;
+        $img_field = array('und' => array($image));
+        $node->$field_name = $img_field;
         # Check that node is ready to save
         if ($node = node_submit($node)) {
           node_save($node);
@@ -607,6 +610,54 @@ class GeslibWriter {
       $file = NULL;
       $image = NULL;
     }
+  }
+
+  /**
+    * Save associated file of the node
+    *
+    * @param $node
+    *     Drupal Node
+    * @param object
+    *   object properties
+    */
+  function update_object_attachment(&$node,&$object_data) {
+    $field_name = variable_get('geslib_'.$this->elements_type.'_file_preview_field', NULL);
+    if ($field_name) {
+      $filename = GeslibCovers::get_cover_file($node,$object_data,$field_name);
+      $filename = $object_data["*cover_url"];
+      # If there is no cover loaded in database, do it
+      if ( $filename && !($attachment = GeslibCovers::drupal_file_load($filename)) ) {
+        // Create file object and update files table
+        $file = new stdClass();
+        $file->filename  = basename($filename);
+        # FILEPATH para usar en la tabla files
+        #$file->filepath  = $filename;
+        # URI se usa en la tabla file_managed (file_save)
+        $file->uri       = GeslibCommon::$attachments_path . "/". basename($filename);
+        $file->filemime  = mime_content_type($filename);
+        $file->filesize  = filesize($filename);
+        $file->uid       = 1;
+        $file->timestamp = time();
+        # Files se usaba en D6, tambien en D7?
+        #drupal_write_record('files', $file);
+        # Esta es la alternativa para D7?
+        file_save($file);
+        $attachment = GeslibCovers::drupal_file_load($filename);
+      }
+      if ( $attachment && $attachment[fid] ) {
+        $attachment['description'] = t("PDF") . ": " . $node->title;
+        $attachment_field = array('und' => array($attachment));
+        $node->$field_name = $attachment_field;
+        # Check that node is ready to save
+        if ($node = node_submit($node)) {
+          node_save($node);
+          GeslibCommon::vprint(t("Attachment stored"),2);
+        } else {
+          GeslibCommon::vprint(t("Error storing attachment"),0);
+        }
+      }
+    }
+  }
 
   /**
    * Get Node by GeslibID

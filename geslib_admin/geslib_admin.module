@@ -54,6 +54,8 @@ function geslib_admin_settings($form_state) {
   $type_int_fields = array();
   $type_dat_fields = array();
   $type_tax_fields = array();
+  $type_img_fields = array();
+  $type_file_fields = array();
   # For all node types
   foreach ( field_info_instances('node', NULL) as $node_name => $node_data ) {
     # And all fields
@@ -93,6 +95,20 @@ function geslib_admin_settings($form_state) {
           $type_tax_fields["#tax-".$field_name] .= ", " . $node_name;
         } else {
           $type_tax_fields["#tax-".$field_name]  = t("Vocabulary") . " ". $field_data[label] . " (". $field_name .") @ " . $node_name;
+        }
+      }
+      if ($field_data[widget][module] == "image") {
+        if (array_key_exists($field_name,$type_img_fields)) {
+          $type_img_fields[$field_name] .= ", " . $node_name;
+        } else {
+          $type_img_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+        }
+      }
+      if ($field_data[widget][module] == "file") {
+        if (array_key_exists($field_name,$type_file_fields)) {
+          $type_file_fields[$field_name] .= ", " . $node_name;
+        } else {
+          $type_file_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
         }
       }
     }
@@ -331,6 +347,24 @@ function geslib_admin_settings($form_state) {
     '#title' => t('Default cover image path'),
     '#default_value' => variable_get('geslib_book_default_image', NULL),
     '#description' => t("Path of the default cover image if the uploaded book doesn't have one."),
+  );
+  $form['books']['geslib_book_file_cover_field'] = array(
+    '#type' => 'select',
+    '#title' => t('Cover file field'),
+    '#default_value' => variable_get('geslib_book_file_cover_field', NULL),
+    '#description' => t('Drupal field used to store book cover.'),
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_img_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
+  );
+  $form['books']['geslib_book_file_preview_field'] = array(
+    '#type' => 'select',
+    '#title' => t('Preview file field'),
+    '#default_value' => variable_get('geslib_book_file_preview_field', NULL),
+    '#description' => t('Drupal field used to store preview file.'),
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_file_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
   );
   $form['books']['geslib_book_body_from'] = array(
     '#type' => 'select',
@@ -612,6 +646,24 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_other_default_image', NULL),
     '#description' => t("Path of the default cover image if the uploaded product doesn't have one."),
   );
+  $form['other']['geslib_other_file_cover_field'] = array(
+    '#type' => 'select',
+    '#title' => t('Image file field'),
+    '#default_value' => variable_get('geslib_other_file_cover_field', NULL),
+    '#description' => t('Drupal field used to store other products image.'),
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_img_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
+  );
+  $form['other']['geslib_other_file_preview_field'] = array(
+    '#type' => 'select',
+    '#title' => t('Preview file field'),
+    '#default_value' => variable_get('geslib_other_file_preview_field', NULL),
+    '#description' => t('Drupal field used to store preview file.'),
+    '#options' => array ( NULL => '--- '.t("Don't store this field").' ---') + $type_file_fields,
+    '#attributes' => array('style' => 'max-width:100%;'),
+    '#prefix' => '<div class="mini">', '#suffix' => '</div>',
+  );
 
   return system_settings_form($form);
 }
@@ -754,6 +806,16 @@ function geslib_admin_settings_validate($form, &$form_state) {
         form_set_error('geslib_book_attribute_type', t("Book node type doesn't have defined field")." '".$field."'.");
       }
     }
+    if ($field = $form_state['values']['geslib_book_file_cover_field']) {
+      if ( !array_key_exists($field,$types) ) {
+        form_set_error('geslib_book_file_cover_field', t("Book node type doesn't have defined field")." '".$field."'.");
+      }
+    }
+    if ($field = $form_state['values']['geslib_book_file_preview_field']) {
+      if ( !array_key_exists($field,$types) ) {
+        form_set_error('geslib_book_file_preview_field', t("Book node type doesn't have defined field")." '".$field."'.");
+      }
+    }
     if ($field = $form_state['values']['geslib_book_link_to_category']) {
       if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_book_link_to_category', t("Book node type doesn't have defined field")." '".$field."'.");
@@ -890,6 +952,16 @@ function geslib_admin_settings_validate($form, &$form_state) {
         form_set_error('geslib_other_node_type', t("Other Product node type doesn't have defined field")." '".$field."'.");
       }
     }
+    if ($field = $form_state['values']['geslib_other_file_cover_field']) {
+      if ( !array_key_exists($field,$types) ) {
+        form_set_error('geslib_other_file_cover_field', t("Other Product node type doesn't have defined field")." '".$field."'.");
+      }
+    }
+    if ($field = $form_state['values']['geslib_other_file_preview_field']) {
+      if ( !array_key_exists($field,$types) ) {
+        form_set_error('geslib_other_file_preview_field', t("Other Product node type doesn't have defined field")." '".$field."'.");
+      }
+    } 
   }
 
 

@@ -57,9 +57,11 @@ class GeslibCovers {
     * @param object
     *   object properties
     */
-  static function get_cover_file(&$node,&$object_data) {
+  static function get_cover_file(&$node,&$object_data,$element_type) {
     $image_file = NULL;
-    if ($node->nid && (!$node->field_image_cache[0] || $node->field_image_cache[0]['filepath'] == variable_get('geslib_book_default_image', NULL)) ) {
+    $image_field_name = variable_get('geslib_'.$element_type.'_file_cover_field', NULL);
+    $image_field = $node->$image_field_name;
+    if ($node->nid && (!$image_field[0] || $image_field[0]['filepath'] == variable_get('geslib_'.$element_type.'_default_image', NULL)) ) {
       $cover_url = $object_data["*cover_url"];
       $uploaded_cover = GeslibCovers::get_uploaded_cover_file($node);
       # If not book cover exists try to download it
@@ -74,12 +76,8 @@ class GeslibCovers {
         }
       }
       # Use default one
-      if (!$image_file && !$node->field_image_cache[0]) {
-        if ( $node->type == variable_get('geslib_book_node_type', NULL)) {
-          $image_file = variable_get('geslib_book_default_image', NULL);
-        } else {
-          $image_file = variable_get('geslib_other_default_image', NULL);
-        }
+      if (!$image_file && !$image_field[0]) {
+        $image_file = variable_get('geslib_'.$element_type.'_default_image', NULL);
         if ($image_file) {
           GeslibCommon::vprint(t("Using default cover"));
         }
