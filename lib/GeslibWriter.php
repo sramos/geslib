@@ -710,7 +710,8 @@ class GeslibWriter {
   * Flush all caches
   */
   function flush_cache() {
-    GeslibCommon::vprint("\n---------------------- ".t("Flush all caches")."\n",2);
+    GeslibCommon::vprint("\n---------------------- ".t("Flush all caches"),2);
     drupal_flush_all_caches();
+    GeslibCommon::vprint("                       Removed cycles: ".gc_collect_cycles()."\n",2);
   }
 }
