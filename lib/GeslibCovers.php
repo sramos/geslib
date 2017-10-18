@@ -64,13 +64,12 @@ class GeslibCovers {
       $uploaded_cover = GeslibCovers::get_uploaded_cover_file($node);
       # If not book cover exists try to download it
       if (!$uploaded_cover && $cover_url) {
-        GeslibCommon::vprint(t("Downloading remote book cover"));
+        GeslibCommon::vprint(t("Downloading remote book cover") . ": " . $cover_url,2);
         $image_file = GeslibCovers::download_file($cover_url, GeslibCommon::$covers_path, $node->model);
         # If content type is not an image, delete it
         $ext = pathinfo($image_file, PATHINFO_EXTENSION);
         if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
-          GeslibCommon::vprint(t("Remote book cover not valid").": ".$image_file);
-          $image_file=NULL;
+          GeslibCommon::vprint(t("Remote book cover not valid").": ".$image_file,2);
           unlink($image_file);
         }
       }
