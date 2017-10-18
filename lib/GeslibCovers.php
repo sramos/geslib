@@ -29,7 +29,7 @@ class GeslibCovers {
     if (!($orig_file === false)) {
       # Gets file content type
       foreach ($http_response_header as $header) {
-        preg_match("/^Content-Type: .+\/(.+)/", $header, $matches);
+        preg_match("/^Content-Type: .+\/([^;]+)/", $header, $matches);
         if ( $matches ) {
           $ext = $matches[1];
         }
