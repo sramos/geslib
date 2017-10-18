@@ -30,7 +30,7 @@ class DilveSearch {
   */
   static function search($isbn) {
     $book=array();
-    $query  = self.$url_proto.'://'.self::$url_host.'/'.self::$url_path.'/getRecordsX.do?user='.self::$url_user.'&password='.self::$url_pass.'&identifier='.$isbn;
+    $query  = self::$url_proto.'://'.self::$url_host.'/'.self::$url_path.'/getRecordsX.do?user='.self::$url_user.'&password='.self::$url_pass.'&identifier='.$isbn;
     # Get xml in ONIX version 2.1
     $query .= '&metadataformat=ONIX&version=2.1';
     # Get xml in CEGAL version 3
