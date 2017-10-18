@@ -485,7 +485,6 @@ class GeslibWriter {
           foreach ( $rel_values as $rel_element ) {
             # If related element has node type, we can search it
             if ( $rel_node_type = variable_get('geslib_'.$rel_name.'_node_type', NULL) ) {
-              GeslibCommon::vprint("Tenemos tipo de nodo, asi que seguimos...",2);
               # If author rol is not "author", search another valid field_name
               if ( $rel_name == "author") {
                 $rel_field_name = NULL;
@@ -497,72 +496,71 @@ class GeslibWriter {
                   GeslibCommon::vprint(t("Translator rol"),2);
                   $author_field_name = variable_get('geslib_'.$this->elements_type.'_link_to_translator', NULL);;
                 // Ilustrators
-              } else {
-                GeslibCommon::vprint(t("Ilustrator with rol: ") . $rel_element["function"],2);
-                $author_field_name = variable_get('geslib_'.$this->elements_type.'_link_to_ilustrator', NULL);;
-              }
-              if ($author_field_name && $allowed[$author_field_name]) {
-                $rel_field_name = $author_field_name;
-              }
-            } else {
-              $rel_field_name = $field_name;
-            }
-            # If field name is not NULL (author rol not related)
-            if ( $rel_field_name ) {
-              GeslibCommon::vprint("Vamos a procesar un " . $rel_field_name, 2);
-              $linked_nid = $this->get_nid_by_gid($rel_element["gid"], $rel_node_type);
-              # If related object exists, link it
-              if ($linked_nid) {
-                GeslibCommon::vprint("Asociando la referencia a ".$rel_node_type." ('".$rel_field_name."/NID:".$linked_nid."/GID:".$rel_element["gid"].")",2);
-                # If related node field is nodereference, we store only related object nid
-                if (preg_match('#^nodereference#', $allowed[$rel_field_name]['widget_type']) === 1) {
-                  $linked_elements[$rel_field_name]['und'][] = array( 'nid' => $linked_nid );
-                # For text fields, store the relation title value
                 } else {
-                  $linked = $this->get_node_by_gid($rel_element["gid"], $rel_name, $rel_node_type);
-                  $linked_elements[$rel_field_name]['und'][] = array( 'value' => $linked->title );
-                  $linked = NULL;
+                  GeslibCommon::vprint(t("Ilustrator with rol: ") . $rel_element["function"],2);
+                  $author_field_name = variable_get('geslib_'.$this->elements_type.'_link_to_ilustrator', NULL);;
+                }
+                if ($author_field_name && $allowed[$author_field_name]) {
+                  $rel_field_name = $author_field_name;
                 }
               } else {
-                GeslibCommon::vprint("ERROR: El nodo ". $rel_node_type ." relacionado (GID:". $rel_element["gid"] .") no pudo encontrarse",0);
+                $rel_field_name = $field_name;
+              }
+              # If field name is not NULL (author rol not related)
+              if ( $rel_field_name ) {
+                $linked_nid = $this->get_nid_by_gid($rel_element["gid"], $rel_node_type);
+                # If related object exists, link it
+                if ($linked_nid) {
+                  GeslibCommon::vprint("Asociando la referencia a ".$rel_node_type." ('".$rel_field_name."/NID:".$linked_nid."/GID:".$rel_element["gid"].")",2);
+                  # If related node field is nodereference, we store only related object nid
+                  if (preg_match('#^nodereference#', $allowed[$rel_field_name]['widget_type']) === 1) {
+                    $linked_elements[$rel_field_name]['und'][] = array( 'nid' => $linked_nid );
+                  # For text fields, store the relation title value
+                  } else {
+                    $linked = $this->get_node_by_gid($rel_element["gid"], $rel_name, $rel_node_type);
+                    $linked_elements[$rel_field_name]['und'][] = array( 'value' => $linked->title );
+                    $linked = NULL;
+                  }
+                } else {
+                  GeslibCommon::vprint("ERROR: El nodo ". $rel_node_type ." relacionado (GID:". $rel_element["gid"] .") no pudo encontrarse",0);
+                }
+              } else {
+                GeslibCommon::vprint("No tenemos con que  procesar " . $rel_field_name, 2);
+              }
+              # If related element could not be found, look it in geslib array
+            } else if (preg_match('#^nodereference#', $allowed[$field_name]['widget_type']) !== 1) {
+              $referenced_value = $this->elements[$rel_name][$rel_element["gid"]]["title"];
+              if ( $referenced_value ) {
+                $linked_elements[$field_name]['und'][] = array( 'value' => $referenced_value );
+                GeslibCommon::vprint("Asociando el valor ('".$referenced_value."'/GID:".$rel_element["gid"].") como ".$field_name,2);
+              } else {
+                GeslibCommon::vprint("ERROR: No pudo encontrarse el valor de la referencia en el fichero geslib (".$rel_name."/GID:".$rel_element["gid"].")",0);
               }
             } else {
-              GeslibCommon::vprint("No tenemos con que  procesar " . $rel_field_name, 2);
+              GeslibCommon::vprint("ERROR: No se que hacer con el elemento relacionado",0);
             }
-            # If related element could not be found, look it in geslib array
-          } else if (preg_match('#^nodereference#', $allowed[$field_name]['widget_type']) !== 1) {
-            $referenced_value = $this->elements[$rel_name][$rel_element["gid"]]["title"];
-            if ( $referenced_value ) {
-              $linked_elements[$field_name]['und]'][] = array( 'value' => $referenced_value );
-              GeslibCommon::vprint("Asociando el valor ('".$referenced_value."'/GID:".$rel_element["gid"].") como ".$field_name);
-            } else {
-              GeslibCommon::vprint("ERROR: No pudo encontrarse el valor de la referencia en el fichero geslib (".$rel_name."/GID:".$rel_element["gid"].")",0);
-            }
-          } else {
-            GeslibCommon::vprint("ERROR: No se que hacer con el elemento relacionado",0);
           }
+          $updated = true;
         }
-        $updated = true;
       }
-    }
-    # Check that node is ready to save
-    if ($updated) {
-      # Assign all values to the node
-      foreach ($linked_elements as $field_key => $field_value) {
-        $node->$key = $value;
-      }
-      # Prepare and save node
-      if ($node_to_save = node_submit($node)) {
-        node_save($node_to_save);
-        GeslibCommon::vprint(t("Node")." '".$node_to_save->title."' (NID:".$node_to_save->nid."): ".t("relationships updated correctly"),2);
+      # Check that node is ready to save
+      if ($updated) {
+        # Assign all values to the node
+        foreach ($linked_elements as $field_key => $field_value) {
+          $node->$field_key = $field_value;
+        }
+        # Prepare and save node
+        if ($node = node_submit($node)) {
+          node_save($node);
+          GeslibCommon::vprint(t("Node")." '".$node->title."' (NID:".$node->nid."): ".t("relationships updated correctly"),2);
+        } else {
+          #print_r($node);
+          GeslibCommon::vprint(t("Relationships for node")." '".$node->title."' (NID:".$node->nid.") ".t("not updated"), 0);
+        }
       } else {
-        #print_r($node);
-        GeslibCommon::vprint(t("Relationships for node")." '".$node->title."' (NID:".$node->nid.") ".t("not updated"), 0);
+        GeslibCommon::vprint(t("There is no relationships to update"));
       }
-    } else {
-      GeslibCommon::vprint(t("There is no relationships to update"));
     }
-    $node_to_save = NULL;
   }
 
   /**
