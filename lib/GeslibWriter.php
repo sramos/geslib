@@ -263,9 +263,9 @@ class GeslibWriter {
   * @param node
   *    Node object reference
   * @param object_data
-  *    Node attributes
+  *    Node attributes reference
   */
-  function update_attributes($node, $object_data) {
+  function update_attributes(&$node, $object_data) {
     if ($node->nid && ($attributes = $object_data['attribute'])) {
       # Recoge si el nodo ha cambiado
       $changed = false;
@@ -331,7 +331,7 @@ class GeslibWriter {
   * @param object_data
   *    Ubercart node attributes
   */
-  function update_uc_attributes($node, $object_data) {
+  function update_uc_attributes(&$node, $object_data) {
     if ($node->nid && ($attributes = $object_data['uc_product'])) {
       # Recoge si el nodo ha cambiado
       $changed = false;
