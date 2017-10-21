@@ -54,42 +54,41 @@ class GeslibCovers {
     *
     * @param $node
     *     Drupal Node
-    * @param object
+    * @param $object
     *   object properties
+    * @param $element_type
+    *   geslib element type
+    * @param $image_field_name
+    *   node field to store images
     */
-  static function get_cover_file(&$node,&$object_data,$element_type) {
+  static function get_cover_file(&$node,&$object_data,$element_type,$image_field_name) {
     $image_file = NULL;
-    $image_field_name = variable_get('geslib_'.$element_type.'_file_cover_field', NULL);
-    if ($node->nid && $image_field_name) {
-      $image_field = $node->$image_field_name;
-      $default_image = variable_get('geslib_'.$element_type.'_default_image', NULL);
-      // Hay que revisar la comparacion entre la configuracion y el resultado de uri
-      if (empty($image_field['und'][0]) ||
-          drupal_realpath($image_field['und'][0]['uri']) == $default_image) {
-        $cover_url = $object_data["*cover_url"];
-        $uploaded_cover = GeslibCovers::get_uploaded_cover_file($node);
-        # If not book cover exists try to download it
-        if (!$uploaded_cover && $cover_url) {
-          GeslibCommon::vprint(t("Downloading remote book cover") . ": " . $cover_url,2);
-          $image_file = GeslibCovers::download_file($cover_url, GeslibCommon::$covers_path, $node->model);
-          # If content type is not an image, delete it
-          $ext = pathinfo($image_file, PATHINFO_EXTENSION);
-          if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
-            GeslibCommon::vprint(t("Remote book cover not valid").": ".$image_file,2);
-            unlink($image_file);
-            $image_file = NULL;
-          }
-        }
-        # Use default one
-        if (!$image_file && !$image_field['und'][0]) {
-          $image_file = $default_image_file;
-          if ($image_file) {
-            GeslibCommon::vprint(t("Using default cover"));
-          }
+    $image_field = $node->$image_field_name;
+    $default_image = variable_get('geslib_'.$element_type.'_default_image', NULL);
+    // Hay que revisar la comparacion entre la configuracion y el resultado de uri
+    if (empty($image_field['und'][0]) ||
+        drupal_realpath($image_field['und'][0]['uri']) == $default_image) {
+      $cover_url = $object_data["*cover_url"];
+      $uploaded_cover = GeslibCovers::get_uploaded_cover_file($node);
+      # If not book cover exists try to download it
+      if (!$uploaded_cover && $cover_url) {
+        GeslibCommon::vprint(t("Downloading remote book cover") . ": " . $cover_url,2);
+        $image_file = GeslibCovers::download_file($cover_url, GeslibCommon::$covers_path, $node->model);
+        # If content type is not an image, delete it
+        $ext = pathinfo($image_file, PATHINFO_EXTENSION);
+        if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
+          GeslibCommon::vprint(t("Remote book cover not valid").": ".$image_file,2);
+          unlink($image_file);
+          $image_file = NULL;
         }
       }
-    } elseif (empty($image_field_name)){
-      GeslibCommon::vprint(t("No hay atributo definido para imagenes"),3);
+      # Use default one
+      if (!$image_file && !$image_field['und'][0]) {
+        $image_file = $default_image_file;
+        if ($image_file) {
+          GeslibCommon::vprint(t("Using default cover"));
+        }
+      }
     }
     # Return cover path
     return $image_file;
@@ -102,12 +101,15 @@ class GeslibCovers {
     *     Drupal Node
     * @param object
     *   object properties
+    * @param $element_type
+    *   geslib element type
+    * @param $attachment_field_name
+    *   node field to store images
     */
-  static function get_attachment_file(&$node,&$object_data,$element_type) {
+  static function get_attachment_file(&$node,&$object_data,$element_type,$attachment_field_name) {
     $attachment_file = NULL;
-    $attachment_field_name = variable_get('geslib_'.$element_type.'_file_preview_field', NULL);
     $attachment_field = $node->$attachment_field_name;
-    if ($node->nid && !$attachment_field['und'][0] ) {
+    if (!$attachment_field['und'][0] ) {
       $preview_url = $object_data["*preview_url"];
       if ($preview_url) {
         GeslibCommon::vprint(t("Downloading remote book attachment") . ": " . $preview_url,2);
