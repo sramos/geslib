@@ -286,7 +286,7 @@ class GeslibReader {
           # Publisher reference code is relative to book, so internal code should include it
           $descr = GeslibCommon::utf8_encode($myline[3]);
           #$this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = $descr;
-	        $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = "6E ".$myline[1] . "-" . $myline[2];
+          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = "6E ".$myline[1] . "-" . $myline[2];
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
           $this->elements["book"][$myline[1]]["relation"]["publisher_reference"][] = array("gid" => $myline[1] . "_" . $myline[2]);
