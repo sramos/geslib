@@ -114,7 +114,7 @@ class GeslibCovers {
       if ($preview_url) {
         GeslibCommon::vprint(t("Downloading remote book attachment") . ": " . $preview_url,2);
         $attachment_file = GeslibCovers::download_file($preview_url, GeslibCommon::$attachments_path, $node->model);
-        # If content type is not an image, delete it
+        # If content type is not an pdf, delete it
         $ext = pathinfo($attachment_file, PATHINFO_EXTENSION);
         if ($ext != "pdf") {
           GeslibCommon::vprint(t("Remote book attachment not valid").": ".$attachment_file,2);

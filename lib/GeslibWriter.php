@@ -647,6 +647,9 @@ class GeslibWriter {
       }
       if ( $attachment && $attachment[fid] ) {
         $attachment['description'] = t("PDF") . ": " . $node->title;
+        // Por algun motivo, no coge el valor por defecto y hay que definir
+        // explicitamente 'display' para que no de error SQL
+        $attachment['display'] = 1;
         $attachment_field = array('und' => array($attachment));
         $node->$field_name = $attachment_field;
         # Check that node is ready to save
