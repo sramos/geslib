@@ -39,7 +39,7 @@ class GeslibCovers {
         #print "----------> No existe content type para el elemento!!!\n";
         $ext = pathinfo($url, PATHINFO_EXTENSION);
       }
-      $filename = $path . '/' . $isbn . "." . strtolower($ext);
+      $filename = $path . $isbn . "." . strtolower($ext);
       # Write file to disk
       file_put_contents($filename, $orig_file);
       if ( file_exists($filename) ) {
@@ -68,12 +68,13 @@ class GeslibCovers {
     // Hay que revisar la comparacion entre la configuracion y el resultado de uri
     if (empty($image_field['und'][0]) ||
         drupal_realpath($image_field['und'][0]['uri']) == $default_image) {
-      $cover_url = $object_data["*cover_url"];
-      $uploaded_cover = GeslibCovers::get_uploaded_cover_file($node);
+      $ean = $node->model;
+      $image_file = GeslibCovers::get_uploaded_cover_file($ean);
       # If not book cover exists try to download it
-      if (!$uploaded_cover && $cover_url) {
+      $cover_url = $object_data["*cover_url"];
+      if (!$image_file && $cover_url) {
         GeslibCommon::vprint(t("Downloading remote book cover") . ": " . $cover_url,2);
-        $image_file = GeslibCovers::download_file($cover_url, GeslibCommon::$covers_path, $node->model);
+        $image_file = GeslibCovers::download_file($cover_url, GeslibCommon::$covers_path, $ean);
         # If content type is not an image, delete it
         $ext = pathinfo($image_file, PATHINFO_EXTENSION);
         if ($ext != "jpeg" && $ext != "png" && $ext != "jpg" && $ext != "gif" && $ext != "tiff") {
@@ -130,13 +131,48 @@ class GeslibCovers {
   /**
     * Return uploaded image of the node
     *
-    * @param $node
-    *     Drupal Node
-    * @param object
-    *   object properties
+    * @param $ean
+    *     EAN book
     */
-    static function get_uploaded_cover_file(&$node) {
-      return NULL;
+    static function get_uploaded_cover_file($ean) {
+      $found = FALSE;
+      $covers_path = variable_get('geslib_upload_cover_path', NULL);
+      $dest_covers_path = GeslibCommon::$covers_path;
+      # Try with known image extensions
+      if ($ean && $covers_path) {
+        $remove_originals = variable_get('geslib_delete_original_covers', NULL);
+        $short_ean = substr($ean, 0, 12);
+        foreach ( array("gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "png", "PNG")  as $extension ) {
+          $subdir = substr($ean, 0, 6);
+          // Each of possible locations for cover images
+          $locations = array( $covers_path."/".$ean.".".$extension,
+                              $covers_path."/".substr($ean, 0 , 12).".".$extension,
+                              $covers_path."/".$subdir."/".$ean.".".$extension,
+                              $covers_path."/".$subdir."/".substr($ean, 0 , 12).".".$extension );
+          foreach ( $locations as $filename ) {
+            if ( !$found && realpath( $filename ) ) {
+              // File exists, copy to final destination!!!
+              $cover_file = $dest_covers_path.$ean.".".strtolower($extension);
+              if ( copy( $filename, $cover_file ) ) {
+                $found = TRUE;
+                # Delete original cover
+                if ( $remove_originals ) {
+                  unlink($filename);
+                }
+                break;
+              } else {
+                GeslibCommon::vprint("ERROR: No se pudo copiar '".$filename."' sobre '".$cover_file."'",2);
+              }
+            }
+          }
+        }
+      }
+      if ($found) {
+        GeslibCommon::vprint(t("Using uploaded book cover: ").$cover_file,3);
+      } else {
+        $cover_file = null;
+      }
+      return $cover_file;
     }
 
     static function drupal_file_load($filename) {
