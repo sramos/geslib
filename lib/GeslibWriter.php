@@ -242,8 +242,8 @@ class GeslibWriter {
   function update_body(&$node, $object, $body_from) {
     if ( $object["relation"][$body_from] ) {
       $body_gid = $object["relation"][$body_from][0]["gid"];
-      $tmp_body = $this->elements[$body_from][$body_gid]["title"];
-      #$tmp_body = $this->elements[$body_from][$body_gid]["attribute"]["body"];
+      #$tmp_body = $this->elements[$body_from][$body_gid]["title"];
+      $tmp_body = $this->elements[$body_from][$body_gid]["attribute"]["body"];
       if ($tmp_body) {
         # Guardamos el body en full_html (format: 2)
         $node->body['und'][0] = array('value' => $tmp_body, 'format' => 2);
