@@ -71,7 +71,7 @@ class GeslibWriter {
     foreach ($this->elements[$this->elements_type] as $object_id => $object) {
       if ($counter == 1000) {
         # Not sure if this clear internal node
-        #$this->flush_cache();
+        $this->flush_cache();
         $counter = 0;
       }
       if ($object["action"] != "B") {
@@ -120,7 +120,7 @@ class GeslibWriter {
       # Each 1000 objects, clear cache
       if ( $counter == 1000 ) {
         # Not sure if this clear internal node cache
-        #$this->flush_cache();
+        $this->flush_cache();
         $counter = 0;
       }
       if ( $object["action"] != "B" && $object["type"] == $geslib_book_type && $object["attribute"]["ean"] && $this->get_uploaded_book_image($object["attribute"]["ean"]) ) {
@@ -768,5 +768,6 @@ class GeslibWriter {
     GeslibCommon::vprint("\n---------------------- ".t("Flush all caches"),2);
     drupal_flush_all_caches();
     GeslibCommon::vprint("                       Removed cycles: ".gc_collect_cycles()."\n",2);
+    GeslibCommon::vprint("Memory usage: " . memory_get_usage(true), 3);
   }
 }

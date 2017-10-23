@@ -34,6 +34,7 @@ class geslib_api {
       DilveSearch::set_user(variable_get('geslib_dilve_user', NULL));
       DilveSearch::set_pass(variable_get('geslib_dilve_pass', NULL));
     }
+    GeslibCommon::vprint("Memory usage: " . memory_get_usage(true), 3);
   }
 
   /**
@@ -91,6 +92,7 @@ class geslib_api {
     if (empty($filename) || !file_exists ($filename)) {
       throw new Exception(t('Geslib file not valid.'));
     } else {
+      GeslibCommon::vprint("Memory usage: " . memory_get_usage(true), 3);
       $this->geslib_filename = $filename;
       $this->elements = array();
       # Check if there is a previously serialized version of file
@@ -120,6 +122,7 @@ class geslib_api {
   * Import all elements
   */
   function import_elements() {
+    GeslibCommon::vprint("Memory usage: " . memory_get_usage(true), 3);
     # Write action in log table
     $log_import = array('start_date' => time(),
                         'component' => 'geslib_file',
