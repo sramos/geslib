@@ -69,11 +69,11 @@ function geslib_admin_settings($form_state) {
           $type_txt_fields[$field_name]  = $field_name.": ".$field_data[label] . " @ " . $node_name;
         }
       }
-      if (preg_match('#^nodereference#', $field_data[widget_type]) === 1) {
+      if ($field_data[widget][module] == "node_reference" || preg_match('#^nodereference#', $field_data[widget_type]) === 1) {
         if (array_key_exists($field_name,$type_ref_fields)) {
           $type_ref_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_ref_fields[$field_name]  = $field_name." (".$field_data[widget_type]."): ".$field_data[label] . " @ " . $node_name;
+          $type_ref_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
        }
       }
       if ($field_data[widget][module] == "number") {
@@ -961,7 +961,7 @@ function geslib_admin_settings_validate($form, &$form_state) {
       if ( !array_key_exists($field,$types) ) {
         form_set_error('geslib_other_file_preview_field', t("Other Product node type doesn't have defined field")." '".$field."'.");
       }
-    } 
+    }
   }
 
 
