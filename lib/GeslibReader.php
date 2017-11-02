@@ -105,7 +105,8 @@ class GeslibReader {
         case "1L":
           $this->elements["publisher"][$myline[2]]["action"] = $myline[1];
           if ($myline[1] != "B") {
-            $this->elements["publisher"][$myline[2]]["title"] = GeslibCommon::utf8_encode($myline[4]);
+            $this->elements["publisher"][$myline[2]]["title"] = GeslibCommon::utf8_encode($myline[3]);
+            $this->elements["publisher"][$myline[2]]["attribute"]["body"] = GeslibCommon::utf8_encode($myline[4]);
           }
           break;
         # Colecciones
