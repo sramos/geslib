@@ -154,7 +154,12 @@ class GeslibReader {
             }
             #$this->elements["book"][$myline[2]]["*author"][] = array('name' => GeslibCommon::utf8_encode($myline[4]));
             //ISBN (por si se quiere seleccionar)
-            $this->elements["book"][$myline[2]]["attribute"]["isbn"] = GeslibCommon::utf8_encode($myline[6]);
+            # Si no tenemos ISBN usamos el EAN en su lugar
+            if ($myline[6]) {
+              $this->elements["book"][$myline[2]]["attribute"]["isbn"] = GeslibCommon::utf8_encode($myline[6]);
+            } else if ($myline[7]) {
+              $this->elements["book"][$myline[2]]["attribute"]["isbn"] = GeslibCommon::utf8_encode($myline[7]);
+            }
             # Si hay EAN, lo asignamos y tambien al model de UC
             if ($myline[7]) {
               $code = GeslibCommon::utf8_encode($myline[7]);
