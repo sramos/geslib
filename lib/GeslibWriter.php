@@ -514,7 +514,8 @@ class GeslibWriter {
                 if ($linked_nid) {
                   GeslibCommon::vprint("Asociando la referencia a ".$rel_node_type." ('".$rel_field_name."/NID:".$linked_nid."/GID:".$rel_element["gid"].")",2);
                   # If related node field is nodereference, we store only related object nid
-                  if (preg_match('#^nodereference#', $allowed[$rel_field_name]['widget_type']) === 1) {
+                  if ($allowed[$rel_field_name]['widget']['module'] == "node_reference" ||
+                      preg_match('#^nodereference#', $allowed[$rel_field_name]['widget_type']) === 1) {
                     $linked_elements[$rel_field_name]['und'][] = array( 'nid' => $linked_nid );
                   # For text fields, store the relation title value
                   } else {
@@ -529,7 +530,8 @@ class GeslibWriter {
                 GeslibCommon::vprint("No tenemos con que  procesar " . $rel_field_name, 2);
               }
               # If related element could not be found, look it in geslib array
-            } else if (preg_match('#^nodereference#', $allowed[$field_name]['widget_type']) !== 1) {
+            } else if (preg_match('#^nodereference#', $allowed[$field_name]['widget_type']) !== 1 &&
+                       $allowed[$rel_field_name]['widget']['module'] != "node_reference" ) {
               $referenced_value = $this->elements[$rel_name][$rel_element["gid"]]["title"];
               if ( $referenced_value ) {
                 $linked_elements[$field_name]['und'][] = array( 'value' => $referenced_value );
