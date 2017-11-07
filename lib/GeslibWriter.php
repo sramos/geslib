@@ -496,10 +496,10 @@ class GeslibWriter {
                 } elseif ($rel_element["function"] == "T") {
                   GeslibCommon::vprint(t("Translator rol"),2);
                   $author_field_name = variable_get('geslib_'.$this->elements_type.'_link_to_translator', NULL);;
-                // Ilustrators
+                // Illustrators
                 } else {
-                  GeslibCommon::vprint(t("Ilustrator with rol: ") . $rel_element["function"],2);
-                  $author_field_name = variable_get('geslib_'.$this->elements_type.'_link_to_ilustrator', NULL);;
+                  GeslibCommon::vprint(t("Illustrator with rol: ") . $rel_element["function"],2);
+                  $author_field_name = variable_get('geslib_'.$this->elements_type.'_link_to_illustrator', NULL);;
                 }
                 if ($author_field_name && $allowed[$author_field_name]) {
                   $rel_field_name = $author_field_name;
