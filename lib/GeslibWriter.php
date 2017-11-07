@@ -38,7 +38,10 @@ class GeslibWriter {
   function save_items() {
     $query = "SELECT id FROM {geslib_log} WHERE component = :component AND imported_file = :file AND status IN ('ok', 'working')";
     $result = db_query($query, array(':component' => $this->elements_type, ':file' => $this->geslib_filename));
-    if ( $result->rowCount() == 0 && $this->elements[$this->elements_type] && $this->node_type ) {
+    if ( $result->rowCount() == 0 &&
+         ( ($this->elements[$this->elements_type] && $this->node_type) ||
+           ($this->elements_type == "covers" && $this->elements["book"]) )
+       ) {
       $log_element = array('start_date' => time(),
                            'component' => $this->elements_type,
                            'imported_file' => basename($this->geslib_filename),

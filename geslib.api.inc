@@ -154,8 +154,8 @@ class geslib_api {
   * Import pending covers
   */
   function import_covers() {
-    $writer = new GeslibWriter('covers', $this->elements['book'], basename($this->geslib_filename), $this->user);
-    $writer->save_elements();
+    $writer = new GeslibWriter('covers', $this->elements, basename($this->geslib_filename), $this->user);
+    $writer->save_items();
   }
 
   /**

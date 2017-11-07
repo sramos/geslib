@@ -85,7 +85,7 @@ class GeslibCovers {
       }
       # Use default one
       if (!$image_file && !$image_field['und'][0]) {
-        $image_file = $default_image_file;
+        $image_file = $default_image;
         if ($image_file) {
           GeslibCommon::vprint(t("Using default cover"));
         }
