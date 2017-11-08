@@ -117,21 +117,22 @@ class GeslibWriter {
     $total_counter = 0;
     $geslib_book_type = variable_get('geslib_book_geslib_type', NULL);
     $geslib_book_node_type = variable_get('geslib_book_node_type', NULL);
-    # Loop elements and send it to apropiate action
+    # Loop books and send it to apropiate action
     GeslibCommon::vprint(t("Searching book covers"),1);
-    foreach ($this->elements[$this->elements_type] as $object_id => $object) {
+    foreach ($this->elements["book"] as $object_id => $object) {
       # Each 1000 objects, clear cache
       if ( $counter == 1000 ) {
         # Not sure if this clear internal node cache
         $this->flush_cache();
         $counter = 0;
       }
-      if ( $object["action"] != "B" && $object["type"] == $geslib_book_type && $object["attribute"]["ean"] && $this->get_uploaded_book_image($object["attribute"]["ean"]) ) {
-        $node = $this->get_node_by_gid($object_id, "book", $geslib_book_node_type);
+      if ( $object["action"] != "B" && $object["type"] == $geslib_book_type && $object["attribute"]["ean"] ) {
+        # Get book
+        $node = $this->get_node_by_gid($object_id, $geslib_book_node_type);
         # If there is no cover, we define it
         if ($node->nid) {
           GeslibCommon::vprint(t("Updating")." ".$node_type." '".$object["title"]."' (NID:".$node->nid."/GESLIB_ID:".$object_id."/TITLE:'".$node->title."')", 1);
-          $this->set_object_image($node, $object["*cover_url"]);
+          $this->update_object_image($node, $object, "book");
         }
         $counter += 1;
         $total_counter += 1;
@@ -522,7 +523,7 @@ class GeslibWriter {
                     $linked_elements[$rel_field_name]['und'][] = array( 'nid' => $linked_nid );
                   # For text fields, store the relation title value
                   } else {
-                    $linked = $this->get_node_by_gid($rel_element["gid"], $rel_name, $rel_node_type);
+                    $linked = $this->get_node_by_gid($rel_element["gid"], $rel_node_type);
                     $linked_elements[$rel_field_name]['und'][] = array( 'value' => $linked->title );
                     $linked = NULL;
                   }
@@ -576,11 +577,16 @@ class GeslibWriter {
     *     Drupal Node
     * @param object
     *   object properties
+    * @param element_type
+    *   elements_type value. If not defined use $this->elements_type
     */
-  function update_object_image(&$node,&$object_data) {
-    $field_name = variable_get('geslib_'.$this->elements_type.'_file_cover_field', NULL);
+  function update_object_image(&$node, &$object_data, $element_type=NULL) {
+    if ( is_null($element_type) ) {
+      $element_type = $this->elements_type;
+    }
+    $field_name = variable_get('geslib_'.$element_type.'_file_cover_field', NULL);
     if ($node->nid && $field_name) {
-      $filename = GeslibCovers::get_cover_file($node,$object_data,$this->elements_type,$field_name);
+      $filename = GeslibCovers::get_cover_file($node,$object_data,$element_type,$field_name);
       # If there is no cover loaded in database, do it
       if ( $filename && !($image = GeslibCovers::drupal_file_load($filename)) ) {
         // Create file object and update files table
