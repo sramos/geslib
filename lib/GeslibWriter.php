@@ -363,7 +363,7 @@ class GeslibWriter {
           $attr_value = $stock;
         }
         # Cambia el valor del stock
-        uc_stock_set($node->model, $attr_value);
+        $this->update_stock($node, $attr_value);
         # Hace un procesado especial del stock para ajustar tambien
         # si el producto se puede coger o no
         $node->qty = $attr_value;
@@ -382,6 +382,31 @@ class GeslibWriter {
           return NULL;
         }
       }
+    }
+  }
+
+  /**
+  * Update ubercart stock
+  *
+  * @param node
+  *    Node object reference
+  * @param stock
+  *    stock value
+  */
+  function update_stock(&$node, $qty) {
+    # Comprueba que exista definicion de stock para el producto
+    $stock = db_query("SELECT stock FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $node->model))->fetchObject();
+    if ($stock) {
+      # Cambia el valor del stock
+      uc_stock_set($node->model, $qty);
+    } else {
+      # Crea el valor del stock inicializando el threshold
+      db_insert('uc_product_stock')
+        ->fields( array( 'nid' => $node->nid,
+                         'sku' => $node->model,
+                         'stock' => $qty,
+                         'threshold' => 1, 'active' => 1) )
+        ->execute();
     }
   }
 
