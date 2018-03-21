@@ -17,9 +17,6 @@ function geslib_init() {
  */
 function geslib_permission() {
   return array(
-      'geslib content import' => array(
-          'title' => t('Import Geslib files'),
-      ),
       'geslib report page' => array(
           'title' => t('Imported Geslib items report'),
       ),
@@ -34,16 +31,6 @@ function geslib_permission() {
  */
 function geslib_menu() {
   $items = array();
-  # Define import form
-  $items['admin/store/geslib_import'] = array(
-    'title' => 'Import Geslib File',
-    'description' => 'Import Geslib File',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('geslib_first_import_form'),
-    'access callback' => 'user_access',
-    'access arguments' => array('geslib content import'),
-    'type' => MENU_NORMAL_ITEM,
-  );
   # Define reports page
   $items['admin/store/reports/geslib_report'] = array(
     'title' => 'Imported Geslib Files Report',
