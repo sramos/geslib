@@ -801,9 +801,9 @@ class GeslibWriter {
   * Flush all caches
   */
   function flush_cache() {
-    GeslibCommon::vprint("\n---------------------- ".t("Flush all caches"),2);
-    drupal_flush_all_caches();
-    GeslibCommon::vprint("                       Removed cycles: ".gc_collect_cycles()."\n",2);
-    GeslibCommon::vprint("*** Memory usage: " . memory_get_usage(true), 3);
+    //GeslibCommon::vprint("\n---------------------- ".t("Flush all caches"),2);
+    //drupal_flush_all_caches();
+    //GeslibCommon::vprint("                       Removed cycles: ".gc_collect_cycles()."\n",2);
+    //GeslibCommon::vprint("*** Memory usage: " . memory_get_usage(true), 3);
   }
 }
