@@ -174,17 +174,17 @@ class GeslibReader {
             } else {
               $this->elements["book"][$myline[2]]["uc_product"]["model"] = "GID-".$myline[2];
             }
-            $this->elements["book"][$myline[2]]["attribute"]["pages"] = $myline[8];
-            $this->elements["book"][$myline[2]]["attribute"]["edition"] = $myline[9];
+            $this->elements["book"][$myline[2]]["attribute"]["pages"] = intval($myline[8]);
+            $this->elements["book"][$myline[2]]["attribute"]["edition"] = GeslibCommon::utf8_encode($myline[9]);
             $this->elements["book"][$myline[2]]["*origen_edicion"] = GeslibCommon::utf8_encode($myline[10]);
-            $this->elements["book"][$myline[2]]["attribute"]["edition_date"] = $myline[11];
+            $this->elements["book"][$myline[2]]["attribute"]["edition_date"] = GeslibCommon::utf8_encode($myline[11]);
             $this->elements["book"][$myline[2]]["*fecha_reedicion"] = $myline[12];
-            $this->elements["book"][$myline[2]]["attribute"]["year"] = $myline[13];
+            $this->elements["book"][$myline[2]]["attribute"]["year"] = GeslibCommon::utf8_encode($myline[13]);
             $this->elements["book"][$myline[2]]["*anno_ultima_edicion"] = $myline[14];
             $this->elements["book"][$myline[2]]["attribute"]["location"] = GeslibCommon::utf8_encode($myline[15]);
             $this->elements["book"][$myline[2]]["uc_product"]["stock"] = intval($myline[16]);
             $this->elements["book"][$myline[2]]["*materia"] = GeslibCommon::utf8_encode($myline[17]);
-            $this->elements["book"][$myline[2]]["attribute"]["registration_date"] = $myline[18];
+            $this->elements["book"][$myline[2]]["attribute"]["registration_date"] = GeslibCommon::utf8_encode($myline[18]);
             if ( $this->elements["language"][$myline[20]] ) {
               $this->elements["book"][$myline[2]]["attribute"]["language"] = $this->elements["language"][$myline[20]];
             } else {
