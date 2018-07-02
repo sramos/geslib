@@ -227,7 +227,7 @@ class GeslibWriter {
     $node->language = 'es';
     $node->promote = 0; // Display on front page ? 1 : 0
     $node->sticky = 0;  // Display top of page ? 1 : 0
-    $node->format = 1;  // 1:Filtered HTML, 2: Full HTML, 3: ???
+    //$node->format = 1;  // 1:Filtered HTML, 2: Full HTML, 3: ???
     $node->comment = variable_get('comment_'.$node_type, 0); // 0:Disabled, 1:Read, 2:Read/Write
     $node->is_new = true;
     node_object_prepare($node);
@@ -249,7 +249,8 @@ class GeslibWriter {
       #$tmp_body = $this->elements[$body_from][$body_gid]["title"];
       $tmp_body = $this->elements[$body_from][$body_gid]["attribute"]["body"];
       if ($tmp_body) {
-        # Guardamos el body en full_html (format: 2)
+        # Guardamos el body en full_html (format: 2 ó format: "full_html")
+        #$node->body['und'][0] = array('value' => $tmp_body, 'format' => "full_html");
         $node->body['und'][0] = array('value' => $tmp_body, 'format' => 2);
         # Check that node is ready and save it
         if ($node = node_submit($node)) {
