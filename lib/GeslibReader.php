@@ -281,6 +281,7 @@ class GeslibReader {
           # Library reference code is relative to book, so internal code should include it
           $descr = GeslibCommon::utf8_encode($myline[3]);
           #$this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = $descr;
+          $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["action"] = "M";
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["title"] = "6 ".$myline[1] . "-" . $myline[2];
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["library_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
@@ -292,6 +293,7 @@ class GeslibReader {
           # Publisher reference code is relative to book, so internal code should include it
           $descr = GeslibCommon::utf8_encode($myline[3]);
           #$this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = $descr;
+          $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["action"] = "M";
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["title"] = "6E ".$myline[1] . "-" . $myline[2];
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["publisher_reference"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
@@ -303,6 +305,7 @@ class GeslibReader {
           # Index code is relative to book, so internal code should include it
           $descr = GeslibCommon::utf8_encode($myline[3]);
           #$this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = $descr;
+          $this->elements["index"][$myline[1] . "_" . $myline[2]]["action"] = "M";
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["title"] = "6I ".$myline[1] . "-" . $myline[2];
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["attribute"]["body"] = $descr;
           $this->elements["index"][$myline[1] . "_" . $myline[2]]["*title_from_related_book"] = $myline[1];
