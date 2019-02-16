@@ -308,8 +308,10 @@ class GeslibWriter {
             $this->update_vocabulary_terms($node,$tax_field_name,$vocab->vid,$attr_value);
           // El resto de campos, los guarda como atributos
           } else {
-            // Format 5: plaintext
-            $this->change_attribute($node, $field_name, $attr_value, 5);
+            # Obtenemos el formato del campo de la configuracion del modulo
+            # (por defecto 5: plain_text)
+            $text_format = variable_get('geslib_'.$this->elements_type.'_node_'.$attr_name.'_format', 5);
+            $this->change_attribute($node, $field_name, $attr_value, $text_format);
           }
           $changed = true;
         }
