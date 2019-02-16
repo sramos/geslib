@@ -48,6 +48,11 @@ function geslib_admin_settings($form_state) {
     $node_types[$node_type] = $node_label . " (" . $node_type . ")";
   }
 
+  // Format body options( 'plain_text': 5, 'filtered_html': 1, 'full_html': 2 )
+  $body_format_options = array( '5' => 'Plain text',
+                                '1' => 'Filtered HTML',
+                                '2' => 'Full HTML' );
+
   // Get field by type
   $type_txt_fields = array();
   $type_ref_fields = array();
@@ -274,6 +279,13 @@ function geslib_admin_settings($form_state) {
     '#default_value' => variable_get('geslib_index_node_type', NULL),
     '#description' => t('Drupal node type for Index importing (Geslib code line "6I").'),
     '#options' => $node_types,
+  );
+  $form['index']['geslib_index_node_body_format'] = array(
+    '#type' => 'select',
+    '#title' => t('Format type for body field'),
+    '#default_value' => variable_get('geslib_index_node_body_format', NULL),
+    '#description' => t('Allowed Drupal7 text formats: Plain text, Filtered HTML or Full HTML.'),
+    '#options' => $body_format_options,
   );
 
   // Options for publisher references

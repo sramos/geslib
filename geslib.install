@@ -24,6 +24,7 @@ function geslib_install() {
   variable_set('geslib_publisher_reference_node_type', NULL);
   variable_set('geslib_library_reference_node_type', NULL);
   variable_set('geslib_index_node_type', NULL);
+  variable_del('geslib_index_node_body_format', '2');
   variable_set('geslib_book_node_type', "product");
   variable_set('geslib_book_geslib_type', "L0");
   variable_set('geslib_book_attribute_type', NULL);
@@ -88,6 +89,7 @@ function geslib_uninstall() {
   variable_del('geslib_publisher_reference_node_type');
   variable_del('geslib_library_reference_node_type');
   variable_del('geslib_index_node_type');
+  variable_del('geslib_index_node_body_format');
   variable_del('geslib_book_node_type');
   variable_del('geslib_book_geslib_type');
   variable_del('geslib_book_attribute_type');
