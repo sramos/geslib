@@ -792,7 +792,7 @@ class GeslibWriter {
    */
   function get_access(&$node, $op) {
     if (!node_access($op, $node, $this->user)) {
-      if (!db_query('UPDATE {node} SET uid=%d WHERE nid=%d', $this->user->uid, $node->nid)) {
+      if (!db_query('UPDATE {node} SET uid=:uid WHERE nid=:nid', array(':uid' => $this->user->uid, ':nid' => $node->nid))) {
         throw new Exception('User ' . $this->user->uid . ' not authorized to ' . $op . ' content type ' . $node->type);
       }
       watchdog('geslib-import', "$node->type: Changed ownership of '%node' to user '%user'", array('%node'=>$node->title, '%user'=>$this->user->name));
