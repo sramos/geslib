@@ -67,53 +67,53 @@ function geslib_admin_settings($form_state) {
     foreach ( $node_data as $field_name => $field_data) {
       #print_r("<br>" . $node_name . ": " . $field_name . "<br>");
       #print_r($field_data);
-      if ($field_data[widget][module] == "text" || $field_data[widget][module] == "options") {
+      if ($field_data['widget']['module'] == "text" || $field_data['widget']['module'] == "options") {
         if (array_key_exists($field_name,$type_txt_fields)) {
           $type_txt_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_txt_fields[$field_name]  = $field_name.": ".$field_data[label] . " @ " . $node_name;
+          $type_txt_fields[$field_name]  = $field_name.": ".$field_data['label'] . " @ " . $node_name;
         }
       }
-      if ($field_data[widget][module] == "node_reference" || preg_match('#^nodereference#', $field_data[widget_type]) === 1) {
+      if ($field_data['widget']['module'] == "node_reference" || preg_match('#^nodereference#', @$field_data['widget_type']) === 1) {
         if (array_key_exists($field_name,$type_ref_fields)) {
           $type_ref_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_ref_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+          $type_ref_fields[$field_name]  = $field_name." (".$field_data['widget']['module']."): ".$field_data['label'] . " @ " . $node_name;
        }
       }
-      if ($field_data[widget][module] == "number") {
+      if ($field_data['widget']['module'] == "number") {
         if (array_key_exists($field_name,$type_int_fields)) {
           $type_int_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_int_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+          $type_int_fields[$field_name]  = $field_name." (".$field_data['widget']['module']."): ".$field_data['label'] . " @ " . $node_name;
         }
       }
-      if ($field_data[widget][module] == "date") {
+      if ($field_data['widget']['module'] == "date") {
         if (array_key_exists($field_name,$type_dat_fields)) {
           $type_dat_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_dat_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+          $type_dat_fields[$field_name]  = $field_name." (".$field_data['widget']['module']."): ".$field_data['label'] . " @ " . $node_name;
         }
       }
-      if ($field_data[widget][module] == "taxonomy") {
+      if ($field_data['widget']['module'] == "taxonomy") {
         if (array_key_exists("#tax-".$field_name,$type_tax_fields)) {
           $type_tax_fields["#tax-".$field_name] .= ", " . $node_name;
         } else {
-          $type_tax_fields["#tax-".$field_name]  = t("Vocabulary") . " ". $field_data[label] . " (". $field_name .") @ " . $node_name;
+          $type_tax_fields["#tax-".$field_name]  = t("Vocabulary") . " ". $field_data['label'] . " (". $field_name .") @ " . $node_name;
         }
       }
-      if ($field_data[widget][module] == "image") {
+      if ($field_data['widget']['module'] == "image") {
         if (array_key_exists($field_name,$type_img_fields)) {
           $type_img_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_img_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+          $type_img_fields[$field_name]  = $field_name." (".$field_data['widget']['module']."): ".$field_data['label'] . " @ " . $node_name;
         }
       }
-      if ($field_data[widget][module] == "file") {
+      if ($field_data['widget']['module'] == "file") {
         if (array_key_exists($field_name,$type_file_fields)) {
           $type_file_fields[$field_name] .= ", " . $node_name;
         } else {
-          $type_file_fields[$field_name]  = $field_name." (".$field_data[widget][module]."): ".$field_data[label] . " @ " . $node_name;
+          $type_file_fields[$field_name]  = $field_name." (".$field_data['widget']['module']."): ".$field_data['label'] . " @ " . $node_name;
         }
       }
     }
