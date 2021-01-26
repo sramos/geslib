@@ -190,9 +190,9 @@ class geslib_api {
     $inet_search_type = variable_get('geslib_book_download_info', NULL);
     $ean = $this->elements["book"][$object_id]["attribute"]["ean"];
     $needed_author = (variable_get('geslib_book_create_fake_author', NULL) == 2 || sizeof($this->elements["book"][$object_id]["*author"]) == 0) &&
-                     sizeof($this->elements["book"][$object_id]["relation"]["author"]) == 0;
+                     @sizeof($this->elements["book"][$object_id]["relation"]["author"]) == 0;
     $needed_description = variable_get('geslib_book_body_from', NULL) &&
-                          sizeof($this->elements["book"][$object_id]["relation"][variable_get('geslib_book_body_from', NULL)]) == 0;
+                          @sizeof($this->elements["book"][$object_id]["relation"][variable_get('geslib_book_body_from', NULL)]) == 0;
 
     if ( $ean && $inet_search_type ) {
       $inet_data = array();
