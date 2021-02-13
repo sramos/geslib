@@ -65,8 +65,11 @@ function geslib_admin_settings($form_state) {
   foreach ( field_info_instances('node', NULL) as $node_name => $node_data ) {
     # And all fields
     foreach ( $node_data as $field_name => $field_data) {
-      #print_r("<br>" . $node_name . ": " . $field_name . "<br>");
+      #print_r($field_name ." @ " . $node_name . " [" . $field_data['type'] . " - " . $field_data['widget']['module'] . "]<br>");
+      #print_r("<pre>");
       #print_r($field_data);
+      #print_r("</pre>");
+      #print_r("<br><br>");
       if ($field_data['widget']['module'] == "text" || $field_data['widget']['module'] == "options") {
         if (array_key_exists($field_name,$type_txt_fields)) {
           $type_txt_fields[$field_name] .= ", " . $node_name;
@@ -74,7 +77,9 @@ function geslib_admin_settings($form_state) {
           $type_txt_fields[$field_name]  = $field_name.": ".$field_data['label'] . " @ " . $node_name;
         }
       }
-      if ($field_data['widget']['module'] == "node_reference" || preg_match('#^nodereference#', @$field_data['widget_type']) === 1) {
+      if ($field_data['widget']['module'] == "node_reference" ||
+          preg_match('#^nodereference#', @$field_data['widget_type']) === 1 ||
+          preg_match('#^nodereference#', @$field_data['widget']['type']) === 1) {
         if (array_key_exists($field_name,$type_ref_fields)) {
           $type_ref_fields[$field_name] .= ", " . $node_name;
         } else {
